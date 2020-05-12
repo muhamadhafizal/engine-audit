@@ -30,6 +30,14 @@ Route::get('unauthorized', ['as' => 'unauthorized', 'uses' => 'LoginController@u
 //token
 Route::group(['middleware' => ['auth:api','token']], function(){
 
+    //project
     Route::get('/project', 'ProjectController@index');
+
+    //staff
+    Route::get('/staff/company', 'UserController@listofstaff');
+
+    //Role
+    Route::get('/role', 'RoleController@index');
+    Route::get('/role/all', 'RoleController@all');    
 
 });

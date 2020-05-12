@@ -34,10 +34,11 @@ class UserController extends Controller
             $email = $request->input('email');
             $username = $request->input('username');
             $password = $request->input('password');
-            $role = $request->input('role');
+            $roleid = $request->input('roleid');
+            $userid = $request->input('userid');
 
-            if($role == null){
-                $role = 'company';
+            if($roleid == null){
+                $roleid = '2';
             }
 
             $userExist = User::where('username',$username)->orWhere('password',$password)->first();
@@ -51,7 +52,8 @@ class UserController extends Controller
                 $user->email = $email;
                 $user->username = $username;
                 $user->password = $password;
-                $user->role = $role;
+                $user->role = $roleid;
+                $user->userid = $userid;
 
                 $user->save();
 
@@ -139,7 +141,58 @@ class UserController extends Controller
 
 		return response()->json(['status'=>'success']);
 
-	}
+    }
+    
+    public function listofstaff(Request $request){
+
+        $id = $request->input('id');
+
+        $companyArray = array();
+        $leadArray = array();
+        $auditorsArray = array();
+        $finalArray = array();
+
+        $company = User::find($id);
+        $leadauditor = User::where('role','3')->where('userid',$id)->get();
+        $auditors = User::where('role','4')->where('userid', $id)->get();
+
+        if($company){
+            $companyArray = [
+                'name' => $company->name,
+            ];
+        }
+
+        if($leadauditor){
+            foreach($leadauditor as $data){
+
+                $tempArray = [
+                    'name' => $data->name,
+                ];
+
+                array_push($leadArray,$tempArray);
+
+            }
+        }
+
+        if($auditors){
+            foreach($auditors as $data){
+                $tempAudit = [
+                    'name' => $data->name,
+                ];
+                array_push($auditorsArray,$tempAudit);
+            }
+        }
+
+        $finalArray = [
+
+            'company' => $companyArray,
+            'leadauditor' => $leadArray,
+            'auditors' => $auditorsArray,
+
+        ];
+
+        return response()->json($finalArray);
+    }
 
 
 }
