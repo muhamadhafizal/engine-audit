@@ -13,10 +13,23 @@ use Illuminate\Http\Request;
 |
 */
 
-
+//user management
 Route::get('/user', 'UserController@index');
 Route::post('/user/add', 'UserController@add');
 Route::get('user/all', 'UserController@all');
 Route::get('user/profile', 'UserController@profile');
 Route::post('user/edit', 'UserController@update');
 Route::delete('user/delete', 'UserController@destroy');
+
+//login
+Route::get('/login', 'LoginController@index');
+Route::post('/login', 'LoginController@main');
+
+Route::get('unauthorized', ['as' => 'unauthorized', 'uses' => 'LoginController@unauthorized']);
+
+//token
+Route::group(['middleware' => ['auth:api','token']], function(){
+
+    Route::get('/project', 'ProjectController@index');
+
+});
