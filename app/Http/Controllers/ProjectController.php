@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Project;
+use App\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
@@ -50,11 +51,39 @@ class ProjectController extends Controller
     public function projectbycompany(Request $request){
         
         $companyid = $request->input('companyid');
+        $projectArray = array();
+        $tempArray = array();
 
         $data = Project::where('companyid', $companyid)->orderBy('id','DESC')->get();
+        $company = User::where('role','2')->where('id',$companyid)->first();
 
         if($data){
-            return response()->json(['status'=>'success','data'=>$data]);
+
+            foreach($data as $pro){
+
+                $a = json_decode($pro->setupteam);
+
+                $tempArray = [
+
+                    'id' => $pro->id,
+                    'setupteam' => $a,
+                    'projectinformation' => $pro->projectinformation,
+                    'created_at' => $pro->created_at,
+                    'updated_at' => $pro->updated_at,
+                    'company_id' => $pro->companyid,
+                    'company_name' => $company->name,
+                    'objective' => $pro->objective,
+                    'scope' => $pro->scope,
+                    'methodology' => $pro->methodology,
+                    'measurementtools' => $pro->measurementtools,
+
+                ];
+
+                array_push($projectArray,$tempArray);
+
+            }
+            
+                return response()->json(['status'=>'success','data'=>$projectArray]);
         } else {
             return response()->json(['status'=>'failure','data'=>'Project not exist']);
         }
