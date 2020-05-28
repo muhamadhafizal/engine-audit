@@ -34,6 +34,9 @@ Route::get('project/bycompany', 'ProjectController@projectbycompany');
 Route::delete('project/delete', 'ProjectController@destroy');
 Route::post('project/addinformation', 'ProjectController@information');
 Route::post('project/edit', 'ProjectController@update');
+Route::post('project/addgeneralinformation', 'ProjectController@generalinformation');
+Route::post('project/addoperationinformation', 'ProjectController@operationinformation');
+Route::post('project/addenergymanagementreview', 'ProjectController@managementreview');
 
 
 //token
