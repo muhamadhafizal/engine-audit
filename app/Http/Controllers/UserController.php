@@ -145,53 +145,54 @@ class UserController extends Controller
     
     public function listofstaff(Request $request){
 
-        $id = $request->input('id');
+        $companyid = $request->input('companyid');
 
         $companyArray = array();
         $leadArray = array();
         $auditorsArray = array();
         $finalArray = array();
 
-        $company = User::find($id);
-        $leadauditor = User::where('role','3')->where('userid',$id)->get();
-        $auditors = User::where('role','4')->where('userid', $id)->get();
+        $company = User::find($companyid);
+        $auditors = User::where('role','3')->where('userid',$companyid)->get();
 
         if($company){
             $companyArray = [
+                'id' => $company->id,
                 'name' => $company->name,
             ];
         }
 
-        if($leadauditor){
-            foreach($leadauditor as $data){
-
-                $tempArray = [
-                    'name' => $data->name,
-                ];
-
-                array_push($leadArray,$tempArray);
-
-            }
-        }
-
         if($auditors){
             foreach($auditors as $data){
-                $tempAudit = [
+
+                $tempArray = [
+                    'id' => $data->id,
                     'name' => $data->name,
                 ];
-                array_push($auditorsArray,$tempAudit);
+
+                array_push($auditorsArray,$tempArray);
+
             }
         }
 
         $finalArray = [
 
             'company' => $companyArray,
-            'leadauditor' => $leadArray,
             'auditors' => $auditorsArray,
 
         ];
 
-        return response()->json($finalArray);
+        return response()->json(['status'=>'success','value'=>$finalArray]);
+    }
+
+    public function listuserrole(Request $request){
+
+        $roleid = $request->input('roleid');
+
+        $data = User::where('role',$roleid)->get();
+
+        return response()->json(['status'=>'success','value'=>$data]);
+
     }
 
 

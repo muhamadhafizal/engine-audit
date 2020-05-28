@@ -27,14 +27,25 @@ Route::post('/login', 'LoginController@main');
 
 Route::get('unauthorized', ['as' => 'unauthorized', 'uses' => 'LoginController@unauthorized']);
 
+Route::post('/project/setupteam', 'ProjectController@addSetupTeam');
+Route::get('project/all', 'ProjectController@all');
+Route::get('project/details', 'ProjectController@details');
+Route::get('project/bycompany', 'ProjectController@projectbycompany');
+Route::delete('project/delete', 'ProjectController@destroy');
+Route::post('project/addinformation', 'ProjectController@information');
+Route::post('project/edit', 'ProjectController@update');
+
+
 //token
 Route::group(['middleware' => ['auth:api','token']], function(){
 
     //project
     Route::get('/project', 'ProjectController@index');
+   
 
     //staff
     Route::get('/staff/company', 'UserController@listofstaff');
+    Route::get('/staff/listuserrole', 'UserController@listuserrole');
 
     //Role
     Route::get('/role', 'RoleController@index');
