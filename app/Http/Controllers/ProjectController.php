@@ -96,6 +96,24 @@ class ProjectController extends Controller
                     $finalArray = $pro->energymanagementreview;
                 }
 
+                if($pro->energygeneralinformation){
+                    $f = json_decode($pro->energygeneralinformation);
+                } else {
+                    $f = $pro->energygeneralinformation;
+                }
+
+                if($pro->energytariffstructure){
+                    $g = json_decode($pro->energytariffstructure);
+                } else {
+                    $g = $pro->energytariffstructure;
+                }
+
+                if($pro->lightingregistry){
+                    $j = json_decode($pro->lightingregistry);
+                } else {
+                    $j = $pro->lightingregistry;
+                }
+
                 $tempArray = [
 
                     'id' => $pro->id,
@@ -112,6 +130,9 @@ class ProjectController extends Controller
                     'buildinggeneralinformation' => $b,
                     'buildingoperaioninformation' => $c,
                     'energymanagementreview' => $finalArray,
+                    'energygeneralinformation' => $f,
+                    'energytariffstructure' => $g,
+                    'lightingregistry' => $j,
 
                 ];
 
@@ -180,6 +201,30 @@ class ProjectController extends Controller
                     $finalArray = $data->energymanagementreview;
                 }
 
+                if($data->energygeneralinformation){
+                    $f = json_decode($data->energygeneralinformation);
+                } else {
+                    $f = $data->energygeneralinformation;
+                }
+
+                if($data->energytariffstructure){
+                    $g = json_decode($data->energytariffstructure);
+                } else {
+                    $g = $data->energytariffstructure;
+                }
+
+                if($data->energytarifftimezone){
+                    $h = json_decode($data->energytarifftimezone);
+                } else {
+                    $h = $data->energytarifftimezone;
+                }
+
+                if($data->lightingregistry){
+                    $j = json_decode($data->lightingregistry);
+                } else {
+                    $j = $data->lightingregistry;
+                }
+
  
                 $productArray = [
 
@@ -196,6 +241,10 @@ class ProjectController extends Controller
                     'buildinggeneralinformation' => $b,
                     'buildingoperationinformation' => $c,
                     'energymanagementreview' => $finalArray,
+                    'energygeneralinformation' => $f,
+                    'energytariffstructure' => $g,
+                    'energytarifftimezone' => $h,
+                    'lightingregistry' => $j,
 
                 ];
 
@@ -387,6 +436,138 @@ class ProjectController extends Controller
                 $project->save();
 
                 return response()->json(['status'=>'success','data'=>'success add energy management review']);
+
+            } else {
+                return response()->json(['status'=>'failed','data'=>'project not exist']);
+            }
+
+        }
+
+    }
+
+    public function energygeneralinformation(Request $request){
+
+        $validator = validator::make($request->all(),
+        [
+            'projectid' => 'required',
+            'energygeneralinformation' => 'required',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors(), 422);
+        } else {
+
+            $projectid = $request->input('projectid');
+            $energygeneralinformation = $request->input('energygeneralinformation');
+
+            $project = Project::find($projectid);
+
+            if($project){
+
+                $project->energygeneralinformation = $energygeneralinformation;
+                $project->save();
+
+                return response()->json(['status'=>'success','data'=>'success add energy general information']);
+
+            } else {
+
+                return response()->json(['status'=>'failed','data'=>'project not exist']);
+
+            }
+
+        }
+
+    }
+
+    public function energytariffstructure(Request $request){
+
+        $validator = validator::make($request->all(),
+        [
+            'projectid' => 'required',
+            'energytariffstructure' => 'required',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors(), 422);
+        } else {
+
+            $projectid = $request->input('projectid');
+            $energytariffstructure = $request->input('energytariffstructure');
+
+            $project = Project::find($projectid);
+
+            if($project){
+
+                $project->energytariffstructure = $energytariffstructure;
+                $project->save();
+
+                return response()->json(['status'=>'success','data'=>'success add energy tariff structure']);
+
+            } else {
+
+                return response()->json(['status'=>'failed','data'=>'project not exist']);
+            }
+
+        }
+
+    }
+
+    public function energytarifftimezone(Request $request){
+
+        $validator = validator::make($request->all(),
+        [
+            'projectid' => 'required',
+            'energytarifftimezone' => 'required',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors(), 422);
+        } else {
+
+            $projectid = $request->input('projectid');
+            $energytarifftimezone = $request->input('energytarifftimezone');
+
+            $project = Project::find($projectid);
+
+            if($project){
+
+                $project->energytarifftimezone = $energytarifftimezone;
+                $project->save();
+
+                return response()->json(['status'=>'success','data'=>'success add energy tariff time zone']);
+
+            } else {
+                return response()->json(['status'=>'failed','data'=>'project not exist']);
+            }
+
+        }
+
+    }
+
+    public function lightingregistry(Request $request){
+
+        $validator = validator::make($request->all(),
+        [
+            'projectid' => 'required',
+            'lightingregistry' => 'required',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors(), 422);
+        } else {
+
+            $projectid = $request->input('projectid');
+            $lightingregistry = $request->input('lightingregistry');
+
+            $project = Project::find($projectid);
+
+            if($project){
+
+                $project->lightingregistry = $lightingregistry;
+
+                $project->save();
+
+                return response()->json(['status'=>'success','data'=>'success add lighting registry']);
 
             } else {
                 return response()->json(['status'=>'failed','data'=>'project not exist']);

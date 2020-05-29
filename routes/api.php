@@ -37,6 +37,10 @@ Route::post('project/edit', 'ProjectController@update');
 Route::post('project/addgeneralinformation', 'ProjectController@generalinformation');
 Route::post('project/addoperationinformation', 'ProjectController@operationinformation');
 Route::post('project/addenergymanagementreview', 'ProjectController@managementreview');
+Route::post('project/energygeneralinformation', 'ProjectController@energygeneralinformation');
+Route::post('project/energytariffstructure', 'ProjectController@energytariffstructure');
+Route::post('project/energytarifftimezone', 'ProjectController@energytarifftimezone');
+Route::post('project/lightingregistry', 'ProjectController@lightingregistry');
 
 
 //token
