@@ -43,6 +43,7 @@ Route::post('project/energytariffstructure', 'ProjectController@energytariffstru
 Route::post('project/energytarifftimezone', 'ProjectController@energytarifftimezone');
 Route::post('project/lightingregistry', 'ProjectController@lightingregistry');
 Route::post('/project/addproject','ProjectController@addproject');
+Route::post('/project/references', 'ProjectController@references');
 
 
 //token

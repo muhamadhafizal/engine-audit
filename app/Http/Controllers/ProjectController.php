@@ -146,6 +146,7 @@ class ProjectController extends Controller
                 $tempArray = [
 
                     'id' => $pro->id,
+                    'title' => $pro->title,
                     'setupteam' => $a,
                     'projectinformation' => $pro->projectinformation,
                     'created_at' => $pro->created_at,
@@ -258,6 +259,7 @@ class ProjectController extends Controller
                 $productArray = [
 
                     'id' => $data->id,
+                    'title' => $data->title,
                     'setupteam' => $a,
                     'created_at' => $data->created_at,
                     'updated_at' => $data->updated_at,
@@ -602,6 +604,46 @@ class ProjectController extends Controller
                 return response()->json(['status'=>'failed','data'=>'project not exist']);
             }
 
+        }
+
+    }
+
+    public function references(Request $request){
+
+        $validator = validator::make($request->all(),
+        [
+            'projectid' => 'required',
+            'refrences' => 'required',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors(), 422);
+        } else {
+            $projectid = $request->input('projectid');
+            $refrences = $request->input('refrences');
+            $images = $request->file('images');
+
+            $project = Project::find($projectid);
+
+            if($project){
+
+                $extenstion = $images->getClientOriginalExtension();
+                $filename = rand(11111 , 99999) . '.' .$extenstion;
+                $destinationPath = 'images';
+
+                $images->move($destinationPath, $filename);
+
+                
+                $project->refrences = $refrences;
+                $project->imagesref = $filename;
+                
+                $project->save();
+
+                return response()->json(['status'=>'success','value'=>'success add reference and images']);
+
+            } else {
+                return response()->json(['status'=>'failed','value'=>'sorry project not exist']);
+            }
         }
 
     }
