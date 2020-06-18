@@ -13,11 +13,36 @@ class ProjectController extends Controller
         return response()->json(['status'=>'success','value'=>'product engine']);
     }
 
+    public function addproject(Request $request){
+
+        $validator = validator::make($request->all(),
+        [
+            'companyid' => 'required',
+            'title' => 'required',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors(), 422);
+        } else {
+            $companyid = $request->input('companyid');
+            $title = $request->input('title');
+
+            $project = new Project;
+            $project->companyid = $companyid;
+            $project->title = $title;
+
+            $project->save();
+
+            return response()->json(['status'=>'success','value'=>'success add project']);
+        }
+
+    }
+
     public function addSetupTeam(Request $request){
 
         $validator = validator::make($request->all(),
         [   
-            'companyid' => 'required',
+            'projectid' => 'required',
             'team' => 'required',
         ]);
 
@@ -26,15 +51,19 @@ class ProjectController extends Controller
         } else {
 
             $team = $request->input('team');
-            $companyid = $request->input('companyid');
+            $projectid = $request->input('projectid');
             
-            $project = new project;
-            $project->setupteam = $team;
-            $project->companyid = $companyid;
+            $project = Project::find($projectid);
+            if($project){
 
-            $project->save();
+                $project->setupteam = $team;
+                $project->save();
 
-            return response()->json(['status'=>'success','data'=>'success team project']);
+                return response()->json(['status'=>'success','data'=>'success team project']);
+
+            } else {
+                return response()->json(['status'=>'failed','value'=>'project not exist']);
+            }
 
         }
 
