@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 //user management
 Route::get('/user', 'UserController@index');
 Route::post('/user/add', 'UserController@add');
+Route::post('/user/addauditors', 'UserController@addauditors');
 Route::get('user/all', 'UserController@all');
 Route::get('user/profile', 'UserController@profile');
 Route::post('user/edit', 'UserController@update');
@@ -46,16 +47,16 @@ Route::post('project/lightingregistry', 'ProjectController@lightingregistry');
 //token
 Route::group(['middleware' => ['auth:api','token']], function(){
 
-    //project
-    Route::get('/project', 'ProjectController@index');
+//project
+Route::get('/project', 'ProjectController@index');
    
 
-    //staff
-    Route::get('/staff/company', 'UserController@listofstaff');
-    Route::get('/staff/listuserrole', 'UserController@listuserrole');
+//staff
+Route::get('/staff/company', 'UserController@listofstaff');
+Route::get('/staff/listuserrole', 'UserController@listuserrole');
 
-    //Role
-    Route::get('/role', 'RoleController@index');
-    Route::get('/role/all', 'RoleController@all');    
+//Role
+Route::get('/role', 'RoleController@index');
+Route::get('/role/all', 'RoleController@all');    
 
 });

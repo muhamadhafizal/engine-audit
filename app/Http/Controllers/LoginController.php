@@ -25,8 +25,13 @@ class LoginController extends Controller
 
             $username = $request->input('username');
             $password = $request->input('password');
-
-            $user = User::where('username',$username)->where('password',$password)->first();
+            
+            $user = User::where('password',$password)
+                ->where(function($a) use ($username){
+                    $a->where('username',$username)
+                      ->orWhere('email',$username);
+                })
+                ->first();
 
             if($user){
                 $token = $user->createToken('MyApp')-> accessToken;

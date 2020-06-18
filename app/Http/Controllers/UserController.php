@@ -19,7 +19,11 @@ class UserController extends Controller
 
             'name' => 'required',
             'contact' => 'required',
-            'email' => 'requred',
+            'email' => 'required',
+            'address' => 'required',
+            'postalcode' => 'required',
+            'location' => 'required',
+            'area' => 'required',
             'username' => 'required',
             'password' => 'required',
 
@@ -32,37 +36,87 @@ class UserController extends Controller
             $name = $request->input('name');
             $contact = $request->input('contact');
             $email = $request->input('email');
+            $address = $request->input('address');
+            $postalcode = $request->input('postalcode');
+            $location = $request->input('location');
+            $area = $request->input('area');
             $username = $request->input('username');
             $password = $request->input('password');
-            $roleid = $request->input('roleid');
-            $userid = $request->input('userid');
-
-            if($roleid == null){
-                $roleid = '2';
-            }
-
+            $roleid = '2';
+ 
             $userExist = User::where('username',$username)->orWhere('password',$password)->first();
             if($userExist){
-                return response()->json(['status'=>'failed', 'value'=>'email or password is exust']);
+                return response()->json(['status'=>'failed', 'value'=>'email or password is exist']);
             } else {
 
                 $user = new User;
                 $user->name = $name;
                 $user->contact = $contact;
                 $user->email = $email;
+                $user->address = $address;
+                $user->postalcode = $postalcode;
+                $user->location = $location;
+                $user->area = $area;
                 $user->username = $username;
                 $user->password = $password;
                 $user->role = $roleid;
-                $user->userid = $userid;
 
                 $user->save();
 
-                return response()->json(['status'=>'success']);
+                return response()->json(['status'=>'success', 'value'=>'company success register']);
 
             }
 
         }
 
+    }
+
+    public function addauditors(Request $request){
+
+        $validator = validator::make($request->all(),
+        [
+            'companyid' => 'required',
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'email' => 'required',
+            'contact' => 'required',
+            'username' => 'required',
+            'password' => 'required',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors(), 422);
+        } else {
+
+            $firstname = $request->input('firstname');
+            $lastname = $request->input('lastname');
+            $email = $request->input('email');
+            $contact = $request->input('contact');
+            $username = $request->input('username');
+            $password = $request->input('password');
+            $companyid = $request->input('companyid');
+            $roleid = '3';
+
+            $userExist = User::where('username',$username)->orWhere('password',$password)->first();
+            if($userExist){
+                return response()->json(['status'=>'failed', 'value'=>'email or password is exist']);
+            } else {
+
+                $user = new User;
+                $user->name = $firstname;
+                $user->lastname = $lastname;
+                $user->email = $email;
+                $user->contact = $contact;
+                $user->username = $username;
+                $user->password = $password;
+                $user->userid = $companyid;
+                $user->role = $roleid;
+
+                $user->save();
+
+                return response()->json(['status'=>'success', 'value'=>'success invite auditors']);
+            }
+        }
     }
 
     public function all(){
@@ -87,49 +141,68 @@ class UserController extends Controller
 
     public function update(Request $request){
 
+        $userExist = null;
+
         $id = $request->input('id');
-        $name = $request->input('name');
+        $name = $request->input('fistname');
+        $lastname = $request->input('lastname');
         $contact = $request->input('contact');
         $email = $request->input('email');
         $username = $request->input('username');
         $password = $request->input('password');
         $role = $request->input('role');
 
-        $user = User::find($id);
+        if($username != null || $password != null ){
+            $userExist = User::where('username',$username)->orWhere('password',$password)->first();
+        } 
 
-        if($user){
+        if($userExist){
 
-            if(is_null($name)){
-                $name = $user->name;
-            }
-            if(is_null($contact)){
-                $phone = $user->contact;
-            }
-            if(is_null($email)){
-                $email = $user->email;
-            }
-            if(is_null($username)){
-                $username = $user->username;
-            }
-            if(is_null($password)){
-                $password = $user->password;
-            }
-            if(is_null($role)){
-                $role = $user->role;
-            }
+            return response()->json(['status'=>'failed','value'=>'username or password is exist']);
 
-            $user->name = $name;
-            $user->contact = $contact;
-            $user->email = $email;
-            $user->username = $username;
-            $user->password = $password;
-            $user->role = $role;
-
-            $user->save();
-
-            return response()->json(['status'=>'success']);
         } else {
-            return response()->json(['status'=>'failed','value'=>'user not exist']);
+
+            $user = User::find($id);
+
+            if($user){
+
+                if(is_null($name)){
+                    $name = $user->name;
+                }
+                if(is_null($lastname)){
+                    $lastname = $user->lastname;
+                }
+                if(is_null($contact)){
+                    $phone = $user->contact;
+                }
+                if(is_null($email)){
+                    $email = $user->email;
+                }
+                if(is_null($username)){
+                    $username = $user->username;
+                }
+                if(is_null($password)){
+                    $password = $user->password;
+                }
+                if(is_null($role)){
+                    $role = $user->role;
+                }
+
+                $user->name = $name;
+                $user->lastname = $lastname;
+                $user->contact = $contact;
+                $user->email = $email;
+                $user->username = $username;
+                $user->password = $password;
+                $user->role = $role;
+
+                $user->save();
+
+                return response()->json(['status'=>'success','value'=>'success update user']);
+            } else {
+                return response()->json(['status'=>'failed','value'=>'user not exist']);
+            }
+
         }
 
     }
@@ -159,6 +232,7 @@ class UserController extends Controller
             $companyArray = [
                 'id' => $company->id,
                 'name' => $company->name,
+                'email' => $company->email,
             ];
         }
 
@@ -168,6 +242,8 @@ class UserController extends Controller
                 $tempArray = [
                     'id' => $data->id,
                     'name' => $data->name,
+                    'lastname' => $data->lastname,
+                    'email' => $data->email,
                 ];
 
                 array_push($auditorsArray,$tempArray);
