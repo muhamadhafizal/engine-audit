@@ -83,6 +83,9 @@ class ProjectController extends Controller
         $projectArray = array();
         $tempArray = array();
 
+        $env = 'http://engine-audit.test/images/';
+        //$env = 'http://52.74.178.166:82/';
+
         $data = Project::where('companyid', $companyid)->orderBy('id','DESC')->get();
         $company = User::where('role','2')->where('id',$companyid)->first();
 
@@ -143,6 +146,18 @@ class ProjectController extends Controller
                     $j = $pro->lightingregistry;
                 }
 
+                if($pro->refrences){
+                    $k = json_decode($pro->refrences);
+                } else {
+                    $k = $pro->refrences;
+                }
+
+                if($pro->imagesref){
+                    $dirfile = $env . ''. $pro->imagesref;
+                } else {
+                    $dirfile = $pro->imagesref;
+                }
+
                 $tempArray = [
 
                     'id' => $pro->id,
@@ -163,6 +178,8 @@ class ProjectController extends Controller
                     'energygeneralinformation' => $f,
                     'energytariffstructure' => $g,
                     'lightingregistry' => $j,
+                    'references' => $k,
+                    'imagesref' => $dirfile,
 
                 ];
 
@@ -180,6 +197,8 @@ class ProjectController extends Controller
     public function details(Request $request){
 
         $productArray = array();
+        $env = 'http://engine-audit.test/images/';
+        //$env = 'http://52.74.178.166:82/';
 
         $validator = validator::make($request->all(),
         [
@@ -255,6 +274,18 @@ class ProjectController extends Controller
                     $j = $data->lightingregistry;
                 }
 
+                if($data->refrences){
+                    $k = json_decode($data->refrences);
+                } else {
+                    $k = $data->refrences;
+                }
+
+                if($data->imagesref){
+                    $dirfile = $env . ''. $data->imagesref;
+                } else {
+                    $dirfile = $data->imagesref;
+                }
+
  
                 $productArray = [
 
@@ -276,6 +307,8 @@ class ProjectController extends Controller
                     'energytariffstructure' => $g,
                     'energytarifftimezone' => $h,
                     'lightingregistry' => $j,
+                    'references' => $k,
+                    'imagesref' => $dirfile,
 
                 ];
 
