@@ -286,33 +286,75 @@ class ProjectController extends Controller
                     $dirfile = $data->imagesref;
                 }
 
+                $arrayparent = array();
+                $finalArraya = array();
+                if($data->singline){
+                    $l = json_decode($data->singline, true);
+                    // foreach($l as $data){
+                    //     print_r($data);
+                    // }
+                    
+                    $temparr = ($l['data'][0]['value']);
+                    foreach($temparr as $a){
+                        if($a['parentid'] == '0'){
+                            array_push($arrayparent,$a);
+                        }
+                    }
+                    foreach($arrayparent as $b){
+                        $tempfinal = array();
+                        $childArray = array();
+                        $temb = ($b['id']);
+                        foreach($temparr as $c){
+                            if($c['parentid'] == $temb){
+                                
+                                array_push($childArray,$c);
+                                
+                            }
+                        }
+                        $tempfinal = [
+                            'parentid' => $temb,
+                            'node' => $childArray,
+                        ];
+
+                        array_push($finalArraya,$tempfinal);                        
+                    }
+                    echo json_encode($finalArraya);
+                    //print_r($childArray);
+                    //print_r($temparr);
+                    //echo json_encode($arrayparent);
+                    //echo $data->singline;
+                } else {
+                    $l = $data->singline;
+                }
+
  
-                $productArray = [
+                // $productArray = [
 
-                    'id' => $data->id,
-                    'title' => $data->title,
-                    'setupteam' => $a,
-                    'created_at' => $data->created_at,
-                    'updated_at' => $data->updated_at,
-                    'companyid' => $data->companyid,
-                    'companyname' => $company->name,
-                    'objective' => $data->objective,
-                    'scope' => $data->scope,
-                    'methodology' => $data->methodology,
-                    'measurementtools' => $data->measurementtools,
-                    'buildinggeneralinformation' => $b,
-                    'buildingoperationinformation' => $c,
-                    'energymanagementreview' => $finalArray,
-                    'energygeneralinformation' => $f,
-                    'energytariffstructure' => $g,
-                    'energytarifftimezone' => $h,
-                    'lightingregistry' => $j,
-                    'references' => $k,
-                    'imagesref' => $dirfile,
+                //     'id' => $data->id,
+                //     'title' => $data->title,
+                //     'setupteam' => $a,
+                //     'created_at' => $data->created_at,
+                //     'updated_at' => $data->updated_at,
+                //     'companyid' => $data->companyid,
+                //     'companyname' => $company->name,
+                //     'objective' => $data->objective,
+                //     'scope' => $data->scope,
+                //     'methodology' => $data->methodology,
+                //     'measurementtools' => $data->measurementtools,
+                //     'buildinggeneralinformation' => $b,
+                //     'buildingoperationinformation' => $c,
+                //     'energymanagementreview' => $finalArray,
+                //     'energygeneralinformation' => $f,
+                //     'energytariffstructure' => $g,
+                //     'energytarifftimezone' => $h,
+                //     'lightingregistry' => $j,
+                //     'references' => $k,
+                //     'imagesref' => $dirfile,
+                //     'singleline' => $l,
 
-                ];
+                // ];
 
-                return response()->json(['status'=>'success','data'=>$productArray]);
+                //return response()->json(['status'=>'success','data'=>$productArray]);
             } else {
                 return response()->json(['status'=>'failed','data'=>'project not exist']);
             }
@@ -677,6 +719,36 @@ class ProjectController extends Controller
             } else {
                 return response()->json(['status'=>'failed','value'=>'sorry project not exist']);
             }
+        }
+
+    }
+
+    public function singleline(Request $request){
+
+        $validator = validator::make($request->all(),
+        [
+            'projectid' => 'required',
+            'singleline' => 'required',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors(), 422);
+        } else {
+
+            $projectid = $request->input('projectid');
+            $singleline = $request->input('singleline');
+
+            $project = Project::find($projectid);
+            if($project){
+
+                $project->singline = $singleline;
+                $project->save();
+
+                return response()->json(['status'=>'success','value'=>'success add timeline']);
+            } else {
+                return response()->json(['status'=>'failed','value'=>'project not exist']);
+            }
+
         }
 
     }

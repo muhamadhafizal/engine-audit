@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddUseridToUsersTable extends Migration
+class AddSinglelineToProductsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddUseridToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('companyid')->nullable();
+        Schema::table('projects', function (Blueprint $table) {
+            $table->longText('singline')->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AddUseridToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('companyid');
+        Schema::table('projects', function (Blueprint $table) {
+            $table->dropColumn(['singline']);
         });
     }
 }

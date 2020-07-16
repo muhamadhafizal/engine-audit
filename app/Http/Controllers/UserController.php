@@ -109,7 +109,7 @@ class UserController extends Controller
                 $user->contact = $contact;
                 $user->username = $username;
                 $user->password = $password;
-                $user->userid = $companyid;
+                $user->companyid = $companyid;
                 $user->role = $roleid;
 
                 $user->save();
@@ -226,7 +226,7 @@ class UserController extends Controller
         $finalArray = array();
 
         $company = User::find($companyid);
-        $auditors = User::where('role','3')->where('userid',$companyid)->get();
+        $auditors = User::where('role','3')->where('companyid',$companyid)->get();
 
         if($company){
             $companyArray = [
