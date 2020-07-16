@@ -21,6 +21,7 @@ Route::get('user/all', 'UserController@all');
 Route::get('user/profile', 'UserController@profile');
 Route::post('user/edit', 'UserController@update');
 Route::delete('user/delete', 'UserController@destroy');
+Route::post('user/verification', 'UserController@verification');
 
 //login
 Route::get('/login', 'LoginController@index');

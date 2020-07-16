@@ -96,6 +96,7 @@ class UserController extends Controller
             $password = $request->input('password');
             $companyid = $request->input('companyid');
             $roleid = '3';
+            $status = 'pending';
 
             $userExist = User::where('username',$username)->orWhere('password',$password)->first();
             if($userExist){
@@ -111,6 +112,7 @@ class UserController extends Controller
                 $user->password = $password;
                 $user->companyid = $companyid;
                 $user->role = $roleid;
+                $user->status = $status;
 
                 $user->save();
 
@@ -151,6 +153,7 @@ class UserController extends Controller
         $username = $request->input('username');
         $password = $request->input('password');
         $role = $request->input('role');
+        $status = $request->input('status');
 
         if($username != null || $password != null ){
             $userExist = User::where('username',$username)->orWhere('password',$password)->first();
@@ -187,6 +190,9 @@ class UserController extends Controller
                 if(is_null($role)){
                     $role = $user->role;
                 }
+                if(is_null($status)){
+                    $status = $user->status;
+                }
 
                 $user->name = $name;
                 $user->lastname = $lastname;
@@ -195,6 +201,7 @@ class UserController extends Controller
                 $user->username = $username;
                 $user->password = $password;
                 $user->role = $role;
+                $user->status = $status;
 
                 $user->save();
 
@@ -268,6 +275,21 @@ class UserController extends Controller
         $data = User::where('role',$roleid)->get();
 
         return response()->json(['status'=>'success','value'=>$data]);
+
+    }
+
+    public function verification(Request $request){
+
+        $userid = $request->input('userid');
+
+        $user = User::find($userid);
+
+        $status = 'active';
+        $user->status = $status;
+
+        $user->save();
+
+        return response()->json(['status'=>'success','value'=>'user success verified']);
 
     }
 
