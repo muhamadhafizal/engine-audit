@@ -96,7 +96,7 @@ class UserController extends Controller
             $password = $request->input('password');
             $companyid = $request->input('companyid');
             $roleid = '3';
-            $status = 'pending';
+            $status = 'active';
 
             $userExist = User::where('username',$username)->orWhere('password',$password)->first();
             if($userExist){
