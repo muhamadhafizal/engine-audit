@@ -43,6 +43,7 @@ class UserController extends Controller
             $username = $request->input('username');
             $password = $request->input('password');
             $roleid = '2';
+            $status = 'active';
  
             $userExist = User::where('username',$username)->orWhere('password',$password)->first();
             if($userExist){
@@ -60,6 +61,7 @@ class UserController extends Controller
                 $user->username = $username;
                 $user->password = $password;
                 $user->role = $roleid;
+                $user->status = $status;
 
                 $user->save();
 
