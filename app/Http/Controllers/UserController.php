@@ -245,12 +245,12 @@ class UserController extends Controller
 
         if($auditors){
             foreach($auditors as $data){
-
+                $name = $data->name.' '.$data->lastname;
                 $tempArray = [
                     'id' => $data->id,
-                    'name' => $data->name,
-                    'lastname' => $data->lastname,
+                    'name' => $name,
                     'email' => $data->email,
+                    'status' => $data->status,
                 ];
 
                 array_push($auditorsArray,$tempArray);
