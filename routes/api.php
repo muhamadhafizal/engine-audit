@@ -27,12 +27,6 @@ Route::post('user/verification', 'UserController@verification');
 Route::get('/login', 'LoginController@index');
 Route::post('/login', 'LoginController@main');
 
-//team
-Route::get('/team', 'TeamController@index');
-Route::get('/team/teambyproject', 'TeamController@teambyproject');
-Route::get('/team/detailsteam', 'TeamController@detailsteam');
-Route::post('/team/updateteam', 'TeamController@updateteam');
-Route::delete('/team/delete', 'TeamController@destroy');
 
 Route::get('unauthorized', ['as' => 'unauthorized', 'uses' => 'LoginController@unauthorized']);
 
@@ -42,6 +36,7 @@ Route::get('project/details', 'ProjectController@details');
 Route::get('project/bycompany', 'ProjectController@projectbycompany');
 Route::delete('project/delete', 'ProjectController@destroy');
 Route::post('project/addinformation', 'ProjectController@information');
+Route::get('/project/viewinformation', 'ProjectController@viewinformation');
 Route::post('project/edit', 'ProjectController@update');
 Route::post('project/addgeneralinformation', 'ProjectController@generalinformation');
 Route::post('project/addoperationinformation', 'ProjectController@operationinformation');
@@ -53,6 +48,13 @@ Route::post('project/lightingregistry', 'ProjectController@lightingregistry');
 Route::post('/project/addproject','ProjectController@addproject');
 Route::post('/project/references', 'ProjectController@references');
 Route::post('/project/singleline','ProjectController@singleline');
+
+//team
+Route::get('/team', 'TeamController@index');
+Route::get('/team/teambyproject', 'TeamController@teambyproject');
+Route::get('/team/detailsteam', 'TeamController@detailsteam');
+Route::post('/team/updateteam', 'TeamController@updateteam');
+Route::delete('/team/delete', 'TeamController@destroy');
 
 
 //token

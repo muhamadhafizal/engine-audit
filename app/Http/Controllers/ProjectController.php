@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Project;
 use App\User;
 use App\Team;
+use App\Information;
 use DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -263,21 +264,72 @@ class ProjectController extends Controller
             $methodology = $request->input('methodology');
             $measurementtools = $request->input('measurementtools');
 
-            $project = Project::find($projectid);
-            if($project){
+            $existinginfo = Information::where('projectid',$projectid)->first();
 
-                $project->objective = $objective;
-                $project->scope = $scope;
-                $project->methodology = $methodology;
-                $project->measurementtools = $measurementtools;
+            if($existinginfo){
 
-                $project->save();
+                if($objective == null){
+                    $objective = $existinginfo->objective;
+                }
+                if($scope == null){
+                    $scope = $existinginfo->scope;
+                }
+                if($methodology == null){
+                    $methodology = $existinginfo->methodology;
+                }
+                if($measurementtools == null){
+                    $measurementtools = $existinginfo->measurementtools;
+                }
 
-                return response()->json(['status'=>'success']);
+                $existinginfo->objective = $objective;
+                $existinginfo->scope = $scope;
+                $existinginfo->methodology = $methodology;
+                $existinginfo->measurementtools = $measurementtools;
+
+                $existinginfo->save();
+
+                return response()->json(['status'=>'success','value'=>'success update project information']);
 
             } else {
-                return response()->json(['status'=>'failure','data'=>'project not exist']);
+
+                $information = new Information;
+                $information->projectid = $projectid;
+                $information->objective = $objective;
+                $information->scope = $scope;
+                $information->methodology = $methodology;
+                $information->measurementtools = $measurementtools;
+
+                $information->save();
+
+                return response()->json(['status'=>'success','value'=>'success add project information']);
+
             }
+            
+        }
+
+    }
+
+    public function viewinformation(Request $request){
+
+        $validator = validator::make($request->all(),
+        [
+            'projectid' => 'required',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors(), 422);
+        } else {
+            
+            $projectid = $request->input('projectid');
+
+            $information = Information::where('projectid',$projectid)->first();
+
+            if($information){
+                return response()->json(['status'=>'success','value'=>$information]);
+            } else {
+                return response()->json(['status'=>'failed', 'value'=>'project information is not exist']);
+            }
+
         }
 
     }
