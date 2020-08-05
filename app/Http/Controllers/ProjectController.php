@@ -87,12 +87,24 @@ class ProjectController extends Controller
         
         $data =  DB::table('projects')
                 ->join('users','users.id','=','projects.companyid')
-                ->select('projects.id as id','projects.title as title','users.name as companyname')
+                ->select('projects.id as id','projects.title as title','users.name as companyname','projects.updated_at as update')
                 ->where('projects.companyid','=',$companyid)
                 ->get();
 
         if($data){
-                return response()->json(['status'=>'success','data'=>$data]);
+                foreach($data as $dat){
+                    $tempArray = [
+                        'id' => $dat->id,
+                        'projectname' => $dat->title,
+                        'lastupdate' => $dat->update,
+                        'status' => 'in progress',
+                    ];
+
+                    array_push($projectArray,$tempArray);
+
+                }
+
+                return response()->json(['status'=>'success','data'=>$projectArray]);
         } else {
             return response()->json(['status'=>'failure','data'=>'Project not exist']);
         }
@@ -191,24 +203,24 @@ class ProjectController extends Controller
 
                     'id' => $data->id,
                     'title' => $data->title,
-                    'setupteam' => $a,
-                    'projectinformation' => $data->projectinformation,
-                    'created_at' => $data->created_at,
-                    'updated_at' => $data->updated_at,
-                    'company_id' => $data->companyid,
-                    'company_name' => $company->name,
-                    'objective' => $data->objective,
-                    'scope' => $data->scope,
-                    'methodology' => $data->methodology,
-                    'measurementtools' => $data->measurementtools,
-                    'buildinggeneralinformation' => $b,
-                    'buildingoperaioninformation' => $c,
-                    'energymanagementreview' => $finalArray,
-                    'energygeneralinformation' => $f,
-                    'energytariffstructure' => $g,
-                    'lightingregistry' => $j,
-                    'references' => $k,
-                    'imagesref' => $dirfile,
+                    // 'setupteam' => $a,
+                    // 'projectinformation' => $data->projectinformation,
+                    // 'created_at' => $data->created_at,
+                    // 'updated_at' => $data->updated_at,
+                    // 'company_id' => $data->companyid,
+                    // 'company_name' => $company->name,
+                    // 'objective' => $data->objective,
+                    // 'scope' => $data->scope,
+                    // 'methodology' => $data->methodology,
+                    // 'measurementtools' => $data->measurementtools,
+                    // 'buildinggeneralinformation' => $b,
+                    // 'buildingoperaioninformation' => $c,
+                    // 'energymanagementreview' => $finalArray,
+                    // 'energygeneralinformation' => $f,
+                    // 'energytariffstructure' => $g,
+                    // 'lightingregistry' => $j,
+                    // 'references' => $k,
+                    // 'imagesref' => $dirfile,
 
                 ];
 
