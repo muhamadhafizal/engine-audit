@@ -53,7 +53,11 @@ class TeamController extends Controller
 
             $id = $request->input('userid');
 
-            $details = Team::find($id);
+            $details = DB::table('teams')
+                     ->join('users','users.id','=','teams.userid')
+                     ->select('teams.id as id','users.name as name','teams.role as role','teams.permission as permission')
+                     ->where('teams.id','=', $id)
+                     ->first();
 
             return response()->json(['status'=>'success','value'=>$details]);
 
