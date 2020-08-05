@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Project;
 use App\User;
+use DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
@@ -77,117 +78,21 @@ class ProjectController extends Controller
 
     }
 
+   
     public function projectbycompany(Request $request){
-        
+            
         $companyid = $request->input('companyid');
         $projectArray = array();
         $tempArray = array();
-
-        $env = 'http://engine-audit.test/images/';
-        //$env = 'http://52.74.178.166:82/';
-
-        $data = Project::where('companyid', $companyid)->orderBy('id','DESC')->get();
-        $company = User::where('role','2')->where('id',$companyid)->first();
+        
+        $data =  DB::table('projects')
+                ->join('users','users.id','=','projects.companyid')
+                ->select('projects.id as id','projects.title as title','users.name as companyname')
+                ->where('projects.companyid','=',$companyid)
+                ->get();
 
         if($data){
-
-            foreach($data as $pro){
-
-                $a = json_decode($pro->setupteam);
-
-                if($pro->buildinggeneralinformation){
-                    $b = json_decode($pro->buildinggeneralinformation);
-                } else {
-                    $b = $pro->buildinggeneralinformation;
-                }
-
-                if($pro->buildingoperationinformation){
-                    $c = json_decode($pro->buildingoperationinformation);
-                } else {
-                    $c = $pro->buildingoperationinformation;
-                }
-
-                if($pro->energymanagementreview){
-                    $d = json_decode($pro->energymanagementreview, true);
-
-                    if($d['data'][0]['review'] == 'AEMAS'){
-                        $e = ($d['data'][0]['AEMAS']);
-                        $finalArray = [
-                            'review' => 'AEMAS',
-                            'data' => $e,
-                        ];
-                    } elseif($d['data'][0]['review'] == 'ISO'){
-                        $e = ($d['data'][0]['ISO']);
-                        $finalArray = [
-                            'review' => 'ISO',
-                            'data' => $e,
-                        ];
-                    }
-
-                } else {
-                    $finalArray = $pro->energymanagementreview;
-                }
-
-                if($pro->energygeneralinformation){
-                    $f = json_decode($pro->energygeneralinformation);
-                } else {
-                    $f = $pro->energygeneralinformation;
-                }
-
-                if($pro->energytariffstructure){
-                    $g = json_decode($pro->energytariffstructure);
-                } else {
-                    $g = $pro->energytariffstructure;
-                }
-
-                if($pro->lightingregistry){
-                    $j = json_decode($pro->lightingregistry);
-                } else {
-                    $j = $pro->lightingregistry;
-                }
-
-                if($pro->refrences){
-                    $k = json_decode($pro->refrences);
-                } else {
-                    $k = $pro->refrences;
-                }
-
-                if($pro->imagesref){
-                    $dirfile = $env . ''. $pro->imagesref;
-                } else {
-                    $dirfile = $pro->imagesref;
-                }
-
-                $tempArray = [
-
-                    'id' => $pro->id,
-                    'title' => $pro->title,
-                    'setupteam' => $a,
-                    'projectinformation' => $pro->projectinformation,
-                    'created_at' => $pro->created_at,
-                    'updated_at' => $pro->updated_at,
-                    'company_id' => $pro->companyid,
-                    'company_name' => $company->name,
-                    'objective' => $pro->objective,
-                    'scope' => $pro->scope,
-                    'methodology' => $pro->methodology,
-                    'measurementtools' => $pro->measurementtools,
-                    'buildinggeneralinformation' => $b,
-                    'buildingoperaioninformation' => $c,
-                    'energymanagementreview' => $finalArray,
-                    'energygeneralinformation' => $f,
-                    'energytariffstructure' => $g,
-                    'lightingregistry' => $j,
-                    'references' => $k,
-                    'imagesref' => $dirfile,
-
-                ];
-
-                array_push($projectArray,$tempArray);
-
-            }
-            
-                return response()->json(['status'=>'success','data'=>$projectArray]);
+                return response()->json(['status'=>'success','data'=>$data]);
         } else {
             return response()->json(['status'=>'failure','data'=>'Project not exist']);
         }
@@ -215,11 +120,12 @@ class ProjectController extends Controller
             if($data){
 
                 $company = User::where('role','2')->where('id',$data->companyid)->first();
+
                 $a = json_decode($data->setupteam);
-                
+
                 if($data->buildinggeneralinformation){
                     $b = json_decode($data->buildinggeneralinformation);
-                }else {
+                } else {
                     $b = $data->buildinggeneralinformation;
                 }
 
@@ -262,12 +168,6 @@ class ProjectController extends Controller
                     $g = $data->energytariffstructure;
                 }
 
-                if($data->energytarifftimezone){
-                    $h = json_decode($data->energytarifftimezone);
-                } else {
-                    $h = $data->energytarifftimezone;
-                }
-
                 if($data->lightingregistry){
                     $j = json_decode($data->lightingregistry);
                 } else {
@@ -286,75 +186,33 @@ class ProjectController extends Controller
                     $dirfile = $data->imagesref;
                 }
 
-                $arrayparent = array();
-                $finalArraya = array();
-                if($data->singline){
-                    $l = json_decode($data->singline, true);
-                    // foreach($l as $data){
-                    //     print_r($data);
-                    // }
-                    
-                    $temparr = ($l['data'][0]['value']);
-                    foreach($temparr as $a){
-                        if($a['parentid'] == '0'){
-                            array_push($arrayparent,$a);
-                        }
-                    }
-                    foreach($arrayparent as $b){
-                        $tempfinal = array();
-                        $childArray = array();
-                        $temb = ($b['id']);
-                        foreach($temparr as $c){
-                            if($c['parentid'] == $temb){
-                                
-                                array_push($childArray,$c);
-                                
-                            }
-                        }
-                        $tempfinal = [
-                            'parentid' => $temb,
-                            'node' => $childArray,
-                        ];
-
-                        array_push($finalArraya,$tempfinal);                        
-                    }
-                    echo json_encode($finalArraya);
-                    //print_r($childArray);
-                    //print_r($temparr);
-                    //echo json_encode($arrayparent);
-                    //echo $data->singline;
-                } else {
-                    $l = $data->singline;
-                }
-
  
-                // $productArray = [
+                $productArray = [
 
-                //     'id' => $data->id,
-                //     'title' => $data->title,
-                //     'setupteam' => $a,
-                //     'created_at' => $data->created_at,
-                //     'updated_at' => $data->updated_at,
-                //     'companyid' => $data->companyid,
-                //     'companyname' => $company->name,
-                //     'objective' => $data->objective,
-                //     'scope' => $data->scope,
-                //     'methodology' => $data->methodology,
-                //     'measurementtools' => $data->measurementtools,
-                //     'buildinggeneralinformation' => $b,
-                //     'buildingoperationinformation' => $c,
-                //     'energymanagementreview' => $finalArray,
-                //     'energygeneralinformation' => $f,
-                //     'energytariffstructure' => $g,
-                //     'energytarifftimezone' => $h,
-                //     'lightingregistry' => $j,
-                //     'references' => $k,
-                //     'imagesref' => $dirfile,
-                //     'singleline' => $l,
+                    'id' => $data->id,
+                    'title' => $data->title,
+                    'setupteam' => $a,
+                    'projectinformation' => $data->projectinformation,
+                    'created_at' => $data->created_at,
+                    'updated_at' => $data->updated_at,
+                    'company_id' => $data->companyid,
+                    'company_name' => $company->name,
+                    'objective' => $data->objective,
+                    'scope' => $data->scope,
+                    'methodology' => $data->methodology,
+                    'measurementtools' => $data->measurementtools,
+                    'buildinggeneralinformation' => $b,
+                    'buildingoperaioninformation' => $c,
+                    'energymanagementreview' => $finalArray,
+                    'energygeneralinformation' => $f,
+                    'energytariffstructure' => $g,
+                    'lightingregistry' => $j,
+                    'references' => $k,
+                    'imagesref' => $dirfile,
 
-                // ];
+                ];
 
-                //return response()->json(['status'=>'success','data'=>$productArray]);
+                return response()->json(['status'=>'success','data'=>$productArray]);
             } else {
                 return response()->json(['status'=>'failed','data'=>'project not exist']);
             }
