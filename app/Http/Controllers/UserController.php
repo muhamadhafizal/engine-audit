@@ -134,10 +134,42 @@ class UserController extends Controller
     public function profile(Request $request){
 
         $id = $request->input('id');
+        $userarray = array();
 
         $user = User::find($id);
         if($user){
-            return response()->json(['status'=>'success','value'=>$user]);
+
+            if($user->role == 3){
+
+                $userarray = [
+                    'firstname' => $user->name,
+                    'lastname' => $user->lastname,
+                    'email' => $user->email,
+                    'contact' => $user->contact,
+                    'username' => $user->username,
+                    'password' => $user->password,
+                    'role' => 'auditors',
+                    'status' => $user->status, 
+                ];
+
+            } elseif($user->role == 2){
+
+                $userarray = [
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'contact' => $user->contact,
+                    'username' => $user->username,
+                    'password' => $user->password,
+                    'address' => $user->address,
+                    'postalcode' => $user->postalcode,
+                    'location' => $user->location,
+                    'area' => $user->area,
+                    'role' => 'companies',
+                ];
+
+            }
+
+            return response()->json(['status'=>'success','value'=>$userarray]);
         } else {
             return response()->json(['status'=>'failed','value'=>'user not exist']);
         }
