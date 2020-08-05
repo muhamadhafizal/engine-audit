@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Project;
 use App\User;
+use App\Team;
 use DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -44,27 +45,26 @@ class ProjectController extends Controller
         $validator = validator::make($request->all(),
         [   
             'projectid' => 'required',
-            'team' => 'required',
+            'userid' => 'required',
+            'role' => 'required',
         ]);
 
         if($validator->fails()){
             return response()->json($validator->errors(), 422);
         } else {
 
-            $team = $request->input('team');
             $projectid = $request->input('projectid');
-            
-            $project = Project::find($projectid);
-            if($project){
+            $userid = $request->input('userid');
+            $role = $request->input('role');
 
-                $project->setupteam = $team;
-                $project->save();
+            $team = new Team;
+            $team->projectid = $projectid;
+            $team->userid = $userid;
+            $team->role = $role;
 
-                return response()->json(['status'=>'success','data'=>'success team project']);
+            $team->save();
 
-            } else {
-                return response()->json(['status'=>'failed','value'=>'project not exist']);
-            }
+            return response()->json(['status'=>'success', 'value'=>'success add team project']);
 
         }
 

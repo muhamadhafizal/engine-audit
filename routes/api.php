@@ -27,6 +27,13 @@ Route::post('user/verification', 'UserController@verification');
 Route::get('/login', 'LoginController@index');
 Route::post('/login', 'LoginController@main');
 
+//team
+Route::get('/team', 'TeamController@index');
+Route::get('/team/teambyproject', 'TeamController@teambyproject');
+Route::get('/team/detailsteam', 'TeamController@detailsteam');
+Route::post('/team/updateteam', 'TeamController@updateteam');
+Route::delete('/team/delete', 'TeamController@destroy');
+
 Route::get('unauthorized', ['as' => 'unauthorized', 'uses' => 'LoginController@unauthorized']);
 
 Route::post('/project/setupteam', 'ProjectController@addSetupTeam');
