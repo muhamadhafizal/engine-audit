@@ -6,6 +6,7 @@ use App\Project;
 use App\User;
 use App\Team;
 use App\Information;
+use App\Building;
 use DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -384,7 +385,27 @@ class ProjectController extends Controller
         $validator = validator::make($request->all(),
         [
             'projectid' => 'required',
-            'generalinformation' => 'required',
+            'companyname' => 'required',
+            'companyaddress' => 'required',
+            'companyfaxnum' => 'required',
+            'companyemail' => 'required',
+            'designation' => 'required',
+            'picname' => 'required',
+            'picphone' => 'required',
+            'picfaxnum' => 'required',
+            'picemail' => 'required',
+            'electricalenergymanage' => 'required',
+            'noofstaff' => 'required',
+            'electricaltariffcategory' => 'required',
+            'buildingage' => 'required',
+            'buildingfunction' => 'required',
+            'noofblock' => 'required',
+            'grossfloorarea' => 'required',
+            'percentofgross' => 'required',
+            'serverarea' => 'required',
+            'parkingarea' => 'required',
+            'designedoccupant' => 'required',
+            'actualoccupant' => 'required', 
         ]);
 
         if($validator->fails()){
@@ -392,26 +413,168 @@ class ProjectController extends Controller
         } else {
 
             $projectid = $request->input('projectid');
-            $generalinformation = $request->input('generalinformation');
+            $companyname = $request->input('companyname');
+            $companyaddress = $request->input('companyaddress');
+            $companyfaxnum = $request->input('companyfaxnum');
+            $companyemail = $request->input('companyemail');
+            $designation = $request->input('designation');
+            $picname = $request->input('picname');
+            $picphone = $request->input('picphone');
+            $picfaxnum = $request->input('picfaxnum');
+            $picemail = $request->input('picemail');
+            $electricalenergymanage = $request->input('electricalenergymanage');
+            $noofstaff = $request->input('noofstaff');
+            $electricaltariffcategory = $request->input('electricaltariffcategory');
+            $buildingage = $request->input('buildingage');
+            $buildingfunction = $request->input('buildingfunction');
+            $noofblock = $request->input('noofblock');
+            $grossfloorarea = $request->input('grossfloorarea');
+            $percentofgross = $request->input('percentofgross');
+            $serverarea = $request->input('serverarea');
+            $designedoccupant = $request->input('designedoccupant');
+            $actualoccupant = $request->input('actualoccupant');
 
-            $project = Project::find($projectid);
+            $informationexist = Building::where('projectid',$projectid)->first();
 
-            if($project){
+            if($informationexist == null){
+                //add
 
-                $project->buildinggeneralinformation = $generalinformation;
-                $project->save();
+                $information = new Building;
+                $information->projectid = $projectid;
+                $information->companyname = $companyname;
+                $information->companyaddress = $companyaddress;
+                $information->companyfaxnum = $companyfaxnum;
+                $information->companyemail = $companyemail;
+                $information->designation = $designation;
+                $information->picname = $picname;
+                $information->picphone = $picphone;
+                $information->picfaxnum = $picfaxnum;
+                $information->picemail = $picemail;
+                $information->electricalenergymanage = $electricalenergymanage;
+                $information->noofstaff = $noofstaff;
+                $information->electricaltariffcategory = $electricaltariffcategory;
+                $information->buildingage = $buildingage;
+                $information->buildingfunction = $buildingfunction;
+                $information->noofblock = $noofblock;
+                $information->grossfloorarea = $grossfloorarea;
+                $information->percentofgross = $percentofgross;
+                $information->serverarea = $serverarea;
+                $information->designedoccupant = $designedoccupant;
+                $information->actualoccupant = $actualoccupant;
 
-                return response()->json(['status'=>'success','data'=>'success add building general information']);
+                $information->save();
+
+                return response()->json(['status'=>'success','value'=>'success record building general information']);
 
             } else {
+                //update
+                if($companyname == null){
+                    $companyname = $informationexist->companyname; 
+                }
+                if($companyaddress == null){
+                    $companyaddress = $informationexist->companyaddress;
+                }
+                if($companyfaxnum == null){
+                    $companyfaxnum = $informationexist->companyfaxnum;
+                }
+                if($companyemail == null){
+                    $companyemail = $informationexist->companyemail;
+                }
+                if($designation == null){
+                    $designation = $informationexist->designation;
+                }
+                if($picname == null){
+                    $picname = $informationexist->picname;
+                }
+                if($picphone == null){
+                    $picphone = $informationexist->picphone;
+                }
+                if($picfaxnum == null){
+                    $picfaxnum = $informationexist->picfaxnum;
+                }
+                if($picemail == null){
+                    $picemail = $informationexist->picemail;
+                }
+                if($electricalenergymanage == null){
+                    $electricalenergymanage = $informationexist->electricalenergymaange;
+                }
+                if($noofstaff == null){
+                    $noofstaff = $informationexist->noofstaff;
+                }
+                if($electricaltariffcategory == null){
+                    $electricaltariffcategory = $informationexist->electricaltariffcategory;
+                }
+                if($buildingage == null){
+                    $buildingage = $informationexist->buildingage;
+                }
+                if($buildingfunction == null){
+                    $buildingfunction = $informationexist->buildingfunction;
+                }
+                if($noofblock == null){
+                    $noofblock = $informationexist->noofblock;
+                }
+                if($grossfloorarea == null){
+                    $grossfloorarea = $informationexist->grossfloorarea;
+                }
+                if($percentofgross == null){
+                    $percentofgross = $informationexist->percentofgross;
+                }
+                if($serverarea == null){
+                    $serverarea = $informationexist->serverarea;
+                }
+                if($designedoccupant == null){
+                    $designedoccupant = $informationexist->designedoccupant;
+                }
+                if($actualoccupant == null){
+                    $actualoccupant = $informationexist->actualoccupant;
+                }
 
-                return response()->json(['status'=>'failed','data'=>'project not exist']);
+                $informationexist->companyname = $companyname;
+                $informationexist->companyaddress = $companyaddress;
+                $informationexist->companyfaxnum = $companyfaxnum;
+                $informationexist->companyemail = $companyemail;
+                $informationexist->designation = $designation;
+                $informationexist->picname = $picname;
+                $informationexist->picphone = $picphone;
+                $informationexist->picfaxnum = $picfaxnum;
+                $informationexist->picemail = $picemail;
+                $informationexist->electricalenergymanage = $electricalenergymanage;
+                $informationexist->noofstaff = $noofstaff;
+                $informationexist->electricaltariffcategory = $electricaltariffcategory;
+                $informationexist->buildingage = $buildingage;
+                $informationexist->buildingfunction = $buildingfunction;
+                $informationexist->noofblock = $noofblock;
+                $informationexist->grossfloorarea = $grossfloorarea;
+                $informationexist->percentofgross = $percentofgross;
+                $informationexist->serverarea = $serverarea;
+                $informationexist->designedoccupant = $designedoccupant;
+                $informationexist->actualoccupant = $actualoccupant;
+                
+                $informationexist->save();
 
+
+                return response()->json(['status'=>'success','value'=>'success update building general information']);
             }
 
         }
 
     }
+
+    public function viewgeneralinformation(Request $request){
+
+        $projectid = $request->input('projectid');
+        
+        $building = Building::where('projectid',$projectid)->first();
+
+        if($building){
+            return response()->json(['status'=>'success','value'=>$building]);
+        } else {
+            return response()->json(['status'=>'failed','value'=>'building general information is not exist']);
+        }
+
+    }
+
+
 
     public function operationinformation(Request $request){
 
