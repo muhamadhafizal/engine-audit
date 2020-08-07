@@ -8,6 +8,7 @@ use App\Team;
 use App\Information;
 use App\Building;
 use App\Operation;
+use App\Review;
 use DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -874,7 +875,6 @@ class ProjectController extends Controller
         $validator = validator::make($request->all(),
         [
             'projectid' => 'required',
-            'managementreview' => 'required',
         ]);
 
         if($validator->fails()){
@@ -882,21 +882,308 @@ class ProjectController extends Controller
         } else {
 
             $projectid = $request->input('projectid');
-            $managementreview = $request->input('managementreview');
+            $category = $request->input('category');
+            $acceptpotentialScore = $request->input('acceptpotentialScore');
+            $acceptpotentialRemarks = $request->input('acceptpotentialRemarks');
+            $managementCommScore = $request->input('managementCommScore');
+            $managementCommRemarks = $request->input('managementCommRemarks');
+            $rolesScore = $request->input('rolesScore');
+            $rolesRemarks = $request->input('rolesRemarks');
+            $seusScore = $request->input('seusScore');
+            $seusRemarks = $request->input('seusRemarks');
+            $baselineScore = $request->input('baselineScore');
+            $baselineRemarks = $request->input('baselineRemarks');
+            $enpiScore = $request->input('enpiScore');
+            $enpiRemarks = $request->input('enpiRemarks');
+            $objectiveScore = $request->input('objectiveScore');
+            $objectiveRemarks = $request->input('objectiveRemarks');
+            $actionScore = $request->input('actionScore');
+            $actionRemarks = $request->input('actionRemarks');
+            $internalScore = $request->input('internalScore');
+            $internalRemarks = $request->input('internalRemarks');
+            $energyScore = $request->input('energyScore');
+            $energyRemarks = $request->input('energyRemarks');
+            $organizationScore = $request->input('organizationScore');
+            $organizationRemarks = $request->input('organizationRemarks');
+            $motivationScore = $request->input('motivationScore');
+            $motivationRemarks = $request->input('motivationRemarks');
+            $informationScore = $request->input('informationScore');
+            $informationRemarks = $request->input('informationRemarks');
+            $marketingScore = $request->input('marketingScore');
+            $marketingRemarks = $request->input('marketingRemarks');
+            $investmentScore = $request->input('investmentScore');
+            $investmentRemarks = $request->input('investmentRemarks');
 
-            $project = Project::find($projectid);
+            $review = Review::where('projectid',$projectid)->first();
 
-            if($project){
+            if($review){
 
-                $project->energymanagementreview = $managementreview;
-                $project->save();
+                if($category == null){
+                    $category = $review->category;
+                }
 
-                return response()->json(['status'=>'success','data'=>'success add energy management review']);
+                if($acceptpotentialScore == null){
+                    $acceptpotentialScore = $review->acceptpotentialScore;
+                }
+
+                if($acceptpotentialRemarks == null){
+                    $acceptpotentialRemarks = $review->acceptpotentialRemarks;
+                }
+
+                if($managementCommScore == null){
+                    $managementCommScore = $review->managementCommScore;
+                }
+
+                if($managementCommRemarks == null){
+                    $managementCommRemarks = $review->managementCommRemarks;
+                }
+
+                if($rolesScore == null){
+                    $rolesScore = $review->roleseScore;
+                }
+
+                if($rolesRemarks == null){
+                    $rolesRemarks = $review->rolesRemarks;
+                }
+
+                if($seusScore == null){
+                    $seusScore = $review->seusScore;
+                }
+
+                if($seusRemarks == null){
+                    $seusRemarks = $review->seusRemarks;
+                }
+
+                if($baselineScore == null){
+                    $baselineScore = $review->baselineScore;
+                }
+
+                if($baselineRemarks == null){
+                    $baselineRemarks = $review->baselineRemarks;
+                }
+
+                if($enpiScore == null){
+                    $enpiScore = $review->enpiScore;
+                }
+
+                if($enpiRemarks == null){
+                    $enpiRemarks = $review->enpiRemarks;
+                }
+
+                if($objectiveScore == null){
+                    $objectiveScore = $review->objectiveScore;
+                }
+
+                if($objectiveRemarks == null){
+                    $objectiveRemarks = $review->objectiveRemarks;
+                }
+
+                if($actionScore == null){
+                    $actionStore = $review->actionStore;
+                }
+
+                if($actionRemarks == null){
+                    $actionRemarks = $review->actionRemarks;
+                }
+
+                if($internalScore == null){
+                    $internalScore = $review->internalScore;
+                }
+
+                if($internalRemarks == null){
+                    $internalRemarks = $review->internalRemarks;
+                }
+
+                if($energyScore == null){
+                    $energyScore = $review->energyScore;
+                }
+
+                if($energyRemarks == null){
+                    $energyRemarks = $review->energyRemarks;
+                }
+
+                if($organizationScore == null){
+                    $organizationScore = $review->organizationScore;
+                }
+
+                if($organizationRemarks == null){
+                    $organizationRemarks = $review->organizationRemarks;
+                }
+
+                if($motivationScore == null){
+                    $motivationScore = $review->motivationScore;
+                }
+
+                if($motivationRemarks == null){
+                    $motivationRemarks = $review->motivationRemarks;
+                }
+
+                if($informationScore == null){
+                    $informationScore = $review->informationScore;
+                }
+
+                if($informationRemarks == null){
+                    $informationRemarks = $review->informationRemarks;
+                }
+
+                if($marketingScore == null){
+                    $marketingScore = $review->marketingScore;
+                }
+
+                if($marketingRemarks == null){
+                    $marketingRemarks = $review->marketingRemarks;
+                }
+
+                if($investmentScore == null){
+                    $investmentScore = $review->investmentScore;
+                }
+
+                if($investmentRemarks == null){
+                    $investmentRemarks = $review->investmentRemarks;
+                }
+
+
+                $review->category  = $category;
+                $review->acceptpotentialScore = $acceptpotentialScore;
+                $review->acceptpotentialRemarks = $acceptpotentialRemarks;
+                $review->managementCommScore = $managementCommScore;
+                $review->managementCommRemarks = $managementCommRemarks;
+                $review->rolesScore = $rolesScore;
+                $review->rolesRemarks = $rolesRemarks;
+                $review->seusScore = $seusScore;
+                $review->seusRemarks = $seusRemarks;
+                $review->baselineScore = $baselineScore;
+                $review->baselineRemarks = $baselineRemarks;
+                $review->enpiScore = $enpiScore;
+                $review->enpiRemarks = $enpiRemarks;
+                $review->objectiveScore = $objectiveScore;
+                $review->objectiveRemarks = $objectiveRemarks;
+                $review->actionScore = $actionScore;
+                $review->actionRemarks = $actionRemarks;
+                $review->internalScore = $internalScore;
+                $review->internalRemarks = $internalRemarks;
+                $review->energyScore = $energyScore;
+                $review->energyRemarks = $energyRemarks;
+                $review->organizationScore = $organizationScore;
+                $review->organizationRemarks = $organizationRemarks;
+                $review->motivationScore = $motivationScore;
+                $review->motivationRemarks = $motivationRemarks;
+                $review->informationScore = $informationScore;
+                $review->informationRemarks = $informationRemarks;
+                $review->marketingScore = $marketingScore;
+                $review->marketingRemarks = $marketingRemarks;
+                $review->investmentScore = $investmentScore;
+                $review->investmentRemarks = $investmentRemarks;
+                
+                $review->save();
+                return response()->json(['status'=>'success','value'=>'success update review']);
 
             } else {
-                return response()->json(['status'=>'failed','data'=>'project not exist']);
+
+                $review = new Review;
+                $review->projectid = $projectid;
+                $review->category  = $category;
+                $review->acceptpotentialScore = $acceptpotentialScore;
+                $review->acceptpotentialRemarks = $acceptpotentialRemarks;
+                $review->managementCommScore = $managementCommScore;
+                $review->managementCommRemarks = $managementCommRemarks;
+                $review->rolesScore = $rolesScore;
+                $review->rolesRemarks = $rolesRemarks;
+                $review->seusScore = $seusScore;
+                $review->seusRemarks = $seusRemarks;
+                $review->baselineScore = $baselineScore;
+                $review->baselineRemarks = $baselineRemarks;
+                $review->enpiScore = $enpiScore;
+                $review->enpiRemarks = $enpiRemarks;
+                $review->objectiveScore = $objectiveScore;
+                $review->objectiveRemarks = $objectiveRemarks;
+                $review->actionScore = $actionScore;
+                $review->actionRemarks = $actionRemarks;
+                $review->internalScore = $internalScore;
+                $review->internalRemarks = $internalRemarks;
+                $review->energyScore = $energyScore;
+                $review->energyRemarks = $energyRemarks;
+                $review->organizationScore = $organizationScore;
+                $review->organizationRemarks = $organizationRemarks;
+                $review->motivationScore = $motivationScore;
+                $review->motivationRemarks = $motivationRemarks;
+                $review->informationScore = $informationScore;
+                $review->informationRemarks = $informationRemarks;
+                $review->marketingScore = $marketingScore;
+                $review->marketingRemarks = $marketingRemarks;
+                $review->investmentScore = $investmentScore;
+                $review->investmentRemarks = $investmentRemarks;
+                
+                $review->save();
+
+
+                return response()->json(['status'=>'success','value'=>'success add review']);
             }
 
+        }
+
+    }
+
+    public function viewmanamgentreview(Request $request){
+
+        $projectid = $request->input('projectid');
+
+        $reviewDetails = Review::where('projectid',$projectid)->first();
+
+        if($reviewDetails){
+
+            if($reviewDetails->category == 'ISO'){
+
+                $tempArray = [
+                    'id' => $reviewDetails->id,
+                    'category' => $reviewDetails->category,
+                    'acceptpotentialScore' => $reviewDetails->acceptpotentialScore,
+                    'acceptpotentialRemarks' => $reviewDetails->acceptpotentialRemarks,
+                    'managementCommScore' => $reviewDetails->managementCommScore,
+                    'managementCommRemarks' => $reviewDetails->managementCommRemarks,
+                    'rolesScore' => $reviewDetails->rolesScore,
+                    'rolesRemarks' => $reviewDetails->rolesRemarks,
+                    'seusScore' => $reviewDetails->seusScore,
+                    'seusRemarks' => $reviewDetails->seusRemarks,
+                    'baselineScore' => $reviewDetails->baselineScore,
+                    'baselineRemarks' => $reviewDetails->baselineRemarks,
+                    'enpiScore' => $reviewDetails->enpiScore,
+                    'enpiRemarks' => $reviewDetails->enpiRemarks,
+                    'objectiveScore' => $reviewDetails->objectiveScore,
+                    'objectiveRemarks' => $reviewDetails->objectiveRemarks,
+                    'actionScore' => $reviewDetails->actionScore,
+                    'actionRemarks' => $reviewDetails->actionRemarks,
+                    'internalScore' => $reviewDetails->internalScore,
+                    'internalRemarks' => $reviewDetails->internalRemarks,
+                ];
+
+            } else {
+
+                $tempArray = [
+
+                    'id' => $reviewDetails->id,
+                    'category' => $reviewDetails->category,
+                    'energyScore' => $reviewDetails->energyScore,
+                    'energyRemarks' => $reviewDetails->energyRemarks,
+                    'organizationScore' => $reviewDetails->organizationScore,
+                    'organizationRemarks' => $reviewDetails->organizationRemarks,
+                    'motivationScore' => $reviewDetails->motivationScore,
+                    'motivationRemarks' => $reviewDetails->motivationRemarks,
+                    'informationScore' => $reviewDetails->informationScore,
+                    'informationRemarks' => $reviewDetails->informationRemarks,
+                    'marketingScore' => $reviewDetails->marketingScore,
+                    'marketingRemarks' => $reviewDetails->marketingRemarks,
+                    'investmentScore' => $reviewDetails->investmentScore,
+                    'investmentRemarks' => $reviewDetails->investmentRemarks,
+
+                ];
+
+            }
+
+            return response()->json(['status'=>'success','value'=>$tempArray]);
+
+        } else {
+            return response()->json(['status'=>'failed','value'=>'review not exist']);
         }
 
     }

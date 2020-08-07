@@ -43,6 +43,7 @@ Route::get('project/viewgeneralinformation', 'ProjectController@viewgeneralinfor
 Route::post('project/addoperationinformation', 'ProjectController@operationinformation');
 Route::get('project/viewoperationinformation', 'ProjectController@viewoperationinformation');
 Route::post('project/addenergymanagementreview', 'ProjectController@managementreview');
+Route::get('project/viewenergymanagementreview', 'ProjectController@viewmanamgentreview');
 Route::post('project/energygeneralinformation', 'ProjectController@energygeneralinformation');
 Route::post('project/energytariffstructure', 'ProjectController@energytariffstructure');
 Route::post('project/energytarifftimezone', 'ProjectController@energytarifftimezone');
