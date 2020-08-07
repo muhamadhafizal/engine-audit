@@ -41,6 +41,7 @@ Route::post('project/edit', 'ProjectController@update');
 Route::post('project/addgeneralinformation', 'ProjectController@generalinformation');
 Route::get('project/viewgeneralinformation', 'ProjectController@viewgeneralinformation');
 Route::post('project/addoperationinformation', 'ProjectController@operationinformation');
+Route::get('project/viewoperationinformation', 'ProjectController@viewoperationinformation');
 Route::post('project/addenergymanagementreview', 'ProjectController@managementreview');
 Route::post('project/energygeneralinformation', 'ProjectController@energygeneralinformation');
 Route::post('project/energytariffstructure', 'ProjectController@energytariffstructure');

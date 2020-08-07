@@ -7,6 +7,7 @@ use App\User;
 use App\Team;
 use App\Information;
 use App\Building;
+use App\Operation;
 use DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -581,7 +582,36 @@ class ProjectController extends Controller
         $validator = validator::make($request->all(),
         [
             'projectid' => 'required',
-            'operationinformation' => 'required',
+            'operationhours' => 'required',
+            'averageoperations' => 'required',
+            'operationMon' => 'required',
+            'startMon' => 'required',
+            'endMon' => 'required',
+            'timeMon' => 'required',
+            'operationTues' => 'required',
+            'startTues' => 'required',
+            'endTues' => 'required',
+            'timeTues' => 'required',
+            'operationWed' => 'required',
+            'startWed' => 'required',
+            'endWed' => 'required',
+            'timeWed' => 'required',
+            'operationThurs' => 'required',
+            'startThurs' => 'required',
+            'endThurs' => 'required',
+            'timeThurs' => 'required',
+            'operationFri' => 'required',
+            'startFri' => 'required',
+            'endFri' => 'required',
+            'timeFri' => 'required',
+            'operationSat' => 'required',
+            'startSat' => 'required',
+            'endSat' => 'required',
+            'timeSat' => 'required',
+            'operationSun' => 'required',
+            'startSun' => 'required',
+            'endSun' => 'required',
+            'timeSun' => 'required',
         ]);
 
         if($validator->fails()){
@@ -589,19 +619,254 @@ class ProjectController extends Controller
         } else {
 
             $projectid = $request->input('projectid');
-            $operationinformation = $request->input('operationinformation');
+            $operationhours = $request->input('operationhours');
+            $averageoperations = $request->input('averageoperations');
+            $operationMon = $request->input('operationMon');
+            $startMon = $request->input('startMon');
+            $endMon = $request->input('endMon');
+            $timeMon = $request->input('timeMon');
+            $operationTues = $request->input('operationTues');
+            $startTues = $request->input('startTues');
+            $endTues = $request->input('endTues');
+            $timeTues = $request->input('timeTues');
+            $operationWed = $request->input('operationWed');
+            $startWed = $request->input('startWed');
+            $endWed = $request->input('endWed');
+            $timeWed = $request->input('timeWed');
+            $operationThurs = $request->input('operationThurs');
+            $startThurs = $request->input('startThurs');
+            $endThurs = $request->input('endThurs');
+            $timeThurs = $request->input('timeThurs');
+            $operationFri = $request->input('operationFri');
+            $startFri = $request->input('startFri');
+            $endFri = $request->input('endFri');
+            $timeFri = $request->input('timeFri');
+            $operationSat = $request->input('operationSat');
+            $startSat = $request->input('startSat');
+            $endSat = $request->input('endSat');
+            $timeSat = $request->input('timeSat');
+            $operationSun = $request->input('operationSun');
+            $startSun = $request->input('startSun');
+            $endSun = $request->input('endSun');
+            $timeSun = $request->input('timeSun');
 
-            $project = Project::find($projectid);
+            $operation = Operation::where('projectid',$projectid)->first();
 
-            if($project){
-                $project->buildingoperationinformation = $operationinformation;
-                $project->save();
+            if($operation){
 
-                return response()->json(['status'=>'success','data'=>'success add building operation information']);
+                if($operation->operationhours == null){
+                    $operationhours = $operation->operationhours;
+                }
+
+                if($operation->averageoperations == null){
+                    $averageoperations = $operation->averageoperations;
+                }
+
+                if($operation->operationMon == null){
+                    $operationMon = $operation->operationMon;
+                }
+
+                if($operation->startMon == null){
+                    $startMon = $operation->startMon;
+                }
+
+                if($operation->endMon == null){
+                    $endMon = $operation->endMon;
+                }
+
+                if($operation->timeMon == null){
+                    $timeMon = $operation->timeMon;
+                }
+
+                if($operation->operationTues == null){
+                    $operationTues = $operation->operationTues;
+                }
+
+                if($operation->startTues == null){
+                    $startTues = $operation->startTues;
+                }
+
+                if($operation->endTues == null){
+                    $endTues = $operation->endTues;
+                }
+
+                if($operation->timeTues == null){
+                    $timeTues = $operation->timeTues;
+                }
+
+                if($operation->operationWed == null){
+                    $operationWed = $operation->operationWed;
+                }
+
+                if($operation->startWed == null){
+                    $startWed = $operation->startWed;
+                }
+
+                if($operation->endWed == null){
+                    $endWed = $operation->endWed;
+                }
+
+                if($operation->timeWed == null){
+                    $timeWed = $operation->timeWed;
+                }
+
+                if($operation->operationThurs == null){
+                    $operationThurs = $operation->operationThurs;
+                }
+
+                if($operation->startThurs == null){
+                    $startThurs = $operation->startThurs;
+                }
+
+                if($operation->endThurs == null){
+                    $endThurs = $operation->endThurs;
+                }
+
+                if($operation->timeThurs == null){
+                    $timeThurs = $operation->timeThurs;
+                }
+
+                if($operation->operationFri == null){
+                    $operationFri = $operation->operationFri;
+                }
+
+                if($operation->startFri == null){
+                    $startFri = $operation->startFri;
+                }
+
+                if($operation->endFri == null){
+                    $endFri = $operation->endFri;
+                }
+
+                if($operation->timeFri == null){
+                    $timeFri = $operation->timeFri;
+                }
+
+                if($operation->operationSat == null){
+                    $operationSat = $operation->operationSat;
+                }
+
+                if($operation->startSat == null){
+                    $startSat = $operation->startSat;
+                }
+
+                if($operation->endSat == null){
+                    $endSat = $operation->endSat;
+                }
+
+                if($operation->timeSat == null){
+                    $timeSat = $operation->timeSat;
+                }
+
+                if($operation->operationSun == null){
+                    $operationSun = $operation->operationSun;
+                }
+
+                if($operation->startSun == null){
+                    $startSun = $operation->startSun;
+                }
+
+                if($operation->endSun == null){
+                    $endSun = $operation->endSun;
+                }
+
+                if($operation->timeSun == null){
+                    $timeSun = $operation->timeSun;
+                }
+
+                $operation->operationhours = $operationhours;
+                $operation->averageoperations = $averageoperations;
+                $operation->operationMon = $operationMon;
+                $operation->startMon = $startMon;
+                $operation->endMon = $endMon;
+                $operation->timeMon = $timeMon;
+                $operation->operationTues = $operationTues;
+                $operation->startTues = $startTues;
+                $operation->endTues = $endTues;
+                $operation->timeTues = $timeTues;
+                $operation->operationWed = $operationWed;
+                $operation->startWed = $startWed;
+                $operation->endWed = $endWed;
+                $operation->timeWed = $timeWed;
+                $operation->operationThurs = $operationThurs;
+                $operation->startThurs = $startThurs;
+                $operation->endThurs = $endThurs;
+                $operation->timeThurs = $timeThurs;
+                $operation->operationFri = $operationFri;
+                $operation->startFri = $startFri;
+                $operation->endFri = $endFri;
+                $operation->timeFri = $timeFri;
+                $operation->operationSat = $operationSat;
+                $operation->startSat = $startSat;
+                $operation->endSat = $endSat;
+                $operation->timeSat = $timeSat;
+                $operation->operationSun = $operationSun;
+                $operation->startSun = $startSun;
+                $operation->endSun = $endSun;
+                $operation->timeSun = $timeSun;
+
+                $operation->save();
+
+                return response()->json(['status'=>'success','value'=>'operation success update']);
             } else {
-                return response()->json(['status'=>'failed','data'=>'project not exist']);
+
+                $operation = new Operation;
+                $operation->projectid = $projectid;
+                $operation->operationhours = $operationhours;
+                $operation->averageoperations = $averageoperations;
+                $operation->operationMon = $operationMon;
+                $operation->startMon = $startMon;
+                $operation->endMon = $endMon;
+                $operation->timeMon = $timeMon;
+                $operation->operationTues = $operationTues;
+                $operation->startTues = $startTues;
+                $operation->endTues = $endTues;
+                $operation->timeTues = $timeTues;
+                $operation->operationWed = $operationWed;
+                $operation->startWed = $startWed;
+                $operation->endWed = $endWed;
+                $operation->timeWed = $timeWed;
+                $operation->operationThurs = $operationThurs;
+                $operation->startThurs = $startThurs;
+                $operation->endThurs = $endThurs;
+                $operation->timeThurs = $timeThurs;
+                $operation->operationFri = $operationFri;
+                $operation->startFri = $startFri;
+                $operation->endFri = $endFri;
+                $operation->timeFri = $timeFri;
+                $operation->operationSat = $operationSat;
+                $operation->startSat = $startSat;
+                $operation->endSat = $endSat;
+                $operation->timeSat = $timeSat;
+                $operation->operationSun = $operationSun;
+                $operation->startSun = $startSun;
+                $operation->endSun = $endSun;
+                $operation->timeSun = $timeSun;
+
+                $operation->save();
+                
+
+                return response()->json(['status'=>'success','value'=>'operation success save']);
+
             }
+           
         }
+    }
+
+    public function viewoperationinformation(Request $request){
+
+        $projectid = $request->input('projectid');
+
+        $operationdetails = Operation::where('projectid',$projectid)->first();
+
+        if($operationdetails){
+
+            return response()->json(['status'=>'success','value'=>$operationdetails]);
+
+        } else {
+            return response()->json(['status'=>'failed','value'=>'operation not exist']);   
+        }
+
     }
 
     public function managementreview(Request $request){
