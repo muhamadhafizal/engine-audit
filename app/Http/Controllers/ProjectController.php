@@ -9,6 +9,9 @@ use App\Information;
 use App\Building;
 use App\Operation;
 use App\Review;
+use App\Sumplyinformation;
+use App\Sumplytariffstructure;
+use App\Reference;
 use DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -1193,32 +1196,61 @@ class ProjectController extends Controller
         $validator = validator::make($request->all(),
         [
             'projectid' => 'required',
-            'energygeneralinformation' => 'required',
+            'energysourceone' => 'required',
+            'energysourcetwo' => 'required',
+            'energysourcethree' => 'required',
+            'energycategoryone' => 'required',
+            'energycategorytwo' => 'required',
+            'energycategorythree' => 'required',
+            'providercompanyone' => 'required',
+            'providercompanytwo' => 'required',
+            'providercompanythree' => 'required',
+            'applicabletariffone' => 'required',
+            'applicabletarifftwo' => 'required',
+            'applicabletariffthree' => 'required',
+            'tariffvalidityone' => 'required',
+            'tariffvaliditytwo' => 'required',
+            'tariffvaliditythree' => 'required',
         ]);
 
         if($validator->fails()){
             return response()->json($validator->errors(), 422);
         } else {
 
-            $projectid = $request->input('projectid');
-            $energygeneralinformation = $request->input('energygeneralinformation');
 
-            $project = Project::find($projectid);
+          $sumplyinformations = new Sumplyinformation;
+          $sumplyinformations->projectid = $request->input('projectid');
+          $sumplyinformations->energysourceone = $request->input('energysourceone');
+          $sumplyinformations->energysourcetwo = $request->input('energysourcetwo');
+          $sumplyinformations->energysourcethree = $request->input('energysourcethree');
+          $sumplyinformations->energycategoryone = $request->input('energycategoryone');
+          $sumplyinformations->energycategorytwo = $request->input('energycategorytwo');
+          $sumplyinformations->energycategorythree = $request->input('energycategorythree');
+          $sumplyinformations->providercompanyone = $request->input('providercompanyone');
+          $sumplyinformations->providercompanytwo = $request->input('providercompanytwo');
+          $sumplyinformations->providercompanythree = $request->input('providercompanythree');
+          $sumplyinformations->applicabletariffone = $request->input('applicabletariffone');
+          $sumplyinformations->applicabletarifftwo = $request->input('applicabletarifftwo');
+          $sumplyinformations->applicabletariffthree = $request->input('applicabletariffthree');
+          $sumplyinformations->tariffvalidityone = $request->input('tariffvalidityone');
+          $sumplyinformations->tariffvaliditytwo = $request->input('tariffvaliditytwo');
+          $sumplyinformations->tariffvaliditythree = $request->input('tariffvaliditythree');
 
-            if($project){
+          $sumplyinformations->save();
 
-                $project->energygeneralinformation = $energygeneralinformation;
-                $project->save();
-
-                return response()->json(['status'=>'success','data'=>'success add energy general information']);
-
-            } else {
-
-                return response()->json(['status'=>'failed','data'=>'project not exist']);
-
-            }
+          return response()->json(['status'=>'success','value'=>'success record general information energy sumply']);
 
         }
+
+    }
+
+    public function viewenergygeneralinformation(Request $request){
+
+        $projectid = $request->input('projectid');
+
+        $general = Sumplyinformation::where('projectid',$projectid)->first();
+
+        return response()->json(['status'=>'success','value'=>$general]);
 
     }
 
@@ -1227,31 +1259,43 @@ class ProjectController extends Controller
         $validator = validator::make($request->all(),
         [
             'projectid' => 'required',
-            'energytariffstructure' => 'required',
+            'structurepeak' => 'required',
+            'structureoffpeak' => 'required',
+            'maxdemand' => 'required',
+            'mincharge' => 'required',
+            'timezonepeak' => 'required',
+            'timezoneoffpeak' => 'required',
         ]);
 
         if($validator->fails()){
             return response()->json($validator->errors(), 422);
         } else {
 
-            $projectid = $request->input('projectid');
-            $energytariffstructure = $request->input('energytariffstructure');
+           $sumplytariffstructure = new Sumplytariffstructure;
 
-            $project = Project::find($projectid);
+           $sumplytariffstructure->projectid = $request->input('projectid');
+           $sumplytariffstructure->structurepeak = $request->input('structurepeak');
+           $sumplytariffstructure->structureoffpeak = $request->input('structureoffpeak');
+           $sumplytariffstructure->maxdemand = $request->input('maxdemand');
+           $sumplytariffstructure->mincharge = $request->input('mincharge');
+           $sumplytariffstructure->timezonepeak = $request->input('timezonepeak');
+           $sumplytariffstructure->timezoneoffpeak = $request->input('timezoneoffpeak');
 
-            if($project){
+           $sumplytariffstructure->save();
 
-                $project->energytariffstructure = $energytariffstructure;
-                $project->save();
-
-                return response()->json(['status'=>'success','data'=>'success add energy tariff structure']);
-
-            } else {
-
-                return response()->json(['status'=>'failed','data'=>'project not exist']);
-            }
+           return response()->json(['status'=>'success','value'=>'success add energy tariff structure']);
 
         }
+
+    }
+
+    public function viewenergytariffstructure(Request $request){
+
+        $projectid = $request->input('projectid');
+
+        $data = Sumplytariffstructure::where('projectid',$projectid)->first();
+
+        return response()->json(['status'=>'success','value'=>$data]);
 
     }
 
@@ -1325,38 +1369,64 @@ class ProjectController extends Controller
         $validator = validator::make($request->all(),
         [
             'projectid' => 'required',
-            'refrences' => 'required',
+            'mainincoming' => 'required',
+            'mainswitchboard' => 'required',
+            'activesystem' => 'required',
         ]);
 
         if($validator->fails()){
             return response()->json($validator->errors(), 422);
         } else {
+
             $projectid = $request->input('projectid');
-            $refrences = $request->input('refrences');
+            $mainincoming = $request->input('mainincoming');
+            $mainswitchboard = $request->input('mainswitchboard');
+            $activesystem = $request->input('activesystem');
             $images = $request->file('images');
 
-            $project = Project::find($projectid);
+            $extension = $images->getClientOriginalExtension();
+            $filename = rand(11111, 99999) . '.' .$extension;
+            $destinationPath = 'images';
 
-            if($project){
+            $images->move($destinationPath, $filename);
 
-                $extenstion = $images->getClientOriginalExtension();
-                $filename = rand(11111 , 99999) . '.' .$extenstion;
-                $destinationPath = 'images';
+            $reference = new Reference;
+            $reference->projectid = $projectid;
+            $reference->mainincoming = $mainincoming;
+            $reference->mainswitchboard = $mainswitchboard;
+            $reference->activesystem = $activesystem;
+            $reference->image = $filename;
 
-                $images->move($destinationPath, $filename);
+            $reference->save();
 
-                
-                $project->refrences = $refrences;
-                $project->imagesref = $filename;
-                
-                $project->save();
-
-                return response()->json(['status'=>'success','value'=>'success add reference and images']);
-
-            } else {
-                return response()->json(['status'=>'failed','value'=>'sorry project not exist']);
-            }
+            return response()->json(['status'=>'success','value'=>'success add reference']);
+            
         }
+
+    }
+
+    public function viewreference(Request $request){
+
+        $env = 'http://engine-audit.test/images/';
+
+        $dataarray = array();
+
+        $projectid = $request->input('projectid');
+        
+        $data = Reference::where('projectid',$projectid)->first();
+
+        $filename = $env . ''. $data->image;
+
+        $dataarray = [
+            'id' => $data->id,
+            'projectid' => $data->projectid,
+            'mainicoming' => $data->mainincoming,
+            'mainswitchboard' => $data->mainswitchboard,
+            'activesystem' => $data->activesystem,
+            'image' => $filename,
+        ];
+
+        return response()->json(['status'=>'success','value'=>$dataarray]);
 
     }
 

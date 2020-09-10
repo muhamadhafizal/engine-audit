@@ -30,6 +30,7 @@ Route::post('/login', 'LoginController@main');
 
 Route::get('unauthorized', ['as' => 'unauthorized', 'uses' => 'LoginController@unauthorized']);
 
+Route::post('/project/addproject','ProjectController@addproject');
 Route::post('/project/setupteam', 'ProjectController@addSetupTeam');
 Route::get('project/all', 'ProjectController@all');
 Route::get('project/details', 'ProjectController@details');
@@ -45,11 +46,13 @@ Route::get('project/viewoperationinformation', 'ProjectController@viewoperationi
 Route::post('project/addenergymanagementreview', 'ProjectController@managementreview');
 Route::get('project/viewenergymanagementreview', 'ProjectController@viewmanamgentreview');
 Route::post('project/energygeneralinformation', 'ProjectController@energygeneralinformation');
+Route::get('project/viewenergygeneralinformation', 'ProjectController@viewenergygeneralinformation');
 Route::post('project/energytariffstructure', 'ProjectController@energytariffstructure');
-Route::post('project/energytarifftimezone', 'ProjectController@energytarifftimezone');
-Route::post('project/lightingregistry', 'ProjectController@lightingregistry');
-Route::post('/project/addproject','ProjectController@addproject');
+Route::get('project/viewenergytariffstructure', 'ProjectController@viewenergytariffstructure');
+// Route::post('project/energytarifftimezone', 'ProjectController@energytarifftimezone');
+// Route::post('project/lightingregistry', 'ProjectController@lightingregistry');
 Route::post('/project/references', 'ProjectController@references');
+Route::get('/project/viewreference', 'ProjectController@viewreference');
 Route::post('/project/singleline','ProjectController@singleline');
 
 //team
@@ -74,5 +77,12 @@ Route::get('/staff/listuserrole', 'UserController@listuserrole');
 //Role
 Route::get('/role', 'RoleController@index');
 Route::get('/role/all', 'RoleController@all');    
+
+//Equipments
+Route::post('/equipments/addequipment', 'EquipmentController@addequipment');
+Route::get('/equipments/listequipment', 'EquipmentController@listequipment');
+Route::post('/equipments/addsetup', 'EquipmentController@addsetup');
+Route::get('/equipments/listsetup', 'EquipmentController@listsetup');
+Route::get('/equipments/detailssetup', 'EquipmentController@detailssetup');
 
 });

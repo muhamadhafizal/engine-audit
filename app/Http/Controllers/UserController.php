@@ -189,15 +189,6 @@ class UserController extends Controller
         $role = $request->input('role');
         $status = $request->input('status');
 
-        if($username != null || $password != null ){
-            $userExist = User::where('username',$username)->orWhere('password',$password)->first();
-        } 
-
-        if($userExist){
-
-            return response()->json(['status'=>'failed','value'=>'username or password is exist']);
-
-        } else {
 
             $user = User::find($id);
 
@@ -244,7 +235,7 @@ class UserController extends Controller
                 return response()->json(['status'=>'failed','value'=>'user not exist']);
             }
 
-        }
+        
 
     }
 
