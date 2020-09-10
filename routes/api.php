@@ -63,10 +63,6 @@ Route::get('/team/detailsteam', 'TeamController@detailsteam');
 Route::post('/team/updateteam', 'TeamController@updateteam');
 Route::delete('/team/delete', 'TeamController@destroy');
 
-
-//token
-Route::group(['middleware' => ['auth:api','token']], function(){
-
 //project
 Route::get('/project', 'ProjectController@index');
    
@@ -86,8 +82,9 @@ Route::post('/equipments/addsetup', 'EquipmentController@addsetup');
 Route::get('/equipments/listsetup', 'EquipmentController@listsetup');
 Route::get('/equipments/detailssetup', 'EquipmentController@detailssetup');
 
-
 Route::get('unauthorized', ['as' => 'unauthorized', 'uses' => 'LoginController@unauthorized']);
+//token
+Route::group(['middleware' => ['auth:api','token']], function(){
 
 
 });
