@@ -13,6 +13,7 @@ use App\Sumplyinformation;
 use App\Sumplytariffstructure;
 use App\Reference;
 use App\Room;
+use App\Singleline;
 use DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -1436,7 +1437,7 @@ class ProjectController extends Controller
         $validator = validator::make($request->all(),
         [
             'projectid' => 'required',
-            'singleline' => 'required',
+            
         ]);
 
         if($validator->fails()){
@@ -1444,22 +1445,62 @@ class ProjectController extends Controller
         } else {
 
             $projectid = $request->input('projectid');
-            $singleline = $request->input('singleline');
+            $name = $request->input('name');
+            $level = $request->input('level');
+            $levelone = $request->input('levelone');
+            $leveltwo = $request->input('leveltwo');
+            $levelthree = $request->input('levelthree');
+            $levelfour = $request->input('levelfour');
+            $levelfive = $request->input('levelfive');
 
-            $project = Project::find($projectid);
-            if($project){
+            $data = new Singleline;
+            $data->projectid = $projectid;
+            $data->name = $name;
+            $data->level = $level;
+            $data->levelone = $levelone;
+            $data->leveltwo = $leveltwo;
+            $data->levelthree = $levelthree;
+            $data->levelfour = $levelfour;
+            $data->levelfive = $levelfive;
 
-                $project->singline = $singleline;
-                $project->save();
+            $data->save();
 
-                return response()->json(['status'=>'success','value'=>'success add timeline']);
-            } else {
-                return response()->json(['status'=>'failed','value'=>'project not exist']);
+            return response()->json(['status'=>'success','value'=>'succss add singleline']);
+
+           
+        }
+
+    }
+
+    public function listsingleline(Request $request){
+
+        $level = $request->input('level');
+        $projectid = $request->input('projectid');
+        $parentid = $request->input('parentid');
+
+        if($parentid == null){
+
+            $list = Singleline::where('projectid',$projectid)->where('level',$level)->get();
+
+        } else {
+
+            if($level == 'two'){
+                $list = Singleline::where('projectid',$projectid)->where('levelone',$parentid)->where('level','two')->get();
+            } elseif($level == 'three'){
+                $list = Singleline::where('projectid',$projectid)->where('leveltwo',$parentid)->where('level','three')->get();
+            } elseif($level == 'four'){
+                $list = Singleline::where('projectid',$projectid)->where('levelthree',$parentid)->where('level','four')->get();
+            } elseif($level == 'five'){
+                $list = Singleline::where('projectid',$projectid)->where('levelfour',$parentid)->where('level','five')->get();
             }
 
         }
 
+        return response()->json(['status'=>'success','value'=>$list]);
+
     }
+
+   
 
     public function registerroom(Request $request){
 

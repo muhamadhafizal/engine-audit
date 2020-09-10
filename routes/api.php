@@ -53,7 +53,8 @@ Route::post('/project/references', 'ProjectController@references');
 Route::get('/project/viewreference', 'ProjectController@viewreference');
 Route::post('/project/registerroom', 'ProjectController@registerroom');
 Route::get('/project/listroom', 'ProjectController@listroom');
-Route::post('/project/singleline','ProjectController@singleline');
+Route::post('/project/addsingleline','ProjectController@singleline');
+Route::get('/project/listsingleline', 'ProjectController@listsingleline');
 
 //team
 Route::get('/team', 'TeamController@index');
