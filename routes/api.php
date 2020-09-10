@@ -51,6 +51,8 @@ Route::get('project/viewenergytariffstructure', 'ProjectController@viewenergytar
 // Route::post('project/lightingregistry', 'ProjectController@lightingregistry');
 Route::post('/project/references', 'ProjectController@references');
 Route::get('/project/viewreference', 'ProjectController@viewreference');
+Route::post('/project/registerroom', 'ProjectController@registerroom');
+Route::get('/project/listroom', 'ProjectController@listroom');
 Route::post('/project/singleline','ProjectController@singleline');
 
 //team

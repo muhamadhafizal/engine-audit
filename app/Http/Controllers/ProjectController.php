@@ -12,6 +12,7 @@ use App\Review;
 use App\Sumplyinformation;
 use App\Sumplytariffstructure;
 use App\Reference;
+use App\Room;
 use DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -1457,6 +1458,51 @@ class ProjectController extends Controller
             }
 
         }
+
+    }
+
+    public function registerroom(Request $request){
+
+        $validator = validator::make($request->all(),
+        [
+            'projectid' => 'required',
+            'roomarea' => 'required',
+            'block' => 'required',
+            'level' => 'required',
+            'function' => 'required',
+            'area' => 'required',
+            'quantity' => 'required',
+
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors(), 422);
+        } else {
+
+            $room = new Room;
+            $room->projectid = $request->input('projectid');
+            $room->roomarea = $request->input('roomarea');
+            $room->block = $request->input('block');
+            $room->level = $request->input('level');
+            $room->function = $request->input('function');
+            $room->area = $request->input('area');
+            $room->quantity = $request->input('quantity');
+
+            $room->save();
+
+
+            return response()->json(['status'=>'success','value'=>'success add room']);
+        }
+
+    }
+
+    public function listroom(Request $request){
+
+        $projectid = $request->input('projectid');
+
+        $data = Room::where('projectid',$projectid)->get();
+
+        return response()->json(['status'=>'success','value'=>$data]);
 
     }
 
