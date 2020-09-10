@@ -28,8 +28,6 @@ Route::get('/login', 'LoginController@index');
 Route::post('/login', 'LoginController@main');
 
 
-Route::get('unauthorized', ['as' => 'unauthorized', 'uses' => 'LoginController@unauthorized']);
-
 Route::post('/project/addproject','ProjectController@addproject');
 Route::post('/project/setupteam', 'ProjectController@addSetupTeam');
 Route::get('project/all', 'ProjectController@all');
@@ -84,5 +82,9 @@ Route::get('/equipments/listequipment', 'EquipmentController@listequipment');
 Route::post('/equipments/addsetup', 'EquipmentController@addsetup');
 Route::get('/equipments/listsetup', 'EquipmentController@listsetup');
 Route::get('/equipments/detailssetup', 'EquipmentController@detailssetup');
+
+
+Route::get('unauthorized', ['as' => 'unauthorized', 'uses' => 'LoginController@unauthorized']);
+
 
 });
