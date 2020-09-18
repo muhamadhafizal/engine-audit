@@ -1217,26 +1217,53 @@ class ProjectController extends Controller
             return response()->json($validator->errors(), 422);
         } else {
 
+          $projectid = $request->input('projectid');
+          $sumplyinformationexist = Sumplyinformation::where('projectid',$projectid)->first();
 
-          $sumplyinformations = new Sumplyinformation;
-          $sumplyinformations->projectid = $request->input('projectid');
-          $sumplyinformations->energysourceone = $request->input('energysourceone');
-          $sumplyinformations->energysourcetwo = $request->input('energysourcetwo');
-          $sumplyinformations->energysourcethree = $request->input('energysourcethree');
-          $sumplyinformations->energycategoryone = $request->input('energycategoryone');
-          $sumplyinformations->energycategorytwo = $request->input('energycategorytwo');
-          $sumplyinformations->energycategorythree = $request->input('energycategorythree');
-          $sumplyinformations->providercompanyone = $request->input('providercompanyone');
-          $sumplyinformations->providercompanytwo = $request->input('providercompanytwo');
-          $sumplyinformations->providercompanythree = $request->input('providercompanythree');
-          $sumplyinformations->applicabletariffone = $request->input('applicabletariffone');
-          $sumplyinformations->applicabletarifftwo = $request->input('applicabletarifftwo');
-          $sumplyinformations->applicabletariffthree = $request->input('applicabletariffthree');
-          $sumplyinformations->tariffvalidityone = $request->input('tariffvalidityone');
-          $sumplyinformations->tariffvaliditytwo = $request->input('tariffvaliditytwo');
-          $sumplyinformations->tariffvaliditythree = $request->input('tariffvaliditythree');
+          if($sumplyinformationexist){
 
-          $sumplyinformations->save();
+            $sumplyinformationexist->energysourceone = $request->input('energysourceone');
+            $sumplyinformationexist->energysourcetwo = $request->input('energysourcetwo');
+            $sumplyinformationexist->energysourcethree = $request->input('energysourcethree');
+            $sumplyinformationexist->energycategoryone = $request->input('energycategoryone');
+            $sumplyinformationexist->energycategorytwo = $request->input('energycategorytwo');
+            $sumplyinformationexist->energycategorythree = $request->input('energycategorythree');
+            $sumplyinformationexist->providercompanyone = $request->input('providercompanyone');
+            $sumplyinformationexist->providercompanytwo = $request->input('providercompanytwo');
+            $sumplyinformationexist->providercompanythree = $request->input('providercompanythree');
+            $sumplyinformationexist->applicabletariffone = $request->input('applicabletariffone');
+            $sumplyinformationexist->applicabletarifftwo = $request->input('applicabletarifftwo');
+            $sumplyinformationexist->applicabletariffthree = $request->input('applicabletariffthree');
+            $sumplyinformationexist->tariffvalidityone = $request->input('tariffvalidityone');
+            $sumplyinformationexist->tariffvaliditytwo = $request->input('tariffvaliditytwo');
+            $sumplyinformationexist->tariffvaliditythree = $request->input('tariffvaliditythree');
+
+            $sumplyinformationexist->save();
+
+          } else {
+
+            $sumplyinformations = new Sumplyinformation;
+            $sumplyinformations->projectid = $request->input('projectid');
+            $sumplyinformations->energysourceone = $request->input('energysourceone');
+            $sumplyinformations->energysourcetwo = $request->input('energysourcetwo');
+            $sumplyinformations->energysourcethree = $request->input('energysourcethree');
+            $sumplyinformations->energycategoryone = $request->input('energycategoryone');
+            $sumplyinformations->energycategorytwo = $request->input('energycategorytwo');
+            $sumplyinformations->energycategorythree = $request->input('energycategorythree');
+            $sumplyinformations->providercompanyone = $request->input('providercompanyone');
+            $sumplyinformations->providercompanytwo = $request->input('providercompanytwo');
+            $sumplyinformations->providercompanythree = $request->input('providercompanythree');
+            $sumplyinformations->applicabletariffone = $request->input('applicabletariffone');
+            $sumplyinformations->applicabletarifftwo = $request->input('applicabletarifftwo');
+            $sumplyinformations->applicabletariffthree = $request->input('applicabletariffthree');
+            $sumplyinformations->tariffvalidityone = $request->input('tariffvalidityone');
+            $sumplyinformations->tariffvaliditytwo = $request->input('tariffvaliditytwo');
+            $sumplyinformations->tariffvaliditythree = $request->input('tariffvaliditythree');
+
+            $sumplyinformations->save();
+
+          }
+
 
           return response()->json(['status'=>'success','value'=>'success record general information energy sumply']);
 
