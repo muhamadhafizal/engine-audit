@@ -180,7 +180,7 @@ class UserController extends Controller
         $userExist = null;
 
         $id = $request->input('id');
-        $name = $request->input('fistname');
+        $name = $request->input('firstname');
         $lastname = $request->input('lastname');
         $contact = $request->input('contact');
         $email = $request->input('email');

@@ -98,6 +98,7 @@ class ProjectController extends Controller
                 ->join('users','users.id','=','projects.companyid')
                 ->select('projects.id as id','projects.title as title','users.name as companyname','projects.updated_at as update')
                 ->where('projects.companyid','=',$companyid)
+                ->orderBy('projects.created_at','DESC')
                 ->get();
 
         if($data){
