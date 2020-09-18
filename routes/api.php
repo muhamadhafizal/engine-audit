@@ -82,6 +82,11 @@ Route::post('/equipments/addsetup', 'EquipmentController@addsetup');
 Route::get('/equipments/listsetup', 'EquipmentController@listsetup');
 Route::get('/equipments/detailssetup', 'EquipmentController@detailssetup');
 
+//Energysourcecateogry
+Route::get('/energysource','EnergysourceController@index');
+Route::get('/energysource/all', 'EnergysourceController@all');
+Route::get('/energysource/details', 'EnergysourceController@details');
+
 Route::get('unauthorized', ['as' => 'unauthorized', 'uses' => 'LoginController@unauthorized']);
 //token
 Route::group(['middleware' => ['auth:api','token']], function(){
