@@ -1211,9 +1211,6 @@ class ProjectController extends Controller
             'applicabletariffone' => 'required',
             'applicabletarifftwo' => 'required',
             'applicabletariffthree' => 'required',
-            'tariffvalidityone' => 'required',
-            'tariffvaliditytwo' => 'required',
-            'tariffvaliditythree' => 'required',
         ]);
 
         if($validator->fails()){
