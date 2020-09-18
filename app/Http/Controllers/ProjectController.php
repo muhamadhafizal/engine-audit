@@ -586,44 +586,7 @@ class ProjectController extends Controller
 
     public function operationinformation(Request $request){
 
-        $validator = validator::make($request->all(),
-        [
-            'projectid' => 'required',
-            'operationhours' => 'required',
-            'averageoperations' => 'required',
-            'operationMon' => 'required',
-            'startMon' => 'required',
-            'endMon' => 'required',
-            'timeMon' => 'required',
-            'operationTues' => 'required',
-            'startTues' => 'required',
-            'endTues' => 'required',
-            'timeTues' => 'required',
-            'operationWed' => 'required',
-            'startWed' => 'required',
-            'endWed' => 'required',
-            'timeWed' => 'required',
-            'operationThurs' => 'required',
-            'startThurs' => 'required',
-            'endThurs' => 'required',
-            'timeThurs' => 'required',
-            'operationFri' => 'required',
-            'startFri' => 'required',
-            'endFri' => 'required',
-            'timeFri' => 'required',
-            'operationSat' => 'required',
-            'startSat' => 'required',
-            'endSat' => 'required',
-            'timeSat' => 'required',
-            'operationSun' => 'required',
-            'startSun' => 'required',
-            'endSun' => 'required',
-            'timeSun' => 'required',
-        ]);
-
-        if($validator->fails()){
-            return response()->json($validator->errors(), 422);
-        } else {
+      
 
             $projectid = $request->input('projectid');
             $operationhours = $request->input('operationhours');
@@ -857,7 +820,6 @@ class ProjectController extends Controller
 
             }
            
-        }
     }
 
     public function viewoperationinformation(Request $request){
