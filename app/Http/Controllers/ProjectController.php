@@ -1392,6 +1392,8 @@ class ProjectController extends Controller
 
                 $exist->save();
 
+                return response()->json(['status'=>'success','value'=>'success update reference']);
+
              } else {
 
                 $reference = new Reference;
@@ -1403,12 +1405,9 @@ class ProjectController extends Controller
     
                 $reference->save();
 
+                return response()->json(['status'=>'success','value'=>'success add reference']);
+
              }
-
-           
-
-            return response()->json(['status'=>'success','value'=>'success add reference']);
-            
         }
 
     }
