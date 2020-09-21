@@ -1246,36 +1246,52 @@ class ProjectController extends Controller
 
     public function energytariffstructure(Request $request){
 
-        $validator = validator::make($request->all(),
-        [
-            'projectid' => 'required',
-            'structurepeak' => 'required',
-            'structureoffpeak' => 'required',
-            'maxdemand' => 'required',
-            'mincharge' => 'required',
-            'timezonepeak' => 'required',
-            'timezoneoffpeak' => 'required',
-        ]);
+          $projectid = $request->input('projectid');
+          $structurepeak = $request->input('structurepeak');
+          $structureoffpeak = $request->input('structureoffpeak');
+          $maxdemand = $request->input('maxdemand');
+          $mincharge = $request->input('mincharge');
+          $timezonepeak = $request->input('timezonepeak');
+          $timezoneoffpeak = $request->input('timezoneoffpeak');
 
-        if($validator->fails()){
-            return response()->json($validator->errors(), 422);
-        } else {
+          $exist = Sumplytariffstructure::where('projectid',$projectid)->first();
 
-           $sumplytariffstructure = new Sumplytariffstructure;
+          if($exist){
 
-           $sumplytariffstructure->projectid = $request->input('projectid');
-           $sumplytariffstructure->structurepeak = $request->input('structurepeak');
-           $sumplytariffstructure->structureoffpeak = $request->input('structureoffpeak');
-           $sumplytariffstructure->maxdemand = $request->input('maxdemand');
-           $sumplytariffstructure->mincharge = $request->input('mincharge');
-           $sumplytariffstructure->timezonepeak = $request->input('timezonepeak');
-           $sumplytariffstructure->timezoneoffpeak = $request->input('timezoneoffpeak');
+                $exist->structurepeak = $structurepeak;
+                $exist->structureoffpeak = $structureoffpeak;
+                $exist->maxdemand = $maxdemand;
+                $exist->mincharge = $mincharge;
+                $exist->timezonepeak = $timezonepeak;
+                $exist->timezoneoffpeak = $timezoneoffpeak;
 
-           $sumplytariffstructure->save();
+                $exist->save();
 
-           return response()->json(['status'=>'success','value'=>'success add energy tariff structure']);
+                return response()->json(['status'=>'success','value'=>'success update energy tariff structure']);
 
-        }
+          } else {
+
+                $sumplytariffstructure = new Sumplytariffstructure;
+
+                $sumplytariffstructure->projectid = $request->input('projectid');
+                $sumplytariffstructure->structurepeak = $request->input('structurepeak');
+                $sumplytariffstructure->structureoffpeak = $request->input('structureoffpeak');
+                $sumplytariffstructure->maxdemand = $request->input('maxdemand');
+                $sumplytariffstructure->mincharge = $request->input('mincharge');
+                $sumplytariffstructure->timezonepeak = $request->input('timezonepeak');
+                $sumplytariffstructure->timezoneoffpeak = $request->input('timezoneoffpeak');
+
+                $sumplytariffstructure->save();
+
+                return response()->json(['status'=>'success','value'=>'success add energy tariff structure']);
+
+          }
+
+
+
+           
+
+        
 
     }
 
