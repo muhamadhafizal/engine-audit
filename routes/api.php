@@ -78,9 +78,13 @@ Route::get('/role/all', 'RoleController@all');
 //Equipments
 Route::post('/equipments/addequipment', 'EquipmentController@addequipment');
 Route::get('/equipments/listequipment', 'EquipmentController@listequipment');
+Route::post('/equipments/updateequipment', 'EquipmentController@updateequipment');
+Route::delete('equipments/deleteequipment', 'EquipmentController@deleteequipment');
 Route::post('/equipments/addsetup', 'EquipmentController@addsetup');
 Route::get('/equipments/listsetup', 'EquipmentController@listsetup');
 Route::get('/equipments/detailssetup', 'EquipmentController@detailssetup');
+Route::delete('/equipments/deletesetup', 'EquipmentController@destroysetup');
+Route::post('/equipments/editsetup', 'EquipmentController@editsetup');
 
 //Energysourcecateogry
 Route::get('/energysource','EnergysourceController@index');
