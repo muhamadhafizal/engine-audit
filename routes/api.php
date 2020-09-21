@@ -53,6 +53,8 @@ Route::post('/project/references', 'ProjectController@references');
 Route::get('/project/viewreference', 'ProjectController@viewreference');
 Route::post('/project/registerroom', 'ProjectController@registerroom');
 Route::get('/project/listroom', 'ProjectController@listroom');
+Route::delete('/project/deleteroom', 'ProjectController@deleteroom');
+Route::post('/project/editroom', 'ProjectController@editroom');
 Route::post('/project/addsingleline','ProjectController@singleline');
 Route::get('/project/listsingleline', 'ProjectController@listsingleline');
 

@@ -1511,21 +1511,7 @@ class ProjectController extends Controller
 
     public function registerroom(Request $request){
 
-        $validator = validator::make($request->all(),
-        [
-            'projectid' => 'required',
-            'roomarea' => 'required',
-            'block' => 'required',
-            'level' => 'required',
-            'function' => 'required',
-            'area' => 'required',
-            'quantity' => 'required',
-
-        ]);
-
-        if($validator->fails()){
-            return response()->json($validator->errors(), 422);
-        } else {
+      
 
             $room = new Room;
             $room->projectid = $request->input('projectid');
@@ -1540,7 +1526,7 @@ class ProjectController extends Controller
 
 
             return response()->json(['status'=>'success','value'=>'success add room']);
-        }
+        
 
     }
 
@@ -1551,6 +1537,76 @@ class ProjectController extends Controller
         $data = Room::where('projectid',$projectid)->get();
 
         return response()->json(['status'=>'success','value'=>$data]);
+
+    }
+
+    //editroom
+    public function editroom(Request $request){
+
+        $roomid = $request->input('roomid');
+        $projectid = $request->input('projectid');
+        $roomarea = $request->input('roomarea');
+        $block = $request->input('block');
+        $level = $request->input('level');
+        $function = $request->input('function');
+        $area = $request->input('area');
+        $quantity = $request->input('quantity');
+
+        $exist = Room::find($roomid);
+
+        if($exist){
+
+            if($projectid == null){
+                $projectid = $exist->projectid;
+            }
+            if($roomarea == null){
+                $roomarea = $exist->roomarea;
+            }
+            if($block == null){
+                $block = $exist->block;
+            }
+            if($level == null){
+                $level = $exist->level;
+            }
+            if($function == null){
+                $function = $exist->function;
+            }
+            if($area == null){
+                $area = $exist->area;
+            }
+            if($quantity == null){
+                $quantity = $exist->quantity;
+            }
+
+            $exist->projectid = $projectid;
+            $exist->roomarea = $roomarea;
+            $exist->block = $block;
+            $exist->level = $level;
+            $exist->function = $function;
+            $exist->area = $area;
+            $exist->quantity = $quantity;
+
+            $exist->save();
+
+            return response()->json(['status'=>'success','value'=>'success update room']);
+
+
+        } else {
+            return response()->json(['status'=>'error','value'=>'sorry room is not exist']);
+        }
+
+    }
+
+    //deleteroom
+    public function deleteroom(Request $request){
+
+        $roomid = $request->input('roomid');
+
+        $room = Room::find($roomid);
+
+        $room->delete();
+
+        return response()->json(['status'=>'success','value'=>'success deleted room']);
 
     }
 
