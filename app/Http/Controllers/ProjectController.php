@@ -625,125 +625,125 @@ class ProjectController extends Controller
 
             if($operation){
 
-                if($operation->operationhours == null){
-                    $operationhours = $operation->operationhours;
-                }
+                // if($operation->operationhours == null){
+                //     $operationhours = $operation->operationhours;
+                // }
 
-                if($operation->averageoperations == null){
-                    $averageoperations = $operation->averageoperations;
-                }
+                // if($operation->averageoperations == null){
+                //     $averageoperations = $operation->averageoperations;
+                // }
 
-                if($operation->operationMon == null){
-                    $operationMon = $operation->operationMon;
-                }
+                // if($operation->operationMon == null){
+                //     $operationMon = $operation->operationMon;
+                // }
 
-                if($operation->startMon == null){
-                    $startMon = $operation->startMon;
-                }
+                // if($operation->startMon == null){
+                //     $startMon = $operation->startMon;
+                // }
 
-                if($operation->endMon == null){
-                    $endMon = $operation->endMon;
-                }
+                // if($operation->endMon == null){
+                //     $endMon = $operation->endMon;
+                // }
 
-                if($operation->timeMon == null){
-                    $timeMon = $operation->timeMon;
-                }
+                // if($operation->timeMon == null){
+                //     $timeMon = $operation->timeMon;
+                // }
 
-                if($operation->operationTues == null){
-                    $operationTues = $operation->operationTues;
-                }
+                // if($operation->operationTues == null){
+                //     $operationTues = $operation->operationTues;
+                // }
 
-                if($operation->startTues == null){
-                    $startTues = $operation->startTues;
-                }
+                // if($operation->startTues == null){
+                //     $startTues = $operation->startTues;
+                // }
 
-                if($operation->endTues == null){
-                    $endTues = $operation->endTues;
-                }
+                // if($operation->endTues == null){
+                //     $endTues = $operation->endTues;
+                // }
 
-                if($operation->timeTues == null){
-                    $timeTues = $operation->timeTues;
-                }
+                // if($operation->timeTues == null){
+                //     $timeTues = $operation->timeTues;
+                // }
 
-                if($operation->operationWed == null){
-                    $operationWed = $operation->operationWed;
-                }
+                // if($operation->operationWed == null){
+                //     $operationWed = $operation->operationWed;
+                // }
 
-                if($operation->startWed == null){
-                    $startWed = $operation->startWed;
-                }
+                // if($operation->startWed == null){
+                //     $startWed = $operation->startWed;
+                // }
 
-                if($operation->endWed == null){
-                    $endWed = $operation->endWed;
-                }
+                // if($operation->endWed == null){
+                //     $endWed = $operation->endWed;
+                // }
 
-                if($operation->timeWed == null){
-                    $timeWed = $operation->timeWed;
-                }
+                // if($operation->timeWed == null){
+                //     $timeWed = $operation->timeWed;
+                // }
 
-                if($operation->operationThurs == null){
-                    $operationThurs = $operation->operationThurs;
-                }
+                // if($operation->operationThurs == null){
+                //     $operationThurs = $operation->operationThurs;
+                // }
 
-                if($operation->startThurs == null){
-                    $startThurs = $operation->startThurs;
-                }
+                // if($operation->startThurs == null){
+                //     $startThurs = $operation->startThurs;
+                // }
 
-                if($operation->endThurs == null){
-                    $endThurs = $operation->endThurs;
-                }
+                // if($operation->endThurs == null){
+                //     $endThurs = $operation->endThurs;
+                // }
 
-                if($operation->timeThurs == null){
-                    $timeThurs = $operation->timeThurs;
-                }
+                // if($operation->timeThurs == null){
+                //     $timeThurs = $operation->timeThurs;
+                // }
 
-                if($operation->operationFri == null){
-                    $operationFri = $operation->operationFri;
-                }
+                // if($operation->operationFri == null){
+                //     $operationFri = $operation->operationFri;
+                // }
 
-                if($operation->startFri == null){
-                    $startFri = $operation->startFri;
-                }
+                // if($operation->startFri == null){
+                //     $startFri = $operation->startFri;
+                // }
 
-                if($operation->endFri == null){
-                    $endFri = $operation->endFri;
-                }
+                // if($operation->endFri == null){
+                //     $endFri = $operation->endFri;
+                // }
 
-                if($operation->timeFri == null){
-                    $timeFri = $operation->timeFri;
-                }
+                // if($operation->timeFri == null){
+                //     $timeFri = $operation->timeFri;
+                // }
 
-                if($operation->operationSat == null){
-                    $operationSat = $operation->operationSat;
-                }
+                // if($operation->operationSat == null){
+                //     $operationSat = $operation->operationSat;
+                // }
 
-                if($operation->startSat == null){
-                    $startSat = $operation->startSat;
-                }
+                // if($operation->startSat == null){
+                //     $startSat = $operation->startSat;
+                // }
 
-                if($operation->endSat == null){
-                    $endSat = $operation->endSat;
-                }
+                // if($operation->endSat == null){
+                //     $endSat = $operation->endSat;
+                // }
 
-                if($operation->timeSat == null){
-                    $timeSat = $operation->timeSat;
-                }
+                // if($operation->timeSat == null){
+                //     $timeSat = $operation->timeSat;
+                // }
 
-                if($operation->operationSun == null){
-                    $operationSun = $operation->operationSun;
-                }
+                // if($operation->operationSun == null){
+                //     $operationSun = $operation->operationSun;
+                // }
 
-                if($operation->startSun == null){
-                    $startSun = $operation->startSun;
-                }
+                // if($operation->startSun == null){
+                //     $startSun = $operation->startSun;
+                // }
 
-                if($operation->endSun == null){
-                    $endSun = $operation->endSun;
-                }
+                // if($operation->endSun == null){
+                //     $endSun = $operation->endSun;
+                // }
 
-                if($operation->timeSun == null){
-                    $timeSun = $operation->timeSun;
-                }
+                // if($operation->timeSun == null){
+                //     $timeSun = $operation->timeSun;
+                // }
 
                 $operation->operationhours = $operationhours;
                 $operation->averageoperations = $averageoperations;
