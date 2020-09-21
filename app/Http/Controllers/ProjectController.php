@@ -124,8 +124,9 @@ class ProjectController extends Controller
     public function details(Request $request){
 
         $productArray = array();
-        $env = 'http://engine-audit.test/images/';
+        // $env = 'http://engine-audit.test/images/';
         //$env = 'http://52.74.178.166:82/';
+        $env = 'http://codeviable.com/engine-audit/public/images/';
 
         $validator = validator::make($request->all(),
         [
@@ -1379,14 +1380,32 @@ class ProjectController extends Controller
 
             $images->move($destinationPath, $filename);
 
-            $reference = new Reference;
-            $reference->projectid = $projectid;
-            $reference->mainincoming = $mainincoming;
-            $reference->mainswitchboard = $mainswitchboard;
-            $reference->activesystem = $activesystem;
-            $reference->image = $filename;
+             //find reference is exist or not
+             $exist = Reference::where('projectid',$projectid)->first();
 
-            $reference->save();
+             if($exist){
+
+                $exist->mainincoming = $mainincoming;
+                $exist->mainswitchboard = $mainswitchboard;
+                $exist->activesystem = $activesystem;
+                $exist->image = $filename;
+
+                $exist->save();
+
+             } else {
+
+                $reference = new Reference;
+                $reference->projectid = $projectid;
+                $reference->mainincoming = $mainincoming;
+                $reference->mainswitchboard = $mainswitchboard;
+                $reference->activesystem = $activesystem;
+                $reference->image = $filename;
+    
+                $reference->save();
+
+             }
+
+           
 
             return response()->json(['status'=>'success','value'=>'success add reference']);
             
@@ -1396,7 +1415,8 @@ class ProjectController extends Controller
 
     public function viewreference(Request $request){
 
-        $env = 'http://engine-audit.test/images/';
+        // $env = 'http://engine-audit.test/images/';
+        $env = 'http://codeviable.com/engine-audit/public/images/';
 
         $dataarray = array();
 
