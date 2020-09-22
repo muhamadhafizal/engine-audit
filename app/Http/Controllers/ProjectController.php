@@ -442,6 +442,7 @@ class ProjectController extends Controller
             $serverarea = $request->input('serverarea');
             $designedoccupant = $request->input('designedoccupant');
             $actualoccupant = $request->input('actualoccupant');
+            $parkingarea = $request->input('parkingarea');
 
             $informationexist = Building::where('projectid',$projectid)->first();
 
@@ -470,6 +471,7 @@ class ProjectController extends Controller
                 $information->serverarea = $serverarea;
                 $information->designedoccupant = $designedoccupant;
                 $information->actualoccupant = $actualoccupant;
+                $information->parkingarea = $parkingarea;
 
                 $information->save();
 
@@ -538,6 +540,10 @@ class ProjectController extends Controller
                     $actualoccupant = $informationexist->actualoccupant;
                 }
 
+                if($parkingarea == null){
+                    $parkingarea = $informationexist->parkingarea;
+                }
+
                 $informationexist->companyname = $companyname;
                 $informationexist->companyaddress = $companyaddress;
                 $informationexist->companyfaxnum = $companyfaxnum;
@@ -558,6 +564,7 @@ class ProjectController extends Controller
                 $informationexist->serverarea = $serverarea;
                 $informationexist->designedoccupant = $designedoccupant;
                 $informationexist->actualoccupant = $actualoccupant;
+                $informationexist->parkingarea = $parkingarea;
                 
                 $informationexist->save();
 
