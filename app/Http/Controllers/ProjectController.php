@@ -1108,8 +1108,6 @@ class ProjectController extends Controller
 
         if($reviewDetails){
 
-            if($reviewDetails->category == 'ISO'){
-
                 $tempArray = [
                     'id' => $reviewDetails->id,
                     'category' => $reviewDetails->category,
@@ -1131,14 +1129,6 @@ class ProjectController extends Controller
                     'actionRemarks' => $reviewDetails->actionRemarks,
                     'internalScore' => $reviewDetails->internalScore,
                     'internalRemarks' => $reviewDetails->internalRemarks,
-                ];
-
-            } else {
-
-                $tempArray = [
-
-                    'id' => $reviewDetails->id,
-                    'category' => $reviewDetails->category,
                     'energyScore' => $reviewDetails->energyScore,
                     'energyRemarks' => $reviewDetails->energyRemarks,
                     'organizationScore' => $reviewDetails->organizationScore,
@@ -1151,10 +1141,9 @@ class ProjectController extends Controller
                     'marketingRemarks' => $reviewDetails->marketingRemarks,
                     'investmentScore' => $reviewDetails->investmentScore,
                     'investmentRemarks' => $reviewDetails->investmentRemarks,
-
                 ];
 
-            }
+            
 
             return response()->json(['status'=>'success','value'=>$tempArray]);
 
