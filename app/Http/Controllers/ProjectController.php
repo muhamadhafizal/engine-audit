@@ -1512,6 +1512,7 @@ class ProjectController extends Controller
         $level = $request->input('level');
         $projectid = $request->input('projectid');
         $parentid = $request->input('parentid');
+        $finalArray = array();
 
         if($parentid == null){
 
@@ -1531,9 +1532,56 @@ class ProjectController extends Controller
 
         }
 
-        return response()->json(['status'=>'success','value'=>$list]);
+        if($list){
+
+            foreach($list as $data){
+                
+                $status = 'notavailable';
+                //level
+                $level = $data->level;
+
+                //query bawah dia
+                if($level == 'one'){
+                    $exist = Singleline::where('level','two')->where('levelone',$data->id)->first();
+                } elseif($level == 'two'){
+                    $exist = Singleline::where('level','three')->where('leveltwo',$data->id)->first();
+                } elseif($level == 'three'){
+                    $exist = Singleline::where('level','four')->where('levelthree',$data->id)->first();
+                } elseif($level == 'four'){
+                    $exist = Singleline::where('level','five')->where('levelfour',$data->id)->first();
+                } else {
+                    $exist = null;
+                }
+
+                if($exist != null){
+                    $status = 'available';
+                }
+
+                $tempArray = [
+                    'id' => $data->id,
+                    'projectid' => $data->projectid,
+                    'name' => $data->name,
+                    'level' => $data->level,
+                    'levelone' => $data->levelone,
+                    'leveltwo' => $data->leveltwo,
+                    'levelthree' => $data->levelthree,
+                    'levelfour' => $data->levelfour,
+                    'levelfive' => $data->levelfivem,
+                    'status' => $status,
+                ];
+
+                array_push($finalArray,$tempArray);
+            }
+
+            return response()->json(['status'=>'success','value'=>$finalArray]);
+
+        } else {
+            return response()->json(['status'=>'error','value'=>'data not exist']);
+        }
 
     }
+
+          
 
     public function editsingleline(Request $request){
 
