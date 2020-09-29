@@ -57,6 +57,8 @@ Route::delete('/project/deleteroom', 'ProjectController@deleteroom');
 Route::post('/project/editroom', 'ProjectController@editroom');
 Route::post('/project/addsingleline','ProjectController@singleline');
 Route::get('/project/listsingleline', 'ProjectController@listsingleline');
+Route::post('/project/editsingleline', 'ProjectController@editsingleline');
+Route::delete('/project/deletesingleline', 'ProjectController@deletesingleline');
 
 //team
 Route::get('/team', 'TeamController@index');

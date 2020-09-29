@@ -1535,6 +1535,48 @@ class ProjectController extends Controller
 
     }
 
+    public function editsingleline(Request $request){
+
+        $singlelineid = $request->input('singlelineid');
+        $name = $request->input('name');
+
+        $data = Singleline::find($singlelineid);
+
+        if($data){
+
+            $data->name = $name;
+            $data->save();
+
+            return response()->json(['status'=>'success','value'=>'success update name']);
+
+        } else {
+            return response()->json(['status'=>'error','value'=>'sorry data not exist']);
+        }
+
+    }
+
+    public function deletesingleline(Request $request){
+
+        $singlelineid = $request->input('singlelineid');
+
+        $data = Singleline::find($singlelineid);
+
+        if($data){
+
+            $list = Singleline::where('id',$singlelineid)
+                                ->orWhere('levelone', $singlelineid)
+                                ->orWhere('leveltwo', $singlelineid)
+                                ->orWhere('levelthree', $singlelineid)
+                                ->orWhere('levelfour', $singlelineid)
+                                ->orWhere('levelfive', $singlelineid)
+                    ->delete();
+            return response()->json(['status'=>'success','value'=>'success deleted']);
+
+        } else {
+            return response()->json(['status'=>'error','value'=>'sorry data not exist']);
+        }
+
+    }
    
 
     public function registerroom(Request $request){
