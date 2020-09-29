@@ -597,7 +597,10 @@ class ProjectController extends Controller
       
 
             $projectid = $request->input('projectid');
-            $operationhours = $request->input('operationhours');
+            $operationhoursweekdays = $request->input('operationhoursweekdays');
+            $operationdaysweekdays = $request->input('operationdaysweekdays');
+            $operationhoursweekends = $request->input('operationhoursweekends');
+            $operationdaysweekends = $request->input('operationdaysweekends');
             $averageoperations = $request->input('averageoperations');
             $operationMon = $request->input('operationMon');
             $startMon = $request->input('startMon');
@@ -752,7 +755,10 @@ class ProjectController extends Controller
                 //     $timeSun = $operation->timeSun;
                 // }
 
-                $operation->operationhours = $operationhours;
+                $operation->operationhoursweekdays = $operationhoursweekdays;
+                $operation->operationdaysweekdays = $operationdaysweekdays;
+                $operation->operationhoursweekends = $operationhoursweekends;
+                $operation->operationdaysweekends = $operationdaysweekends;
                 $operation->averageoperations = $averageoperations;
                 $operation->operationMon = $operationMon;
                 $operation->startMon = $startMon;
@@ -790,7 +796,10 @@ class ProjectController extends Controller
 
                 $operation = new Operation;
                 $operation->projectid = $projectid;
-                $operation->operationhours = $operationhours;
+                $operation->operationhoursweekdays = $operationhoursweekdays;
+                $operation->operationdaysweekdays = $operationdaysweekdays;
+                $operation->operationhoursweekends = $operationhoursweekends;
+                $operation->operationdaysweekends = $operationdaysweekends;
                 $operation->averageoperations = $averageoperations;
                 $operation->operationMon = $operationMon;
                 $operation->startMon = $startMon;
@@ -1435,18 +1444,26 @@ class ProjectController extends Controller
         
         $data = Reference::where('projectid',$projectid)->first();
 
-        $filename = $env . ''. $data->image;
+        if($data){
 
-        $dataarray = [
-            'id' => $data->id,
-            'projectid' => $data->projectid,
-            'mainicoming' => $data->mainincoming,
-            'mainswitchboard' => $data->mainswitchboard,
-            'activesystem' => $data->activesystem,
-            'image' => $filename,
-        ];
+            $filename = $env . ''. $data->image;
 
-        return response()->json(['status'=>'success','value'=>$dataarray]);
+            $dataarray = [
+                'id' => $data->id,
+                'projectid' => $data->projectid,
+                'mainicoming' => $data->mainincoming,
+                'mainswitchboard' => $data->mainswitchboard,
+                'activesystem' => $data->activesystem,
+                'image' => $filename,
+            ];
+
+            return response()->json(['status'=>'success','value'=>$dataarray]);
+
+        } else {
+            return response()->json(['status'=>'error','value'=>'sorry value not exist']);
+        }
+
+        
 
     }
 
