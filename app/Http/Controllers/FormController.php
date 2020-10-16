@@ -5,6 +5,8 @@ use App\Form;
 use App\Subinventory;
 use App\Room;
 use App\Setup;
+use App\Equipment;
+use DB;
 use Illuminate\Http\Request;
 
 class FormController extends Controller
@@ -18,35 +20,44 @@ class FormController extends Controller
         $roomid = $request->input('roomid');
         $equipmentid = $request->input('equipmentid');
 
-        $existingform = Form::where('roomid',$roomid)->where('equipmentid',$equipmentid)->first();
+        $roomdetails = Room::find($roomid);
+        $equipmentdetails = Equipment::find($equipmentid);
 
-        if($existingform){
-            return response()->json(['status'=>'success', 'value'=>'success update master form']);
+        if($roomdetails == null || $equipmentdetails == null){
+            return response()->json(['status'=>'failed','value'=>'sorry id room pr equipment not exist']);
         } else {
 
-            $roominformation = Room::where('id',$roomid)->first();
-            if($roominformation){
-                $roomname = $roominformation->roomarea;
-                $roomfunction = $roominformation->function;
-                $roomarea = $roominformation->area;
+            $existingform = Form::where('roomid',$roomid)->where('equipmentid',$equipmentid)->first();
+
+            if($existingform){
+                return response()->json(['status'=>'success', 'value'=>'success update master form']);
             } else {
-                $roomname = null;
-                $roomfunction = null;
-                $roomarea = null;
+
+                $roominformation = Room::where('id',$roomid)->first();
+                if($roominformation){
+                    $roomname = $roominformation->roomarea;
+                    $roomfunction = $roominformation->function;
+                    $roomarea = $roominformation->area;
+                } else {
+                    $roomname = null;
+                    $roomfunction = null;
+                    $roomarea = null;
+                }
+
+                $recommendedlux = '400';
+
+                $form = new Form;
+                $form->roomid = $roomid;
+                $form->equipmentid = $equipmentid;
+                $form->roomname = $roomname;
+                $form->roomfunction = $roomfunction;
+                $form->roomarea = $roomarea;
+                $form->recommendedlux = $recommendedlux;
+                $form->category = 'master';
+                $form->save();
+                return response()->json(['status'=>'success','value'=>'success generate new master form']);
             }
 
-            $recommendedlux = '400';
-
-            $form = new Form;
-            $form->roomid = $roomid;
-            $form->equipmentid = $equipmentid;
-            $form->roomname = $roomname;
-            $form->roomfunction = $roomfunction;
-            $form->roomarea = $roomarea;
-            $form->recommendedlux = $recommendedlux;
-            $form->category = 'master';
-            $form->save();
-            return response()->json(['status'=>'success','value'=>'success generate new master form']);
         }
 
     }
@@ -186,48 +197,64 @@ class FormController extends Controller
 
         $subequipmentid = $request->input('subequipmentid');
         $formid = $request->input('formid');
+        $setuparray = array();
 
         $a = json_decode($subequipmentid);
-        
         $total = count($a);
 
-        for($i = 0; $i < $total; $i++){
-            
-            $exist = Subinventory::where('formid',$formid)->where('subequipmentid',$a[$i]->id)->first();
-        
-            if(empty($exist)){  
-                
-                //kite buat dekat sini
-                $subequipmentinfo = Setup::where('id',$a[$i]->id)->first();
-
-                if($subequipmentinfo){
-
-                    $lightingidentification = $subequipmentinfo->lightingid;
-                    $typeoflighting = $subequipmentinfo->type;
-                    $powerrating = $subequipmentinfo->powerrating;
-                    $lighting = $subequipmentinfo->lightingid;
-
-                } else {
-
-                    $lightingidentification = null;
-                    $typeoflighting = null;
-                    $powerrating = null;
-                    $lighting = null;
-
-                }
-
-                $sub = new Subinventory;
-                $sub->formid = $formid;
-                $sub->subequipmentid = $a[$i]->id;
-                $sub->lightingidentification = $lightingidentification;
-                $sub->typeoflighting = $typeoflighting;
-                $sub->powerrating = $powerrating;
-                $sub->lighting = $lighting;
-                $sub->save();
-
-            } 
+        $exist = 'no';
+        for($j = 0; $j< $total; $j++){
+           $existdata = Setup::find($a[$j]->id);
+           if($existdata == null){
+               $exist = 'yes';
+           }
         }
-        return response()->json(['status'=>'success','value'=>'success save subequipment selection']);
+        
+        $formdetails = Form::find($formid);
+
+        if($formdetails == null || $exist = 'yes'){
+            return response()->json(['status'=>'failed','value'=>'sorry id form or subequipment not exist']);
+        } else {
+
+            for($i = 0; $i < $total; $i++){
+            
+                $exist = Subinventory::where('formid',$formid)->where('subequipmentid',$a[$i]->id)->first();
+            
+                if(empty($exist)){  
+                    
+                    //kite buat dekat sini
+                    $subequipmentinfo = Setup::where('id',$a[$i]->id)->first();
+    
+                    if($subequipmentinfo){
+    
+                        $lightingidentification = $subequipmentinfo->lightingid;
+                        $typeoflighting = $subequipmentinfo->type;
+                        $powerrating = $subequipmentinfo->powerrating;
+                        $lighting = $subequipmentinfo->lightingid;
+    
+                    } else {
+    
+                        $lightingidentification = null;
+                        $typeoflighting = null;
+                        $powerrating = null;
+                        $lighting = null;
+    
+                    }
+    
+                    $sub = new Subinventory;
+                    $sub->formid = $formid;
+                    $sub->subequipmentid = $a[$i]->id;
+                    $sub->lightingidentification = $lightingidentification;
+                    $sub->typeoflighting = $typeoflighting;
+                    $sub->powerrating = $powerrating;
+                    $sub->lighting = $lighting;
+                    $sub->save();
+    
+                } 
+            }
+            return response()->json(['status'=>'success','value'=>'success save subequipment selection']);
+
+        }
 
     }
 

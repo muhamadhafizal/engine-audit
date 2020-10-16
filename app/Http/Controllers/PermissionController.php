@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use App\Permission;
 use App\User;
+use App\Equipment;
+use App\Room;
 use DB;
 use Illuminate\Http\Request;
 
@@ -18,7 +20,15 @@ class PermissionController extends Controller
         $equipmentid = $request->input('equipmentid');
         $auditorid = $request->input('auditorid');
 
-        $existing = Permission::where('roomid',$roomid)->where('equipmentid',$equipmentid)->first();
+        $roomdetails = Room::find($roomid);
+        $equipmentdetails = Equipment::find($equipmentid);
+        $auditordetails = User::find($auditorid);
+
+        if($roomdetails == null || $equipmentdetails == null || $auditordetails == null){
+            return response()->json(['status'=>'failed','value'=>'sorry id for room or equipment or auditor not exist']);
+        } else {
+            
+            $existing = Permission::where('roomid',$roomid)->where('equipmentid',$equipmentid)->first();
 
         if($existing){
 
@@ -39,6 +49,12 @@ class PermissionController extends Controller
             return response()->json(['status'=>'success','value'=>'success add new permission']);
 
         }
+
+        }
+
+
+
+        
 
         
     }
