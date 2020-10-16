@@ -95,6 +95,21 @@ Route::get('/energysource','EnergysourceController@index');
 Route::get('/energysource/all', 'EnergysourceController@all');
 Route::get('/energysource/details', 'EnergysourceController@details');
 
+//Permission
+Route::get('/permission', 'PermissionController@index');
+Route::post('/permission/add', 'PermissionController@store');
+Route::delete('/permission/delete', 'PermissionController@destroy');
+Route::get('/permission/all', 'PermissionController@all');
+Route::get('/permission/details', 'PermissionController@details');
+
+//Form
+Route::get('/form', 'FormController@index');
+Route::post('/form/generatemasterform', 'FormController@store');
+Route::get('/form/detailsmasterform', 'FormController@details');
+Route::post('/form/savemasterform', 'FormController@save');
+Route::post('/form/subequipment', 'FormController@subequipment');
+Route::post('/form/savesubform', 'FormController@savesubequipment');
+
 Route::get('unauthorized', ['as' => 'unauthorized', 'uses' => 'LoginController@unauthorized']);
 //token
 Route::group(['middleware' => ['auth:api','token']], function(){
