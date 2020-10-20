@@ -109,6 +109,10 @@ Route::get('/form/detailsmasterform', 'FormController@details');
 Route::post('/form/savemasterform', 'FormController@save');
 Route::post('/form/subequipment', 'FormController@subequipment');
 Route::post('/form/savesubform', 'FormController@savesubequipment');
+Route::post('/form/generatedependentform', 'FormController@generatedependentform');
+Route::get('/form/listdependent', 'FormController@listdependent');
+Route::post('/form/generatedependentsub', 'FormController@generatedependentsub');
+Route::get('/form/detailsdependent', 'FormController@detailsdependent');
 
 Route::get('unauthorized', ['as' => 'unauthorized', 'uses' => 'LoginController@unauthorized']);
 //token

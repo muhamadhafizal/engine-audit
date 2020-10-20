@@ -86,7 +86,7 @@ class FormController extends Controller
                 'roomname' => $detailsform->roomname,
                 'roomfunction' => $detailsform->roomfunction,
                 'roomarea' => $detailsform->roomarea,
-                'generalobservation' => $detailsform->generaloberservation,
+                'generalobservation' => $detailsform->generalobservation,
                 'potentialfornaturallighting' => $detailsform->potentialfornaturallighting,
                 'windowsorientation' => $detailsform->windowsorientation,
                 'recommendedlux' => $detailsform->recommendedlux,
@@ -406,6 +406,205 @@ class FormController extends Controller
             return response()->json(['status'=>'failed','value'=>'sorry data not exist']);
         }
     }
+
+    public function generatedependentform(Request $request){
+
+        $masterid = $request->input('masterid');
+
+        $forminfo = Form::find($masterid);
+        if($forminfo){
+
+            //quantity
+            $roominfo = Room::find($forminfo->roomid);
+            $quantity = $roominfo->quantity;
+
+            $tempdata = [
+
+                'roomid' => $forminfo->roomid,
+                'equipmentid' => $forminfo->equipmentid,
+                'roomname' => $forminfo->roomname,
+                'roomfunction' => $forminfo->roomfunction,
+                'roomarea' => $forminfo->roomarea,
+                'generalobservation' => $forminfo->generalobservation,
+                'potentialfornaturallighting' => $forminfo->potentialfornaturallighting,
+                'windowsorientation' => $forminfo->windowsorientation,
+                'recommendedlux' => $forminfo->recommendedlux,
+                'samplingpoints' => $forminfo->samplingpoints,
+                'average' => $forminfo->average,
+                'category' => 'dependent',
+                'masterid' => $forminfo->id,
+
+            ];
+            
+            for($i = 0; $i < $quantity; $i++){
+                $form = DB::table('forms')
+                ->insert($tempdata);
+            }
+
+            return response()->json(['status'=>'success','value'=>'success generate dependent form']);
+
+        } else {
+            return response()->json(['status'=>'failed','value'=>'sorry masterid at form not exist']);
+        }
+
+    }
+
+    // list dependent by master id
+    public function listdependent(Request $request){
+
+        $masterid = $request->input('masterid');
+        $generalarray = array();
+
+        $dependent = Form::where('masterid',$masterid)->where('category','dependent')->get();
+
+        foreach($dependent as $data){
+
+            if($data->samplingpoints != null){
+                $formatpoints = json_decode($data->samplingpoints);
+            } else {
+                $formatpoints = $data->samplingpoints;
+            }
+
+            $temparray = [
+                'id' => $data->id,
+                'roomid' => $data->roomid,
+                'equipmentdid' => $data->equipmentid,
+                'roomname' => $data->roomname,
+                'roomfunction' => $data->roomfunction,
+                'roomarea' => $data->roomarea,
+                'generalobservation' => $data->generaloberservation,
+                'potentialfornaturallighting' => $data->potentialfornaturallighting,
+                'windowsorientation' => $data->windowsorientation,
+                'recommendedlux' => $data->recommendedlux,
+                'samplingpoints' => $formatpoints,
+                'average' => $data->average,
+                'category' => $data->category,
+                'masterid' => $data->masterid,
+            ];
+
+            array_push($generalarray,$temparray);
+
+        }
+
+        return response()->json(['status'=>'success','value'=>$generalarray]);
+
+    }
+
+    //post method for sub based on form je then tarik master punya sub then copy macam biasa
+    public function generatedependentsub(Request $request){
+
+        $formid = $request->input('formid');
+
+        $formdetails = Form::find($formid);
+
+        if($formdetails){
+
+            $masterdetails = Form::where('id',$formdetails->masterid)->first();
+            $submaster = Subinventory::where('formid',$masterdetails->id)->get();
+
+            //dekat sini buat looping satu2 then set kan dia punya satu2 based on quantity
+            foreach($submaster as $data){
+
+                $tempdata = [
+                    'formid' => $formid,
+                    'subequipmentid' => $data->subequipmentid,
+                    'lightingidentification' => $data->lightingidentification,
+                    'typeoflighting' => $data->typeoflighting,
+                    'powerrating' => $data->powerrating,
+                    'frominventory' => $data->frominventory,
+                    'actual' => $data->actual,
+                    'loadfactory' => $data->loadfactory,
+                    'totalnumberoffixtures' => $data->totalnumberoffictures,
+                    'numberoflightbulbperfixtures' => $data->numberoflightbulbperfixtures,
+                    'totalnumberoflightbulb' => $data->totalnumberoflightbulb,
+                    'lightingreflector' => $data->lightingreflector,
+                    'controlsystem' => $data->controlsystem,
+                    'switchontime' => $data->switchontime,
+                    'switchofftime' => $data->switchofftime,
+                    'consumptionduration' => $data->consumptionduration,
+                    'peakdurationcostoperation' => $data->peakdurationcostoperation,
+                    'offpeakduration' => $data->offpeakduration,
+                    'annualoperationdays' => $data->annualoperationdays,
+                    'lighting' => $data->lighting,
+                    'powerratingperfixture' => $data->powerratingperfixture,
+                    'dailyenergyconsumtion' => $data->dailyenergyconsumtion,
+                    'dailyenergycost' => $data->dailyenergycost,
+                    'peakdurationcostenergy' => $data->peakdurationcostenergy,
+                    'offpeakdurationcost' => $data->offpeakdurationcost,
+                    'annualenergycost' => $data->annualenergycost,
+                    'grandtotalannualenergyconsumption' => $data->grandtotalannualenergyconsumption,
+                    'grandtotalannualenergycost' => $data->grandtotalannualenergycost,
+                ];
+
+                $form = DB::table('subinventories')
+                ->insert($tempdata);
+
+            }
+            
+            return response()->json(['status'=>'success','value'=>'success generate sub dependent form']);
+            
+        } else {
+            return response()->json(['status'=>'error','value'=>'sorry form id not exist']);
+        }
+        
+    }
+
+    public function detailsdependent(Request $request){
+        
+        $formid = $request->input('formid');
+
+        $temparray = array();
+        $subArray = array();
+        $finalArray = array();
+        $detailsform = Form::find($formid);
+
+        if($detailsform){
+
+            if($detailsform->samplingpoints != null){
+                $formatpoints = json_decode($detailsform->samplingpoints);
+            } else {
+                $formatpoints = $detailsform->samplingpoints;
+            }
+
+            $temparray = [
+                'id' => $detailsform->id,
+                'roomid' => $detailsform->roomid,
+                'equipmentdid' => $detailsform->equipmentid,
+                'roomname' => $detailsform->roomname,
+                'roomfunction' => $detailsform->roomfunction,
+                'roomarea' => $detailsform->roomarea,
+                'generalobservation' => $detailsform->generalobservation,
+                'potentialfornaturallighting' => $detailsform->potentialfornaturallighting,
+                'windowsorientation' => $detailsform->windowsorientation,
+                'recommendedlux' => $detailsform->recommendedlux,
+                'samplingpoints' => $formatpoints,
+                'average' => $detailsform->average,
+                'category' => $detailsform->category,
+                'masterid' => $detailsform->masterid,
+            ];
+
+            //ade subequipment dekat sini
+            $sub = Subinventory::where('formid',$detailsform->id)->get();
+    
+            if($sub){
+                foreach($sub as $data){
+                    array_push($subArray,$data);
+                }
+            }
+
+            $finalArray = [
+                'main' => $temparray,
+                'sub' => $subArray,
+            ];
+
+            return response()->json(['status'=>'success','value'=>$finalArray]);
+        } else {
+            return response()->json(['status'=>'failed','value'=>'sorry form not exist']);
+        }
+   
+
+    }
 }
+
 
 
