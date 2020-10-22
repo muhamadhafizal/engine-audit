@@ -114,6 +114,20 @@ Route::get('/form/listdependent', 'FormController@listdependent');
 Route::post('/form/generatedependentsub', 'FormController@generatedependentsub');
 Route::get('/form/detailsdependent', 'FormController@detailsdependent');
 
+//Mainicomings
+Route::get('/mainincoming', 'MainincomingController@index');
+Route::post('/mainincoming/store', 'MainincomingController@store');
+Route::get('/mainincoming/list', 'MainincomingController@all');
+
+//Submeter
+Route::get('/submeter', 'SubmeterController@index');
+Route::post('/submeter/store', 'SubmeterController@store');
+Route::get('/submeter/list', 'SubmeterController@list');
+
+//Phone
+Route::get('/phone','PhoneController@index');
+Route::get('/bus','BusController@index');
+
 Route::get('unauthorized', ['as' => 'unauthorized', 'uses' => 'LoginController@unauthorized']);
 //token
 Route::group(['middleware' => ['auth:api','token']], function(){

@@ -212,7 +212,7 @@ class FormController extends Controller
         
         $formdetails = Form::find($formid);
 
-        if($formdetails == null || $exist = 'yes'){
+        if($formdetails == null || $exist == 'yes'){
             return response()->json(['status'=>'failed','value'=>'sorry id form or subequipment not exist']);
         } else {
 
