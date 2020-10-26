@@ -126,7 +126,8 @@ class ProjectController extends Controller
         $productArray = array();
         // $env = 'http://engine-audit.test/images/';
         //$env = 'http://52.74.178.166:82/';
-        $env = 'http://codeviable.com/engine-audit/public/images/';
+        // $env = 'http://codeviable.com/engine-audit/public/images/';
+        $env = 'http://206.189.87.64:9292/images/';
 
         $validator = validator::make($request->all(),
         [
@@ -1436,7 +1437,8 @@ class ProjectController extends Controller
     public function viewreference(Request $request){
 
         // $env = 'http://engine-audit.test/images/';
-        $env = 'http://codeviable.com/engine-audit/public/images/';
+        // $env = 'http://codeviable.com/engine-audit/public/images/';
+        $env = 'http://206.189.87.64:9292/images/';
 
         $dataarray = array();
 

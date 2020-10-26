@@ -38,7 +38,8 @@ class SubmeterController extends Controller
 
     public function list(Request $request){
 
-        $env = 'http://codeviable.com/engine-audit/public/subtwo/';
+        //$env = 'http://codeviable.com/engine-audit/public/subtwo/';
+        $env = 'http://206.189.87.64:9292/subtwo/';
 
         $projectid = $request->input('projectid');
         $finalarray = Array();
