@@ -124,9 +124,18 @@ Route::get('/submeter', 'SubmeterController@index');
 Route::post('/submeter/store', 'SubmeterController@store');
 Route::get('/submeter/list', 'SubmeterController@list');
 
-//Phone
-Route::get('/phone','PhoneController@index');
-Route::get('/bus','BusController@index');
+//Database
+Route::get('/database', 'DatabaseController@index');
+Route::get('/database/logging/all', 'DatabaseController@alllogging');
+Route::get('/database/logging/details', 'DatabaseController@detailslogging');
+Route::get('/database/typeoflight/all', 'DatabaseController@alltypeoflight');
+Route::get('/database/typeoflight/details', 'DatabaseController@detailstypeoflight');
+Route::get('/database/lightingcontrol/all', 'DatabaseController@alllightingcontroll');
+Route::get('/database/lightingcontrol/details', 'DatabaseController@detailslightingcontrol');
+Route::get('/database/airconditioning/all', 'DatabaseController@allairconditioning');
+Route::get('/database/airconditioning/details', 'DatabaseController@detailsairconditioning');
+Route::get('/database/lighting/all', 'DatabaseController@alllighting');
+Route::get('/database/lighting/details','DatabaseController@detailslighting');
 
 Route::get('unauthorized', ['as' => 'unauthorized', 'uses' => 'LoginController@unauthorized']);
 //token

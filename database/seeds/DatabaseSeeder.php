@@ -12,7 +12,12 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            EnergySource::class,
+            // EnergySource::class,
+            // LoggingSeeder::class,
+            //TypeoflightSeeder::class,
+            //LightingcontrolSeeder::class,
+            //AirconditioningSeeder::class,
+            LightingSeeder::class,
         ]);
     }
 }
