@@ -6,6 +6,8 @@ use App\Subinventory;
 use App\Room;
 use App\Setup;
 use App\Equipment;
+use App\Sumplytariffstructure;
+use App\Operation;
 use DB;
 use Illuminate\Http\Request;
 
@@ -69,9 +71,32 @@ class FormController extends Controller
         $temparray = array();
         $subArray = array();
         $finalArray = array();
-        $detailsform = Form::where('roomid',$roomid)->where('equipmentid',$equipmentid)->first();
+        $timezonepeak = null;
+        $timezoneoffpeak = null;
+        $structurepeak = null;
+        $structureoffpeak = null;
+        $averageoperation = null;
 
+        $detailsform = Form::where('roomid',$roomid)->where('equipmentid',$equipmentid)->first();
+       
         if($detailsform){
+            
+            $roomdetails = Room::where('id',$detailsform->roomid)->first();
+            $detailstariff = Sumplytariffstructure::where('projectid',$roomdetails->projectid)->first();
+            $detailsoperation = Operation::where('projectid',$roomdetails->projectid)->first();
+            
+            if($detailstariff){
+                $timezonepeak = $detailstariff->timezonepeak;
+                $timezoneoffpeak = $detailstariff->timezoneoffpeak;
+                $structurepeak = $detailstariff->structurepeak;
+                $structureoffpeak = $detailstariff->structureoffpeak;
+            } 
+
+            if($detailsoperation){
+                $averageoperation = $detailsoperation->averageoperations;
+            }
+
+            
 
             if($detailsform->samplingpoints != null){
                 $formatpoints = json_decode($detailsform->samplingpoints);
@@ -94,6 +119,11 @@ class FormController extends Controller
                 'average' => $detailsform->average,
                 'category' => $detailsform->category,
                 'masterid' => $detailsform->masterid,
+                'timezonepeak' => $timezonepeak,
+                'timezoneoffpeak' => $timezoneoffpeak,
+                'structurepeak' => $structurepeak,
+                'structureoffpeak' => $structureoffpeak,
+                'averageoperation' => $averageoperation,
             ];
 
             //ade subequipment dekat sini
@@ -112,7 +142,7 @@ class FormController extends Controller
 
             return response()->json(['status'=>'success','value'=>$finalArray]);
         } else {
-            return response()->json(['status'=>'failed','value'=>'master form not exist']);
+           return response()->json(['status'=>'failed','value'=>'master form not exist']);
         }
 
         
