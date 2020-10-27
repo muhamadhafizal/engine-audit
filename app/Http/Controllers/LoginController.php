@@ -78,8 +78,8 @@ class LoginController extends Controller
 
                 
 
-                $token = $user->createToken('MyApp')-> accessToken;
-                return response()->json(['status'=>'success', 'api_key'=>$token, 'value'=>$tempuser]);
+                // $token = $user->createToken('MyApp')-> accessToken;
+                return response()->json(['status'=>'success', 'api_key'=>'abcd', 'value'=>$tempuser]);
             } else {
                 return response()->json(['status'=>'failed']);
             }
