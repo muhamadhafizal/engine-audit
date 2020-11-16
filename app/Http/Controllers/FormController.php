@@ -535,39 +535,45 @@ class FormController extends Controller
             //dekat sini buat looping satu2 then set kan dia punya satu2 based on quantity
             foreach($submaster as $data){
 
-                $tempdata = [
-                    'formid' => $formid,
-                    'subequipmentid' => $data->subequipmentid,
-                    'lightingidentification' => $data->lightingidentification,
-                    'typeoflighting' => $data->typeoflighting,
-                    'powerrating' => $data->powerrating,
-                    'frominventory' => $data->frominventory,
-                    'actual' => $data->actual,
-                    'loadfactory' => $data->loadfactory,
-                    'totalnumberoffixtures' => $data->totalnumberoffictures,
-                    'numberoflightbulbperfixtures' => $data->numberoflightbulbperfixtures,
-                    'totalnumberoflightbulb' => $data->totalnumberoflightbulb,
-                    'lightingreflector' => $data->lightingreflector,
-                    'controlsystem' => $data->controlsystem,
-                    'switchontime' => $data->switchontime,
-                    'switchofftime' => $data->switchofftime,
-                    'consumptionduration' => $data->consumptionduration,
-                    'peakdurationcostoperation' => $data->peakdurationcostoperation,
-                    'offpeakduration' => $data->offpeakduration,
-                    'annualoperationdays' => $data->annualoperationdays,
-                    'lighting' => $data->lighting,
-                    'powerratingperfixture' => $data->powerratingperfixture,
-                    'dailyenergyconsumtion' => $data->dailyenergyconsumtion,
-                    'dailyenergycost' => $data->dailyenergycost,
-                    'peakdurationcostenergy' => $data->peakdurationcostenergy,
-                    'offpeakdurationcost' => $data->offpeakdurationcost,
-                    'annualenergycost' => $data->annualenergycost,
-                    'grandtotalannualenergyconsumption' => $data->grandtotalannualenergyconsumption,
-                    'grandtotalannualenergycost' => $data->grandtotalannualenergycost,
-                ];
+                $subexist = Subinventory::where('formid',$formid)->where('subequipmentid',$data->subequipmentid)->first();
 
-                $form = DB::table('subinventories')
-                ->insert($tempdata);
+                if($subexist == null){
+
+                    $tempdata = [
+                        'formid' => $formid,
+                        'subequipmentid' => $data->subequipmentid,
+                        'lightingidentification' => $data->lightingidentification,
+                        'typeoflighting' => $data->typeoflighting,
+                        'powerrating' => $data->powerrating,
+                        'frominventory' => $data->frominventory,
+                        'actual' => $data->actual,
+                        'loadfactory' => $data->loadfactory,
+                        'totalnumberoffixtures' => $data->totalnumberoffictures,
+                        'numberoflightbulbperfixtures' => $data->numberoflightbulbperfixtures,
+                        'totalnumberoflightbulb' => $data->totalnumberoflightbulb,
+                        'lightingreflector' => $data->lightingreflector,
+                        'controlsystem' => $data->controlsystem,
+                        'switchontime' => $data->switchontime,
+                        'switchofftime' => $data->switchofftime,
+                        'consumptionduration' => $data->consumptionduration,
+                        'peakdurationcostoperation' => $data->peakdurationcostoperation,
+                        'offpeakduration' => $data->offpeakduration,
+                        'annualoperationdays' => $data->annualoperationdays,
+                        'lighting' => $data->lighting,
+                        'powerratingperfixture' => $data->powerratingperfixture,
+                        'dailyenergyconsumtion' => $data->dailyenergyconsumtion,
+                        'dailyenergycost' => $data->dailyenergycost,
+                        'peakdurationcostenergy' => $data->peakdurationcostenergy,
+                        'offpeakdurationcost' => $data->offpeakdurationcost,
+                        'annualenergycost' => $data->annualenergycost,
+                        'grandtotalannualenergyconsumption' => $data->grandtotalannualenergyconsumption,
+                        'grandtotalannualenergycost' => $data->grandtotalannualenergycost,
+                    ];
+    
+                    $form = DB::table('subinventories')
+                    ->insert($tempdata);
+
+                }
 
             }
             
