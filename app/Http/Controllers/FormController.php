@@ -596,6 +596,21 @@ class FormController extends Controller
 
         if($detailsform){
 
+            $roomdetails = Room::where('id',$detailsform->roomid)->first();
+            $detailstariff = Sumplytariffstructure::where('projectid',$roomdetails->projectid)->first();
+            $detailsoperation = Operation::where('projectid',$roomdetails->projectid)->first();
+            
+            if($detailstariff){
+                $timezonepeak = $detailstariff->timezonepeak;
+                $timezoneoffpeak = $detailstariff->timezoneoffpeak;
+                $structurepeak = $detailstariff->structurepeak;
+                $structureoffpeak = $detailstariff->structureoffpeak;
+            } 
+
+            if($detailsoperation){
+                $averageoperation = $detailsoperation->averageoperations;
+            }
+
             if($detailsform->samplingpoints != null){
                 $formatpoints = json_decode($detailsform->samplingpoints);
             } else {
@@ -617,7 +632,12 @@ class FormController extends Controller
                 'average' => $detailsform->average,
                 'category' => $detailsform->category,
                 'masterid' => $detailsform->masterid,
-            ];
+                'timezonepeak' => $timezonepeak,
+                'timezoneoffpeak' => $timezoneoffpeak,
+                'structurepeak' => $structurepeak,
+                'structureoffpeak' => $structureoffpeak,
+                'averageoperation' => $averageoperation,
+            ];            
 
             //ade subequipment dekat sini
             $sub = Subinventory::where('formid',$detailsform->id)->get();
