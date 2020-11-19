@@ -100,9 +100,9 @@ class UserController extends Controller
             $roleid = '3';
             $status = 'active';
 
-            $userExist = User::where('username',$username)->orWhere('password',$password)->first();
+            $userExist = User::where('username',$username)->orWhere('email',$email)->first();
             if($userExist){
-                return response()->json(['status'=>'failed', 'value'=>'email or password is exist']);
+                return response()->json(['status'=>'failed', 'value'=>'email or username is exist']);
             } else {
 
                 $user = new User;
