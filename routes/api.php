@@ -137,6 +137,16 @@ Route::get('/database/airconditioning/details', 'DatabaseController@detailsairco
 Route::get('/database/lighting/all', 'DatabaseController@alllighting');
 Route::get('/database/lighting/details','DatabaseController@detailslighting');
 
+//Lightdeviation
+Route::get('/lightdeviation', 'LightdeviationController@index');
+Route::get('/lightdeviation/generate', 'LightdeviationController@generate');
+Route::post('/lightdeviation/save', 'LightdeviationController@save');
+Route::get('/lightdeviation/details', 'LightdeviationController@details');
+
+//Capactity
+Route::get('/capacity', 'CapacityController@index');
+Route::get('/capacity/generate','CapacityController@generate');
+
 Route::get('unauthorized', ['as' => 'unauthorized', 'uses' => 'LoginController@unauthorized']);
 //token
 Route::group(['middleware' => ['auth:api','token']], function(){
