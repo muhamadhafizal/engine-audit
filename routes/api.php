@@ -147,6 +147,10 @@ Route::get('/lightdeviation/details', 'LightdeviationController@details');
 Route::get('/capacity', 'CapacityController@index');
 Route::get('/capacity/generate','CapacityController@generate');
 
+//Analysis
+Route::get('/analysis', 'AnalysisController@index');
+Route::get('/analysis/installedlighting', 'AnalysisController@installedlighting');
+
 Route::get('unauthorized', ['as' => 'unauthorized', 'uses' => 'LoginController@unauthorized']);
 //token
 Route::group(['middleware' => ['auth:api','token']], function(){
