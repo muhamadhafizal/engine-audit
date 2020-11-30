@@ -105,4 +105,53 @@ class AnalysisController extends Controller
         }
 
     }
+
+    public function energycost(Request $request){
+
+        $projectid = $request->input('projectid');
+
+        $finalarray = array();
+        $infoarray = array();
+
+        $forms = Capacity::where('projectid',$projectid)->get();
+
+        if($forms){
+
+            foreach($forms as $data){
+
+                //sub by form
+                $subs = Subinventory::where('formid',$data->formid)->get();
+
+                if($subs){
+
+                    foreach($subs as $sub){
+
+                        $temparray = [
+                            'name' => $sub->typeoflighting,
+                            'value' => $sub->annualenergycost,
+                        ];
+
+                        array_push($infoarray,$temparray);
+
+                    }
+
+                }
+
+            }
+
+            $totalsum = 0;
+            foreach($infoarray as $info){
+                $totalsum = $totalsum + $info['value'];
+            }
+
+            $finalarray = [
+                'data' => $infoarray,
+                'total' => $totalsum,
+            ];
+
+            return response()->json(['status'=>'success','value'=>$finalarray]);
+
+        }
+
+    }
 }
