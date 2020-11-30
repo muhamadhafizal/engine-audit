@@ -150,6 +150,7 @@ Route::get('/capacity/generate','CapacityController@generate');
 //Analysis
 Route::get('/analysis', 'AnalysisController@index');
 Route::get('/analysis/installedlighting', 'AnalysisController@installedlighting');
+Route::get('/analysis/energyconsumption', 'AnalysisController@energyconsumption');
 
 Route::get('unauthorized', ['as' => 'unauthorized', 'uses' => 'LoginController@unauthorized']);
 //token

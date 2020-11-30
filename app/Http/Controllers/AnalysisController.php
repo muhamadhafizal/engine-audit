@@ -16,7 +16,6 @@ class AnalysisController extends Controller
 
         $finalarray = array();
         $infoarray = array();
-        $namearray = array();
         $projectid = $request->input('projectid');
 
         $forms = Capacity::where('projectid',$projectid)->get();
@@ -54,37 +53,56 @@ class AnalysisController extends Controller
         ];
 
         return response()->json(['status'=>'success','value'=>$finalarray]);
-       
-        // echo json_encode($namearray);
-        
-        
-        // foreach($infoarray as $info){
-
-        //     if(count($finalarray) > 0){
-               
-        //         foreach($finalarray as $final){
-
-        //             if($info['name'] == $final['name']){
-        //                 $total = $final['value'] + $info['value'];
-
-        //                 $final['value'] = $total;
-                        
-        //             } else {
-                     
-        //                 array_push($finalarray,$info);
-        //                 echo 'a';
-        //             }
-
-        //         }
-
-        //     } else {
-        //         array_push($finalarray,$info);
-                
-        //     }
-        // }
-
-       //echo json_encode($finalarray);
 
         
+    }
+
+    public function energyconsumption(Request $request){
+
+        $projectid = $request->input('projectid');
+
+        $finalarray = array();
+        $infoarray = array();
+
+        $forms = Capacity::where('projectid',$projectid)->get();
+
+        if($forms){
+
+            foreach($forms as $data){
+
+                //sub by form
+                $subs = Subinventory::where('formid',$data->formid)->get();
+
+                if($subs){
+
+                    foreach($subs as $sub){
+
+                        $temparray = [
+                            'name' => $sub->typeoflighting,
+                            'value' => $sub->consumptionduration,
+                        ];
+
+                        array_push($infoarray,$temparray);
+
+                    }
+
+                }
+
+            }
+
+            $totalsum = 0;
+            foreach($infoarray as $info){
+                $totalsum = $totalsum + $info['value'];
+            }
+
+            $finalarray = [
+                'data' => $infoarray,
+                'total' => $totalsum,
+            ];
+
+            return response()->json(['status'=>'success','value'=>$finalarray]);
+
+        }
+
     }
 }
