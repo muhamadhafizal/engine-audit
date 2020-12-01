@@ -20,18 +20,19 @@ class CapacityController extends Controller
         $projectid = $request->input('projectid');
 
         $exist = Capacity::where('projectid',$projectid)->get();
-
-        if($exist == null){
-
+     
+       if(count($exist) == 0) {
+       
+          
             $listRoom = Room::where('projectid',$projectid)->get();
             $equipmentid = Equipment::where('projectid',$projectid)->where('equipments','lighting')->first();
-        
+            
             if($equipmentid){
 
                 foreach($listRoom as $data){
                     
                     $formdetails = Form::where('roomid',$data->id)->where('equipmentid',$equipmentid->id)->where('category','master')->first();
-
+                    
                     if($formdetails){
 
                         $deviation = ($formdetails->average - $formdetails->recommendedlux) / ($formdetails->recommendedlux * 100);
@@ -61,6 +62,7 @@ class CapacityController extends Controller
 
         } else {
 
+          
             //update dekat sini
             foreach($exist as $data){
                 
