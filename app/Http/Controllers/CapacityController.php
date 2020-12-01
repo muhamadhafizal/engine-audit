@@ -38,18 +38,16 @@ class CapacityController extends Controller
                         $deviation = ($formdetails->average - $formdetails->recommendedlux) / ($formdetails->recommendedlux * 100);
                         $formid = $formdetails->id;
 
-                    } else {
-                        $deviation = 0;
-                        $formid = 0;
-                    }
-
-                    $capacity = new Capacity;
-                    $capacity->projectid = $projectid;
-                    $capacity->roomid = $data->id;
-                    $capacity->deviation = $deviation;
-                    $capacity->formid = $formid;
+                        $capacity = new Capacity;
+                        $capacity->projectid = $projectid;
+                        $capacity->roomid = $data->id;
+                        $capacity->deviation = $deviation;
+                        $capacity->formid = $formid;
 
                     $capacity->save();
+
+                    }
+
 
                 }
 
