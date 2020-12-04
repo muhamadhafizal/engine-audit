@@ -76,13 +76,16 @@ class AnalysisController extends Controller
                 if($subs){
 
                     foreach($subs as $sub){
+                        if($sub->consumptionduration != 'null'){
 
-                        $temparray = [
-                            'name' => $sub->typeoflighting,
-                            'value' => $sub->consumptionduration,
-                        ];
+                            $temparray = [
+                                'name' => $sub->typeoflighting,
+                                'value' => $sub->consumptionduration,
+                            ];
+    
+                            array_push($infoarray,$temparray);
 
-                        array_push($infoarray,$temparray);
+                        }
 
                     }
 
