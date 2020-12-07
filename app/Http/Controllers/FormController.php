@@ -132,13 +132,32 @@ class FormController extends Controller
             if($sub){
                 foreach($sub as $data){
                     //kena buat dekat sini
+
+                    $setupsinfo = Setup::where('id',$data->subequipmentid)->first();
+
+                    if($setupsinfo){
+                        $lightingid = $setupsinfo->lightingid;
+                        $type = $setupsinfo->type;
+                        $powerrating = $setupsinfo->powerrating;
+                        $lumen = $setupsinfo->lumen;
+                        $average = $setupsinfo->average;
+                    } else {
+                        $lightingid = null;
+                        $type = null;
+                        $powerrating = null;
+                        $lumen = null;
+                        $average = null;
+                    }
+
                     $subtemparray = [
                         'id' => $data->id,
                         'formid' => $data->formid,
                         'subequipmentid' => $data->subequipmentid,
-                        'lightingidentification' => $data->lightingidentification,
-                        'typeoflighting' => $data->typeoflighting,
-                        'powerrating' => $data->powerrating,
+                        'lightingidentification' => $lightingid,
+                        'typeoflighting' => $type,
+                        'powerrating' => $powerrating,
+                        'lumen' => $lumen,
+                        'average' => $average,
                         'frominventory' => $data->frominventory,
                         'actual' => $data->actual,
                         'loadfactory' => $data->loadfactory,
