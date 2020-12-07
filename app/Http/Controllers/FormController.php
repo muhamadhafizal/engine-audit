@@ -131,7 +131,40 @@ class FormController extends Controller
     
             if($sub){
                 foreach($sub as $data){
-                    array_push($subArray,$data);
+                    //kena buat dekat sini
+                    $subtemparray = [
+                        'id' => $data->id,
+                        'formid' => $data->formid,
+                        'subequipmentid' => $data->subequipmentid,
+                        'lightingidentification' => $data->lightingidentification,
+                        'typeoflighting' => $data->typeoflighting,
+                        'powerrating' => $data->powerrating,
+                        'frominventory' => $data->frominventory,
+                        'actual' => $data->actual,
+                        'loadfactory' => $data->loadfactory,
+                        'totalnumberoffixtures' => $data->totalnumberoffixtures,
+                        'numberoflightbulbperfixtures' => $data->numberoflightbulbperfixtures,
+                        'totalnumberoflightbulb' => $data->totalnumberoflightbulb,
+                        'lightingreflector' => $data->lightingreflector,
+                        'controlsystem' => $data->controlsystem,
+                        'switchontime' => $data->switchontime,
+                        'switchofftime' => $data->switchofftime,
+                        'consumptionduration' => $data->consumptionduration,
+                        'peakdurationcostoperation' => $data->peakdurationcostoperation,
+                        'offpeakduration' => $data->offpeakduration,
+                        'annualoperationdays' => $data->annualoperationdays,
+                        'lighting' => $data->lighting,
+                        'powerratingperfixture' => $data->powerratingperfixture,
+                        'dailyenergyconsumtion' => $data->dailyenergyconsumtion,
+                        'dailyenergycost' => $data->dailyenergycost,
+                        'peakdurationcostenergy' => $data->peakdurationcostenergy,
+                        'offpeakdurationcost' => $data->offpeakdurationcost,
+                        'annualenergycost' => $data->annualenergycost,
+                        'grandtotalannualenergyconsumption' => $data->grandtotalannualenergyconsumption,
+                        'grandtotalannualenergycost' => $data->grandtotalannualenergycost,
+
+                    ];
+                    array_push($subArray,$subtemparray);
                 }
             }
 
