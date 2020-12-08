@@ -600,7 +600,7 @@ class FormController extends Controller
                         'frominventory' => $data->frominventory,
                         'actual' => $data->actual,
                         'loadfactory' => $data->loadfactory,
-                        'totalnumberoffixtures' => $data->totalnumberoffictures,
+                        'totalnumberoffixtures' => $data->totalnumberoffixtures,
                         'numberoflightbulbperfixtures' => $data->numberoflightbulbperfixtures,
                         'totalnumberoflightbulb' => $data->totalnumberoflightbulb,
                         'lightingreflector' => $data->lightingreflector,
