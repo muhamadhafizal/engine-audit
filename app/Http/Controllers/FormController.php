@@ -124,6 +124,8 @@ class FormController extends Controller
                 'structurepeak' => $structurepeak,
                 'structureoffpeak' => $structureoffpeak,
                 'averageoperation' => $averageoperation,
+                'grandtotalenergyconsumption' => $detailsform->grandtotalenergyconsumption,
+                'grandtotalenergyannualenergycost' => $detailsform->grandtotalannualenergycost,
             ];
 
             //ade subequipment dekat sini
