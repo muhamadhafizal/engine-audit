@@ -129,6 +129,8 @@ class FormController extends Controller
                 'averageoperation' => $averageoperation,
                 'grandtotalenergyconsumption' => $detailsform->grandtotalenergyconsumption,
                 'grandtotalenergyannualenergycost' => $detailsform->grandtotalannualenergycost,
+                'created_at' => date($detailsform->created_at),
+                'updated_at' => date($detailsform->updated_at),
             ];
 
             //ade subequipment dekat sini
@@ -186,6 +188,8 @@ class FormController extends Controller
                         'annualenergycost' => $data->annualenergycost,
                         'grandtotalannualenergyconsumption' => $data->grandtotalannualenergyconsumption,
                         'grandtotalannualenergycost' => $data->grandtotalannualenergycost,
+                        'created_at' => date($data->created_at),
+                        'updated_at' => date($data->updated_at),
 
                     ];
                     array_push($subArray,$subtemparray);
@@ -531,6 +535,8 @@ class FormController extends Controller
                 'average' => $forminfo->average,
                 'category' => 'dependent',
                 'masterid' => $forminfo->id,
+                'created_at' => $forminfo->created_at,
+                'updated_at' => $forminfo->updated_at,
 
             ];
             
@@ -579,6 +585,8 @@ class FormController extends Controller
                 'average' => $data->average,
                 'category' => $data->category,
                 'masterid' => $data->masterid,
+                'created_at' => date($data->created_at),
+                'updated_at' => date($data->updated_at),
             ];
 
             array_push($generalarray,$temparray);
@@ -707,6 +715,8 @@ class FormController extends Controller
                 'structurepeak' => $structurepeak,
                 'structureoffpeak' => $structureoffpeak,
                 'averageoperation' => $averageoperation,
+                'created_at' => date($detailsform->created_at),
+                'updated_at' => date($detailsform->updated_at),
             ];            
 
             //ade subequipment dekat sini
