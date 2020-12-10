@@ -83,7 +83,7 @@ class FormController extends Controller
 
             if($detailsform->category == 'master'){
 
-                $roomdetails = Room::where('id',$detailsform->roomid)->first();
+            $roomdetails = Room::where('id',$detailsform->roomid)->first();
             $detailstariff = Sumplytariffstructure::where('projectid',$roomdetails->projectid)->first();
             $detailsoperation = Operation::where('projectid',$roomdetails->projectid)->first();
             
@@ -104,6 +104,15 @@ class FormController extends Controller
                 $formatpoints = json_decode($detailsform->samplingpoints);
             } else {
                 $formatpoints = $detailsform->samplingpoints;
+            }
+
+            //dependentstatus
+            $dependent = Form::where('masterid',$detailsform->id)->where('category','dependent')->get();
+
+            if($dependent->isEmpty()){
+                $dependentstatus = 'notexist';
+            } else {
+                $dependentstatus = 'exist';
             }
 
             $temparray = [
@@ -129,6 +138,7 @@ class FormController extends Controller
                 'averageoperation' => $averageoperation,
                 'grandtotalenergyconsumption' => $detailsform->grandtotalenergyconsumption,
                 'grandtotalenergyannualenergycost' => $detailsform->grandtotalannualenergycost,
+                'dependentstatus' => $dependentstatus,
                 'created_at' => date($detailsform->created_at),
                 'updated_at' => date($detailsform->updated_at),
             ];
