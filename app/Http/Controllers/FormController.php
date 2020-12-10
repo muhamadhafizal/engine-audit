@@ -305,6 +305,47 @@ class FormController extends Controller
 
     }
 
+    public function addsubinventory(Request $request){
+
+        $subequipmentid = $request->input('subequipmentid');
+        $formid = $request->input('formid');
+
+        $a = json_decode($subequipmentid);
+        $total = count($a);
+
+        for($i = 0; $i < $total; $i++){
+
+            //check dah exist ke belum
+            $existsub = Subinventory::where('formid',$formid)->where('subequipmentid',$a[$i]->id)->first();
+
+            //check ada dalam setup ke x
+            $existsetup = Setup::find($a[$i]->id);
+
+            if($existsub == null && $existsetup != null){
+                
+                $subequipmentinfo = Setup::where('id',$a[$i]->id)->first();
+
+                $lightingidentification = $subequipmentinfo->lightingid;
+                $typeoflighting = $subequipmentinfo->type;
+                $powerrating = $subequipmentinfo->powerrating;
+                $lighting = $subequipmentinfo->lightingid;
+
+                $sub = new Subinventory;
+                $sub->formid = $formid;
+                $sub->subequipmentid = $a[$i]->id;
+                $sub->lightingidentification = $lightingidentification;
+                $sub->typeoflighting = $typeoflighting;
+                $sub->powerrating = $powerrating;
+                $sub->lighting = $lighting;
+                $sub->save();
+
+            }
+        }
+
+        return response()->json(['status'=>'success','value'=>'success add']);
+
+    }
+
     public function subequipment(Request $request){
 
         $subequipmentid = $request->input('subequipmentid');
@@ -748,7 +789,27 @@ class FormController extends Controller
             return response()->json(['status'=>'failed','value'=>'sorry form not exist']);
         }
    
+    }
 
+    public function listsubequipment(Request $request){
+
+        $formid = $request->input('formid');
+
+        $listsub = Subinventory::where('formid',$formid)->get();
+
+        return response()->json(['status'=>'success','value'=>$listsub]);
+
+    }
+
+    public function deletesubinventory(Request $request){
+
+        $subinventoryid = $request->input('subinventory');
+
+        $details = Subinventory::find($subinventoryid);
+
+        $details->delete();
+
+        return response()->json(['status'=>'success','value'=>'success deleted']);
     }
 }
 

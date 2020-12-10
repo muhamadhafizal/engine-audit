@@ -113,6 +113,9 @@ Route::post('/form/generatedependentform', 'FormController@generatedependentform
 Route::get('/form/listdependent', 'FormController@listdependent');
 Route::post('/form/generatedependentsub', 'FormController@generatedependentsub');
 Route::get('/form/detailsdependent', 'FormController@detailsdependent');
+Route::get('/form/listsubinventorybyform', 'FormController@listsubequipment');
+Route::delete('/form/deletesubinventory', 'FormController@deletesubinventory');
+Route::get('/form/addsubinventory', 'FormController@addsubinventory');
 
 //Mainicomings
 Route::get('/mainincoming', 'MainincomingController@index');
