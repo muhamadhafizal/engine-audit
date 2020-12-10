@@ -80,8 +80,10 @@ class FormController extends Controller
         $detailsform = Form::where('roomid',$roomid)->where('equipmentid',$equipmentid)->first();
        
         if($detailsform){
-            
-            $roomdetails = Room::where('id',$detailsform->roomid)->first();
+
+            if($detailsform->category == 'master'){
+
+                $roomdetails = Room::where('id',$detailsform->roomid)->first();
             $detailstariff = Sumplytariffstructure::where('projectid',$roomdetails->projectid)->first();
             $detailsoperation = Operation::where('projectid',$roomdetails->projectid)->first();
             
@@ -106,6 +108,7 @@ class FormController extends Controller
 
             $temparray = [
                 'id' => $detailsform->id,
+                'formname' => $detailsform->formname,
                 'roomid' => $detailsform->roomid,
                 'equipmentdid' => $detailsform->equipmentid,
                 'roomname' => $detailsform->roomname,
@@ -195,6 +198,12 @@ class FormController extends Controller
             ];
 
             return response()->json(['status'=>'success','value'=>$finalArray]);
+
+            } else {
+                return response()->json(['status'=>'failed','value'=>'sorry this form is not master form please use route form details dependent']);
+            }
+            
+            
         } else {
            return response()->json(['status'=>'failed','value'=>'master form not exist']);
         }
@@ -217,6 +226,7 @@ class FormController extends Controller
         $average = $request->input('average');
         $grandtotalenergyconsumption = $request->input('grandtotalenergyconsumption');
         $grandtotalannualenergycost = $request->input('grandtotalannualenergycost');
+        $formname = $request->input('formname');
 
         $detailsform = Form::find($formid);
 
@@ -255,6 +265,9 @@ class FormController extends Controller
             if($grandtotalannualenergycost == null){
                 $grandtotalannualenergycost = $detailsform->grandtotalannualenergycost;
             }
+            if($formname == null){
+                $formname = $detailsform->formname;
+            }
 
             $detailsform->roomname = $roomname;
             $detailsform->roomfunction = $roomfunction;
@@ -267,6 +280,7 @@ class FormController extends Controller
             $detailsform->average = $average;
             $detailsform->grandtotalenergyconsumption = $grandtotalenergyconsumption;
             $detailsform->grandtotalannualenergycost = $grandtotalannualenergycost;
+            $detailsform->formname = $formname;
 
             $detailsform->save();
             return response()->json(['status'=>'success','value'=>'success save master from']);
@@ -551,6 +565,7 @@ class FormController extends Controller
 
             $temparray = [
                 'id' => $data->id,
+                'formname' => $data->formname,
                 'roomid' => $data->roomid,
                 'equipmentdid' => $data->equipmentid,
                 'roomname' => $data->roomname,
@@ -673,6 +688,7 @@ class FormController extends Controller
 
             $temparray = [
                 'id' => $detailsform->id,
+                'formname' => $detailsform->formname,
                 'roomid' => $detailsform->roomid,
                 'equipmentdid' => $detailsform->equipmentid,
                 'roomname' => $detailsform->roomname,
