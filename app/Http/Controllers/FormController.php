@@ -620,6 +620,14 @@ class FormController extends Controller
                 $formatpoints = $data->samplingpoints;
             }
 
+            $subexist = Subinventory::where('formid',$data->id)->first();
+
+            if($subexist){
+                $substatus = 'exist';
+            } else {
+                $substatus = 'notexist';
+            }
+
             $temparray = [
                 'id' => $data->id,
                 'formname' => $data->formname,
@@ -636,6 +644,7 @@ class FormController extends Controller
                 'average' => $data->average,
                 'category' => $data->category,
                 'masterid' => $data->masterid,
+                'substatus' => $substatus,
                 'created_at' => date($data->created_at),
                 'updated_at' => date($data->updated_at),
             ];
