@@ -40,11 +40,23 @@ class ExcelImport implements ToCollection
         }
 
         $formatdata = json_encode($allarray);
+
+        //average here
+        $count = 0;
+        $total = 0;
+        foreach($allarray as $data){
+            $count = $count + 1;
+            $total = $total + $data['power'];
+        }
+   
+        $average = number_format($total/$count, 2, '.','');
+        $peak =  $average;
        
         $mainincoming = new Mainincoming;
         $mainincoming->projectid = $projectid;
         $mainincoming->randnumber = $randnumber;
         $mainincoming->value = $formatdata;
+        $mainincoming->peak = $peak;
         $mainincoming->save();
   
     }

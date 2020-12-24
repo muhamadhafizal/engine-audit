@@ -120,12 +120,17 @@ Route::get('/form/addsubinventory', 'FormController@addsubinventory');
 //Mainicomings
 Route::get('/mainincoming', 'MainincomingController@index');
 Route::post('/mainincoming/store', 'MainincomingController@store');
-Route::get('/mainincoming/list', 'MainincomingController@all');
+//Route::get('/mainincoming/list', 'MainincomingController@all');
+Route::post('/mainincoming/edit', 'MainincomingController@update');
+Route::get('/mainincoming/listname', 'MainincomingController@listmainincoming');
+Route::get('/mainincoming/details', 'MainincomingController@details');
+Route::get('/mainincoming/submeter', 'MainincomingController@submeter');
 
 //Submeter
 Route::get('/submeter', 'SubmeterController@index');
 Route::post('/submeter/store', 'SubmeterController@store');
 Route::get('/submeter/list', 'SubmeterController@list');
+
 
 //Database
 Route::get('/database', 'DatabaseController@index');
@@ -155,6 +160,13 @@ Route::get('/analysis', 'AnalysisController@index');
 Route::get('/analysis/installedlighting', 'AnalysisController@installedlighting');
 Route::get('/analysis/energyconsumption', 'AnalysisController@energyconsumption');
 Route::get('/analysis/energycost', 'AnalysisController@energycost');
+
+//Generate
+Route::get('/generate', 'GenerateController@index');
+Route::post('/generate/add', 'GenerateController@store');
+Route::get('/generate/list', 'GenerateController@list');
+Route::post('/generate/edit', 'GenerateController@edit');
+Route::get('/generate/delete', 'GenerateController@destroy');
 
 Route::get('unauthorized', ['as' => 'unauthorized', 'uses' => 'LoginController@unauthorized']);
 //token
