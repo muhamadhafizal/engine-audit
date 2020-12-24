@@ -155,43 +155,51 @@ class MainincomingController extends Controller
         $list = Mainincoming::where('projectid',$projectid)->where('name','!=','main')->get();
         $main = Mainincoming::where('projectid',$projectid)->where('name','main')->first();
 
-        $totalsub = 0;
-        $otherspeak = 0;
-        $otherspercent = 0;
+        if($main){
 
-        $mainarray = [
-            'id' => $main->name,
-            'peak' => $main->peak,
-            'percent' => 100,
-        ];
+            $totalsub = 0;
+            $otherspeak = 0;
+            $otherspercent = 0;
 
-        array_push($finalarray,$mainarray);
-
-        foreach($list as $data){
-
-            $temparray =[
-                'name' => $data->name,
-                'peak' => $data->peak,
-                'percent' => ($data->peak/$main->peak)*100,
+            $mainarray = [
+                'id' => $main->name,
+                'peak' => $main->peak,
+                'percent' => 100,
             ];
 
-            array_push($finalarray,$temparray);
+            array_push($finalarray,$mainarray);
 
-            $totalsub = $totalsub + $data->peak;
+            foreach($list as $data){
+
+                $temparray =[
+                    'name' => $data->name,
+                    'peak' => $data->peak,
+                    'percent' => ($data->peak/$main->peak)*100,
+                ];
+
+                array_push($finalarray,$temparray);
+
+                $totalsub = $totalsub + $data->peak;
+            }
+
+            $otherspeak = $main->peak - $totalsub;
+            $otherspercent = ($otherspeak/$main->peak)*100; 
+
+            $othersarray = [
+                'name' => 'others',
+                'peak' => $otherspeak,
+                'percent' => $otherspercent,
+            ];
+            
+            array_push($finalarray,$othersarray);
+
+            return response()->json(['status'=>'success','value'=>$finalarray]);
+
+        } else {
+            return response()->json(['status'=>'failed','value'=>'sorry mainincoming not exist']);
         }
 
-        $otherspeak = $main->peak - $totalsub;
-        $otherspercent = ($otherspeak/$main->peak)*100; 
-
-        $othersarray = [
-            'name' => 'others',
-            'peak' => $otherspeak,
-            'percent' => $otherspercent,
-        ];
         
-        array_push($finalarray,$othersarray);
-
-        return response()->json(['status'=>'success','value'=>$finalarray]);
 
     }
 }
