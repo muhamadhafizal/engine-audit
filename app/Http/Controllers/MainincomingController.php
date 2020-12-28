@@ -187,6 +187,7 @@ class MainincomingController extends Controller
             $totalsub = 0;
             $otherspeak = 0;
             $otherspercent = 0;
+            $totalpercent = 0;
 
             $mainarray = [
                 'id' => $main->name,
@@ -220,10 +221,24 @@ class MainincomingController extends Controller
                 array_push($finalarray,$temparray);
 
                 $totalsub = $totalsub + $data->peak;
+
+                $totalpercent = $totalpercent + round(($data->peak/$main->peak)*100);
             }
 
+            
+
+           
             $otherspeak = $main->peak - $totalsub;
             $otherspercent = round(($otherspeak/$main->peak)*100); 
+
+            $totalpercent = $totalpercent + $otherspercent;
+
+            $balance = 100 - $totalpercent;
+
+            if($balance != 0){
+                $otherspercent = $otherspercent + $balance;
+            }
+            
 
             $othersarray = [
                 'name' => 'others',
