@@ -72,7 +72,7 @@ class MainincomingController extends Controller
 
         $mainincomingid = $request->input('mainincomingid');
         $peak = $request->input('peak');
-        $name = $request->input('name');
+        $name = $request->input('nameid');
 
         $details = Mainincoming::find($mainincomingid);
 
@@ -121,6 +121,7 @@ class MainincomingController extends Controller
             $temparray = [
                 'id' => $data->id,
                 'name' => $name,
+                'peak' => $data->peak,
             ];
             array_push($finalarray,$temparray);
         }
