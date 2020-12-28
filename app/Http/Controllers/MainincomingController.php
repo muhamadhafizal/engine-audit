@@ -210,7 +210,7 @@ class MainincomingController extends Controller
             }
 
             $otherspeak = $main->peak - $totalsub;
-            $otherspercent = ($otherspeak/$main->peak)*100; 
+            $otherspercent = round(($otherspeak/$main->peak)*100); 
 
             $othersarray = [
                 'name' => 'others',
