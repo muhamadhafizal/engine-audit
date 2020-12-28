@@ -198,8 +198,21 @@ class MainincomingController extends Controller
 
             foreach($list as $data){
 
+                //generatesname
+            if($data->name != 'main'){
+                $generatesdetails = Generate::find($data->name);
+                if($generatesdetails){
+                     $name = $generatesdetails->name;
+                } else {
+                    $name = $data->name;
+                }
+               
+            } else {
+                $name = $data->name;
+            }
+
                 $temparray =[
-                    'name' => $data->name,
+                    'name' => $name,
                     'peak' => $data->peak,
                     'percent' => round(($data->peak/$main->peak)*100),
                 ];
