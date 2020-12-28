@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Imports\ExcelImport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Mainincoming;
+use App\Generate;
 
 class MainincomingController extends Controller
 {
@@ -16,7 +17,7 @@ class MainincomingController extends Controller
     public function store(Request $request){
 
         $projectid = $request->input('projectid');
-        $name = $request->input('name');
+        $nameid = $request->input('nameid');
         $excelfile = $request->file('excelfile');
         $randnumber = rand(11111, 99999) . '-' . $projectid;
  
@@ -32,7 +33,7 @@ class MainincomingController extends Controller
         $excelfile->move($destinationPath,$filename);
 
         $incomingupdate->filename = $filename;
-        $incomingupdate->name = $name;
+        $incomingupdate->name = $nameid;
 
         $incomingupdate->save();
         return response()->json(['status'=>'success','value'=>'success upload and import to database']);
@@ -105,9 +106,21 @@ class MainincomingController extends Controller
 
         foreach($list as $data){
 
+           if($data->name != 'main'){
+               $generatesdetails = Generate::find($data->name);
+               if($generatesdetails){
+                    $name = $generatesdetails->name;
+               } else {
+                   $name = $data->name;
+               }
+              
+           } else {
+               $name = $data->name;
+           }
+
             $temparray = [
                 'id' => $data->id,
-                'name' => $data->name,
+                'name' => $name,
             ];
             array_push($finalarray,$temparray);
         }
@@ -126,6 +139,19 @@ class MainincomingController extends Controller
 
         if($details){
 
+            //generatesname
+            if($details->name != 'main'){
+                $generatesdetails = Generate::find($details->name);
+                if($generatesdetails){
+                     $name = $generatesdetails->name;
+                } else {
+                    $name = $details->name;
+                }
+               
+            } else {
+                $name = $details->name;
+            }
+
             $a = json_decode($details->value);
             foreach($a as $data){
                 array_push($xarray,$data->date);
@@ -134,7 +160,7 @@ class MainincomingController extends Controller
             
             $temparray = [
                 'id' => $details->id,
-                'name' => $details->name,
+                'name' => $name,
                 'peak' => $details->peak,
                 'x-axis' => $xarray,
                 'y-axis' => $yarray,
