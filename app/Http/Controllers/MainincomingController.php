@@ -201,7 +201,7 @@ class MainincomingController extends Controller
                 $temparray =[
                     'name' => $data->name,
                     'peak' => $data->peak,
-                    'percent' => ($data->peak/$main->peak)*100,
+                    'percent' => round(($data->peak/$main->peak)*100),
                 ];
 
                 array_push($finalarray,$temparray);
