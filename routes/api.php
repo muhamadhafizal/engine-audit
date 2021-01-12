@@ -170,6 +170,7 @@ Route::get('/generate/delete', 'GenerateController@destroy');
 
 //ECM
 Route::get('/ecm', 'EcmController@index');
+Route::get('/ecm/list', 'EcmController@list');
 
 Route::get('unauthorized', ['as' => 'unauthorized', 'uses' => 'LoginController@unauthorized']);
 //token
