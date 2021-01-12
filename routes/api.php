@@ -168,6 +168,9 @@ Route::get('/generate/list', 'GenerateController@list');
 Route::post('/generate/edit', 'GenerateController@edit');
 Route::get('/generate/delete', 'GenerateController@destroy');
 
+//ECM
+Route::get('/ecm', 'EcmController@index');
+
 Route::get('unauthorized', ['as' => 'unauthorized', 'uses' => 'LoginController@unauthorized']);
 //token
 Route::group(['middleware' => ['auth:api','token']], function(){
