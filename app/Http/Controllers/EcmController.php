@@ -31,8 +31,8 @@ class EcmController extends Controller
         foreach($listroom as $rooms){
             foreach($listequipment as $equipments){
 
-                $listform = Form::where('roomid',$rooms->id)->where('equipmentid',$equipments->id)->where('category','master')->get();
-                
+                $listform = Form::where('roomid',$rooms->id)->where('equipmentid',$equipments->id)->where('category','master')->first();
+            
                 array_push($formarray,$listform);
             }
         }
@@ -40,14 +40,20 @@ class EcmController extends Controller
         // //dari formarray kita akan tarik dia punya subequipment
         foreach($formarray as $form){
 
-            echo $form;
-            // $listsub = Subinventory::where('formid',$form->id)->get();
-            // array_push($ecmitem,$listsub);
+            $listsub = Subinventory::where('formid',$form->id)->get();
+
+            $temparray = [
+                'formid' => $form->id,
+                'formname' => $form->formname,
+                'roomid' => $form->roomid,
+                'listsub' => $listsub,
+            ];
+
+            array_push($ecmitem,$temparray);
 
         }
 
-        //echo json_encode($ecmitem);
-
+        return response()->json(['status'=>'success','value'=>$ecmitem]);
 
     }
 }
