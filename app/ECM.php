@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class ECM extends Model
 {
-    //
+    protected $table = 'ecm';
 }
