@@ -39,8 +39,6 @@ class EcmController extends Controller
                 array_push($formarray,$listform);
             }
         }
-
-        dd($formarray);
         
         // //dari formarray kita akan tarik dia punya subequipment
         foreach($formarray as $form){
