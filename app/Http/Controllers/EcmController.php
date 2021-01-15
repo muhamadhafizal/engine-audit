@@ -43,27 +43,27 @@ class EcmController extends Controller
         dd($formarray);
         
         // //dari formarray kita akan tarik dia punya subequipment
-        // foreach($formarray as $form){
+        foreach($formarray as $form){
 
-        //     $listsub = Subinventory::where('formid',$form->id)->get();
+            $listsub = Subinventory::where('formid',$form->id)->get();
 
-        //     $temparray = [
-        //         'projectid' => $projectid,
-        //         'formid' => $form->id,
-        //         'formname' => $form->formname,
-        //         'roomid' => $form->roomid,
-        //         'roomname' => $form->roomname,
-        //         // 'recommendedlux' => $form->recommendedlux,
-        //         // 'averagelux' => $form->average,
-        //         // 'luxstandard' => $luxstandard,
-        //         'listsub' => $listsub,
-        //     ];
+            $temparray = [
+                'projectid' => $projectid,
+                'formid' => $form->id,
+                'formname' => $form->formname,
+                'roomid' => $form->roomid,
+                'roomname' => $form->roomname,
+                // 'recommendedlux' => $form->recommendedlux,
+                // 'averagelux' => $form->average,
+                // 'luxstandard' => $luxstandard,
+                'listsub' => $listsub,
+            ];
 
-        //     array_push($ecmitem,$temparray);
+            array_push($ecmitem,$temparray);
 
-        // }
+        }
 
-        // return response()->json(['status'=>'success','value'=>$ecmitem]);
+        return response()->json(['status'=>'success','value'=>$ecmitem]);
 
     }
 
