@@ -83,8 +83,8 @@ class EcmController extends Controller
         $controlsystemresult = null;
         $daylight = null;
         $daylightresult = null;
-        $lampcheck = null;
-        $lampcheckresult = null;
+        $lampcheck = 'no action required';
+        $lampcheckresult = 'no action required';
 
         $formdetails = Form::find($formid);
         $subinventorydeails = Subinventory::find($subinventoryid);
@@ -190,6 +190,7 @@ class EcmController extends Controller
                 $temparray = [
                     'id' => $details->id,
                     'subinventoryid' => $details->subinventoryid,
+                    'status' => $details->status,
                     'formid' => $details->formid,
                     'projectid' => $details->projectid,
                     'luxstandard' => $details->luxstandard,
@@ -207,6 +208,7 @@ class EcmController extends Controller
                     'projectid' => $details->projectid,
                     'formid' => $details->formid,
                     'subinventoryid' => $details->subinventoryid,
+                    'status' => $details->status,
                     'luxstandard' => $details->luxstandard,
                     'luxstandardname' => 'does not meet recommended standard',
                     'lampcheck' => $details->lampcheck,
