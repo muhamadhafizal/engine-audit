@@ -68,7 +68,7 @@ class EcmController extends Controller
     public function details(Request $request){
 
         $subinventoryid = $request->input('subinventoryid');
-        $formid = $request->input('formid');
+        //$formid = $request->input('formid');
         $projectid = $request->input('projectid');
 
         //genraldeclare
@@ -80,8 +80,18 @@ class EcmController extends Controller
         $lampcheck = 'no action required';
         $lampcheckresult = 'no action required';
 
-        $formdetails = Form::find($formid);
         $subinventorydeails = Subinventory::find($subinventoryid);
+
+        if($subinventorydeails){
+
+            $formid = $subinventorydeails->formid;
+
+            $formdetails = Form::find($formid);
+
+            $roomdetails = Room::where('id',$formdetails->roomid)->first();
+
+            $projectid = $roomdetails->projectid;
+        
 
         
         //luxstandard & daylight availability & lampcheck
@@ -213,6 +223,12 @@ class EcmController extends Controller
             }
 
             return response()->json(['status'=>'success','value'=>$temparray]);
+
+        } else {
+            return response()->json(['status'=>'failed','value'=>'sorry subinventory id not exist']);
+        }
+
+        
 
     }
 
