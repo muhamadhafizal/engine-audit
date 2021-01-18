@@ -223,7 +223,34 @@ class EcmController extends Controller
                 ];
             }
 
-            return response()->json(['status'=>'success','value'=>$temparray]);
+            //formarray
+            $formrray = [
+                'id' => $formdetails->id,
+                'roomid' => $formdetails->roomid,
+                'equipmentid' => $formdetails->equipmentid,
+                'roomname' => $formdetails->roomname,
+                'roomfunction' => $formdetails->roomfunction,
+                'roomarea' => $formdetails->roomarea,
+                'generalobservation' => $formdetails->generalobservation,
+                'potentialfornaturallighting' => $formdetails->potentialfornaturallighting,
+                'windowsorientation' => $formdetails->windowsorientation,
+                'recommendedlux' => $formdetails->recommendedlux,
+                'samplingpoints' => json_decode($formdetails->samplingpoints),
+                'average' => $formdetails->average,
+                'category' => $formdetails->category,
+                'grandtotalenergyconsumption' => $formdetails->grandtotalenergyconsumption,
+                'grandtotalannualenergycost' => $formdetails->grandtotalannualenergycost,
+                'formname' => $formdetails->formname,
+
+            ];
+
+            $finalarray = [
+                'result' => $temparray,
+                'forminformation' => $formrray,
+                'subinventoryinformation' => $subinventorydeails,
+            ];
+
+            return response()->json(['status'=>'success','value'=>$finalarray]);
 
         } else {
             return response()->json(['status'=>'failed','value'=>'sorry subinventory id not exist']);
