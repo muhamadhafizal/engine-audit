@@ -51,9 +51,6 @@ class EcmController extends Controller
                 'formname' => $form->formname,
                 'roomid' => $form->roomid,
                 'roomname' => $form->roomname,
-                // 'recommendedlux' => $form->recommendedlux,
-                // 'averagelux' => $form->average,
-                // 'luxstandard' => $luxstandard,
                 'listsub' => $listsub,
             ];
 
