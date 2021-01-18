@@ -70,7 +70,7 @@ class EcmController extends Controller
 
         $subinventoryid = $request->input('subinventoryid');
         //$formid = $request->input('formid');
-        $projectid = $request->input('projectid');
+        //$projectid = $request->input('projectid');
 
         //genraldeclare
         $luxstandard = null;
@@ -139,7 +139,7 @@ class EcmController extends Controller
                 $ref_deviation = $capacitydetails->deviation;
                 $ref_overlit = $lightdeviationdetails->overlitdeviation;
                 $ref_underlit = $lightdeviationdetails->underlitdeviation;
-
+                echo $$lightdeviationdetails->overlitdeviation;
                 if($capacitydetails->deviation > $lightdeviationdetails->overlitdeviation){
 
                     $lampcheck = 1;
@@ -281,7 +281,7 @@ class EcmController extends Controller
                 'subinventoryinformation' => $subinventorydeails,
             ];
 
-            return response()->json(['status'=>'success','value'=>$finalarray]);
+            //return response()->json(['status'=>'success','value'=>$finalarray]);
 
         } else {
             return response()->json(['status'=>'failed','value'=>'sorry subinventory id not exist']);
