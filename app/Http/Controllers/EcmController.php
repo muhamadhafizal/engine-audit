@@ -39,22 +39,26 @@ class EcmController extends Controller
                 array_push($formarray,$listform);
             }
         }
-        
+
         // //dari formarray kita akan tarik dia punya subequipment
         foreach($formarray as $form){
 
-            $listsub = Subinventory::where('formid',$form->id)->get();
+            if($form != null){
+                
+                $listsub = Subinventory::where('formid',$form->id)->get();
 
-            $temparray = [
-                'projectid' => $projectid,
-                'formid' => $form->id,
-                'formname' => $form->formname,
-                'roomid' => $form->roomid,
-                'roomname' => $form->roomname,
-                'listsub' => $listsub,
-            ];
+                $temparray = [
+                    'projectid' => $projectid,
+                    'formid' => $form->id,
+                    'formname' => $form->formname,
+                    'roomid' => $form->roomid,
+                    'roomname' => $form->roomname,
+                    'listsub' => $listsub,
+                ];
+    
+                array_push($ecmitem,$temparray);
 
-            array_push($ecmitem,$temparray);
+            }
 
         }
 
