@@ -131,15 +131,13 @@ class EcmController extends Controller
 
             $capacitydetails = Capacity::where('projectid',$projectid)->where('roomid',$formdetails->roomid)->first();
             $lightdeviationdetails = Lightdeviation::where('projectid',$projectid)->first();
-       
-            
 
             if($capacitydetails != null && $lightdeviationdetails != null){
 
                 $ref_deviation = $capacitydetails->deviation;
                 $ref_overlit = $lightdeviationdetails->overlitdeviation;
                 $ref_underlit = $lightdeviationdetails->underlitdeviation;
-                echo $$lightdeviationdetails->overlitdeviation;
+     
                 if($capacitydetails->deviation > $lightdeviationdetails->overlitdeviation){
 
                     $lampcheck = 1;
@@ -281,7 +279,7 @@ class EcmController extends Controller
                 'subinventoryinformation' => $subinventorydeails,
             ];
 
-            //return response()->json(['status'=>'success','value'=>$finalarray]);
+            return response()->json(['status'=>'success','value'=>$finalarray]);
 
         } else {
             return response()->json(['status'=>'failed','value'=>'sorry subinventory id not exist']);
