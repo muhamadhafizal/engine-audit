@@ -81,6 +81,14 @@ class EcmController extends Controller
         $lampcheck = 'no action required';
         $lampcheckresult = 'no action required';
 
+        $ref_average = null;
+        $ref_recommendedlux = null;
+        $ref_potentialfornaturallighting = null;
+        $ref_deviation = null;
+        $ref_overlit = null;
+        $ref_underlit = null;
+        $ref_controlsystem = null;
+
         $subinventorydeails = Subinventory::find($subinventoryid);
 
         if($subinventorydeails){
@@ -98,6 +106,10 @@ class EcmController extends Controller
         //luxstandard & daylight availability & lampcheck
 
         if($formdetails){
+
+            $ref_average = $formdetails->average;
+            $ref_recommendedlux = $formdetails->recommendedlux;
+            $ref_potentialfornaturallighting = $formdetails->potentialfornaturallighting;
 
             //luxstandard
             if($formdetails->average >= $formdetails->recommendedlux){
@@ -124,6 +136,10 @@ class EcmController extends Controller
 
             if($capacitydetails != null && $lightdeviationdetails != null){
 
+                $ref_deviation = $capacitydetails->deviation;
+                $ref_overlit = $lightdeviationdetails->overlitdeviation;
+                $ref_underlit = $lightdeviationdetails->underlitdeviation;
+
                 if($capacitydetails->deviation > $lightdeviationdetails->overlitdeviation){
 
                     $lampcheck = 1;
@@ -140,6 +156,9 @@ class EcmController extends Controller
 
         //controlsystem
         if($subinventorydeails){
+
+            $ref_controlsystem = $subinventorydeails->controlsysten;
+
             if($subinventorydeails->controlsysten == 'manual'){
                 $controlsystem = 0;
                 $controlsystemresult  = 'Install control system for exiting lamp';
@@ -244,8 +263,20 @@ class EcmController extends Controller
 
             ];
 
+            //referencearray
+            $referencearray = [
+                'ref_average' => $ref_average,
+                'ref_recommendedlux' => $ref_recommendedlux,
+                'ref_potentialfornaturallighting' => $ref_potentialfornaturallighting,
+                'ref_deviation' => $ref_deviation,
+                'ref_overlit' => $ref_overlit,
+                'ref_underlit' => $ref_underlit,
+                'ref_controlsystem' => $ref_controlsystem,
+            ];
+
             $finalarray = [
                 'result' => $temparray,
+                'reference' => $referencearray,
                 'forminformation' => $formrray,
                 'subinventoryinformation' => $subinventorydeails,
             ];
