@@ -208,6 +208,14 @@ class EcmController extends Controller
 
             $details = ECM::where('subinventoryid',$subinventoryid)->first();
 
+            if($details->lampcheck == '0'){
+                $lampcategory = 'Underlit';
+            } elseif($details->lampcheck == '1') {
+                $lampcategory = 'Overlit';
+            } else {
+                $lampcategory = 'unknown';
+            }
+
             if($details->luxstandard == '1'){
                 $temparray = [
                     'id' => $details->id,
@@ -223,6 +231,7 @@ class EcmController extends Controller
                     'efficiencyresult' => $details->efficiencyresult,
                     'controlsystem' => $details->controlsystem,
                     'controlsystemresult' => $details->controlsystemresult, 
+                    'category' => 'well-it',
                 ];
             } else {
                 $temparray = [
@@ -237,6 +246,7 @@ class EcmController extends Controller
                     'lampcheckresult' => $details->lampcheckresult,
                     'daylightavailability' => $details->daylightavailability,
                     'daylightavailabilityresult' => $details->daylightavailabilityresult,
+                    'category' => $lampcategory,
                 ];
             }
 
