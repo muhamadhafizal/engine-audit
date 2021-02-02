@@ -231,7 +231,7 @@ class EcmController extends Controller
                     'efficiencyresult' => $details->efficiencyresult,
                     'controlsystem' => $details->controlsystem,
                     'controlsystemresult' => $details->controlsystemresult, 
-                    'category' => 'well-it',
+                    'category' => 'Wellit',
                 ];
             } else {
                 $temparray = [
