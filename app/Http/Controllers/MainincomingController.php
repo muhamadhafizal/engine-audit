@@ -174,12 +174,20 @@ class MainincomingController extends Controller
         }
     }
 
+
     public function submeter(Request $request){
 
         $projectid = $request->input('projectid');
         $finalarray = array();
 
-        $list = Mainincoming::where('projectid',$projectid)->where('name','!=','main')->get();
+        $list = Mainincoming::where('projectid',$projectid)
+                              ->where(function($query){
+                              $query->where('name',null)
+                                ->orWhere('name','!=','main');
+                              })
+                              ->get();
+
+
         $main = Mainincoming::where('projectid',$projectid)->where('name','main')->first();
 
         if($main){
@@ -198,6 +206,8 @@ class MainincomingController extends Controller
             array_push($finalarray,$mainarray);
 
             foreach($list as $data){
+
+               
 
                 //generatesname
             if($data->name != 'main'){
@@ -224,6 +234,7 @@ class MainincomingController extends Controller
 
                 $totalpercent = $totalpercent + round(($data->peak/$main->peak)*100);
             }
+
 
             
 
