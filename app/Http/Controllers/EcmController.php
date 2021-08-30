@@ -11,6 +11,7 @@ use App\Setup;
 use App\ECM;
 use App\Capacity;
 use App\Lightdeviation;
+use App\Sumplytariffstructure;
 use Illuminate\Http\Request;
 
 class EcmController extends Controller
@@ -111,14 +112,14 @@ class EcmController extends Controller
             $ref_recommendedlux = $formdetails->recommendedlux;
             $ref_potentialfornaturallighting = $formdetails->potentialfornaturallighting;
 
-            //luxstandard
+            //luxstandard (main checking)
             if($formdetails->average >= $formdetails->recommendedlux){
                 $luxstandard = 1;
             } else {
                 $luxstandard = 0;
             }
 
-            //daylight availability
+            //daylight availability (2C / 2D)
             if($formdetails->potentialfornaturallighting == 'yes'){
                 $daylightavailability = 1;
                 $daylightavailabilityresult = 'Maximise daylight usage';
@@ -127,8 +128,7 @@ class EcmController extends Controller
                 $daylightavailabilityresult = 'Install more lamp';
             }
 
-            //lampcheck
-
+            //lampcheck (2A / 2B)
             $capacitydetails = Capacity::where('projectid',$projectid)->where('roomid',$formdetails->roomid)->first();
             $lightdeviationdetails = Lightdeviation::where('projectid',$projectid)->first();
 
@@ -152,7 +152,7 @@ class EcmController extends Controller
 
         }
 
-        //controlsystem
+        //controlsystem (1C / 1D)
         if($subinventorydeails){
 
             $ref_controlsystem = $subinventorydeails->controlsysten;
@@ -166,8 +166,8 @@ class EcmController extends Controller
             }
         }
 
-        
-
+        // Efficiency (1A / 1B)
+        //input current installation and corrective measure
 
         $ecmexist = ECM::where('subinventoryid',$subinventoryid)->first();
 
@@ -328,6 +328,172 @@ class EcmController extends Controller
 
         } else {
             return response()->json(['status'=>'failed','value'=>'sorry ecm item not exist']);
+        }
+
+    }
+
+    public function calculation(Request $request){
+
+        $ecm_id = $request->input('ecm_id');
+
+        $detailsecm = Ecm::find($ecm_id);
+
+        $resultdescone = '-';
+        $resultecmone = '-';
+
+        if($detailsecm){
+
+            if($detailsecm->luxstandard == '0'){
+                
+                if($detailsecm->lampcheck == '0'){
+                    if($detailsecm->daylightavailability == '0'){
+                        $resultecm = '2D';
+                        $resultdesc = 'install more lamp';
+
+                    } elseif($detailsecm->daylightavailability == '1') {
+        
+                        $resultecm = '2C';
+                        $resultdesc = 'maximise daylight usage';
+
+                    } else {
+
+                        $resultecm = 'E';
+                        $resultdesc = 'no action required';
+
+                    }
+
+                } elseif($detailsecm->lampcheck == '1') {
+
+                    $resultdesc = 'delamping';
+                    $resultecm = '2A';
+
+                } else {
+
+                    $resultdesc = 'no action required';
+                    $resultecm = 'E';
+
+                }
+
+            } else {
+          
+                if($detailsecm->effieciency == '0'){
+                    $resultdesc = 'change to higher efficiency';
+                    $resultecm = '1B';
+                } elseif($detailsecm->effieciency == '1'){
+                    $resultdesc = 'No ECM';
+                    $resultecm = '1A';
+                } else {
+                    $resultdesc = 'no action required';
+                    $resultecm = 'E';
+                }
+
+                if($detailsecm->controlsystem == '0'){
+                    $resultdescone = 'install control system for existing lamp';
+                    $resultecmone = '1D';
+                } elseif($detailsecm->controlsystem == '1'){
+                    $resultdescone = 'No ECM';
+                    $resultecmone = '1C';
+                }
+
+            }
+
+            if($resultecm == 'E'){
+                return response()->json(['status'=>'success','value'=>'no calculation required']);
+            } else {
+
+                if($resultecm == '2D'){
+
+                    $formdetails = Form::find($detailsecm->formid);
+                    $subinventorydetails = Subinventory::find($detailsecm->subinventoryid);
+                    $sumplytariff = Sumplytariffstructure::where('projectid',$detailsecm->projectid)->first();
+
+                    //difference in lux
+                    $difference_lux = $formdetails->recommendedlux - $formdetails->average;
+
+                    //number of lamp required
+                    if($detailsecm->underlit_lumen_of_lamp == null){
+                        $lumen_of_lamp = 0;
+                    } else{
+                        $lumen_of_lamp = $detailsecm->underlit_lumen_of_lamp;
+                    }
+                    if($difference_lux > 0){
+                       $number_of_lamp = $difference_lux * $formdetails->roomarea / $lumen_of_lamp;
+                    } else {
+                        $number_of_lamp = 0;
+                    }
+
+                    //investment cost
+                    if($detailsecm->underlit_unit_price_of_lamp == null){
+                        $unit_price_lamp = 0;
+                    } else {
+                        $unit_price_lamp = $detailsecm->underlit_unit_price_of_lamp;
+                    }
+
+                    $investment_cost = $number_of_lamp * $unit_price_lamp;
+
+                    //annual energy consumption
+                    if($detailsecm->underlit_power_rating_of_lamp == null){
+                        $power_rating_of_lamp = 0;
+                    } else {
+                        $power_rating_of_lamp = $detailsecm->underlit_power_rating_of_lamp;
+                    }
+ 
+                    $annual_energy_consumption = (($power_rating_of_lamp / 1000 * $number_of_lamp) * $subinventorydetails->loadfactory) * $subinventorydetails->consumptionduration * $subinventorydetails->annualoperationdays;
+                    
+                    //annual energy cost
+
+                    $annual_energy_cost = (($power_rating_of_lamp / 1000 * $subinventorydetails->loadfactory) * $number_of_lamp * $subinventorydetails->peakdurationcostoperation * $sumplytariff->structurepeak + ($power_rating_of_lamp * $subinventorydetails->loadfactory / 1000) * $number_of_lamp * $subinventorydetails->offpeakduration * $sumplytariff->structureoffpeak) * $subinventorydetails->annualoperationdays;
+
+                    $detailsecm->underlit_difference_in_lux = $difference_lux;
+                    $detailsecm->underlit_number_of_lamp_required = $number_of_lamp;
+                    $detailsecm->underlit_investment_cost = $investment_cost;
+                    $detailsecm->underlit_annual_energy_consumption = $annual_energy_consumption;
+                    $detailsecm->underlit_annual_energy_cost = $annual_energy_cost;
+
+                    $detailsecm->save();
+
+                    $finalresult = [
+                        'type_of_lamp' => $detailsecm->underlit_type_of_lamp,
+                        'unit_price_of_lamp' => $detailsecm->underlit_unit_price_of_lamp,
+                        'lumen_of_lamp' => $detailsecm->underlit_lumen_of_lamp,
+                        'power_rating_of_lamp' => $detailsecm->underlit_power_rating_of_lamp,
+                        'difference_in_lux' => $detailsecm->underlit_difference_in_lux,
+                        'number_of_lamp_required' => $detailsecm->underlit_number_of_lamp_required,
+                        'investment_cost' => $detailsecm->underlit_investment_cost,
+                        'annual_energy_consumption' => $detailsecm->underlit_annual_energy_consumption,
+                        'annual_energy_cost' => $detailsecm->underlit_annual_energy_cost,
+                    ];
+
+                } elseif($resultecm == '2C'){
+                    echo 'calculation 4';
+                } elseif($resultecm == '2A'){
+                    echo 'calculation 1 overlit';
+                } elseif($resultecm == '1B'){
+                    echo 'calculation 2';
+                }
+
+                if($resultecmone == '1D'){
+                    echo 'calculation 3';
+                }
+
+                $finalarray = array();
+
+                $finalarray = [
+                    'ecm_id' => $detailsecm->id,
+                    'result_ecm' => $resultecm,
+                    'result_ecmdesc' => $resultdesc,
+                    'result_ecmone' => $resultecmone,
+                    'result_ecmonedesc' => $resultdescone,
+                    'finalresult' => $finalresult,
+                    'ecm_calculation_desc' => 'calculation 1 underlit',
+                ];
+
+            }
+
+            return response()->json(['status'=>'success','value'=>$finalarray]);
+
+        } else {
+            return response()->json(['status'=>'failed','value'=>'sorry ecm id not exist']);
         }
 
     }
