@@ -338,6 +338,8 @@ class EcmController extends Controller
 
         $detailsecm = Ecm::find($ecm_id);
 
+        $finalresult = array();
+
         $resultdescone = '-';
         $resultecmone = '-';
 
@@ -375,7 +377,7 @@ class EcmController extends Controller
                 }
 
             } else {
-          
+                //luxstandar = 1
                 if($detailsecm->effieciency == '0'){
                     $resultdesc = 'change to higher efficiency';
                     $resultecm = '1B';
@@ -397,7 +399,7 @@ class EcmController extends Controller
 
             }
 
-            if($resultecm == 'E'){
+            if($resultecm == 'E' || $resultecm == '1A'){
                 return response()->json(['status'=>'success','value'=>'no calculation required']);
             } else {
 
@@ -462,12 +464,89 @@ class EcmController extends Controller
                         'investment_cost' => $detailsecm->underlit_investment_cost,
                         'annual_energy_consumption' => $detailsecm->underlit_annual_energy_consumption,
                         'annual_energy_cost' => $detailsecm->underlit_annual_energy_cost,
+                        'ecm_calculation_desc' => 'calculation 1 underlit',
                     ];
 
                 } elseif($resultecm == '2C'){
                     echo 'calculation 4';
                 } elseif($resultecm == '2A'){
-                    echo 'calculation 1 overlit';
+                    //echo 'calculation 1 overlit';
+                    $formdetails = Form::find($detailsecm->formid);
+                    $subinventorydetails = Subinventory::find($detailsecm->subinventoryid);
+                    $sumplytariff = Sumplytariffstructure::where('projectid',$detailsecm->projectid)->first();
+                    
+                    //difference in lux
+                    $difference_lux = $formdetails->recommendedlux - $formdetails->average;
+
+                    //number of delamping
+                    if($detailsecm->overlit_lumen_of_lamp == null){
+                        $number_of_delamping = 0;
+                    } else {
+                        $number_of_delamping = $difference_lux * $formdetails->roomarea / $detailsecm->overlit_lumen_of_lamp; 
+                    }
+
+                    //Annual enery consumption
+                   if($subinventorydetails){
+                        $annual_energy_consumption = (( $detailsecm->overlit_power_rating_for_lamp / 1000 * $number_of_delamping) * $subinventorydetails->loadfactory) * $subinventorydetails->consumptionduration * $subinventorydetails->annualoperationdays;
+                   } else {
+                       $annual_energy_consumption = 0;
+                   }
+                   
+                   //Annual energy cost
+                   if($subinventorydetails != null && $sumplytariff != null){
+                    $annual_energy_cost = (( $detailsecm->overlit_power_rating_for_lamp / 1000 * $subinventorydetails->loadfactory) * $number_of_delamping * $subinventorydetails->peakdurationcostoperation * $sumplytariff->structurepeak + ($detailsecm->overlit_power_rating_of_lamp * $subinventorydetails->loadfactory / 1000) * $number_of_delamping * $subinventorydetails->offpeakduration * $sumplytariff->structureoffpeak) * $subinventorydetails->annualoperationdays;    
+                   } else {
+                    $annual_energy_cost = 0;
+                   }
+
+                   //Annual energy saving
+                   if($subinventorydetails){
+                        $annual_energy_saving = $subinventorydetails->consumptionduratin - $annual_energy_consumption;
+                   } else {
+                       $annual_energy_saving = 0;
+                   }
+
+                   //Annual cost saving
+                   if($subinventorydetails){
+                        $annual_cost_saving = $subinventorydetails->annualenergycost - $annual_energy_cost;
+                   } else {
+                       $annual_cost_saving = 0;
+                   }
+
+                   //Payback Period
+                   if($detailsecm->overlit_investment_cost == null){
+                       $payback_period = 0;
+                   } else {
+                       $payback_period = $detailsecm->overlit_investment_cost / $annual_cost_saving;
+                   }
+
+                   $detailsecm->overlit_difference_in_lux = $difference_lux;
+                   $detailsecm->overlit_number_of_delamping = $number_of_delamping;
+                   $detailsecm->overlit_annual_energy_consumption = $annual_energy_consumption;
+                   $detailsecm->overlit_annual_energy_cost = $annual_energy_cost;
+                   $detailsecm->overlit_annual_energy_saving = $annual_energy_saving;
+                   $detailsecm->overlit_annual_cost_saving = $annual_cost_saving;
+                   $detailsecm->overlit_payback_period = $payback_period;
+                   $detailsecm->save();
+                    
+                   $finalresult = [
+                       'type_of_lamp' => $detailsecm->overlit_type_of_lamp,
+                       'unit_price_of_lamp' => $detailsecm->overlit_unit_price_of_lamp,
+                       'lumen_of_lamp' => $detailsecm->overlit_lumen_of_lamp,
+                       'power_rating_of_lamp' => $detailsecm->overlit_power_rating_of_lamp,
+                       'difference_lux' => $detailsecm->overlit_differenct_in_lux,
+                       'number_of_delamping' => $detailsecm->overlit_number_of_delamping,
+                       'annual_energy_consumption' => $detailsecm->overlit_annual_energy_consumption,
+                       'annual_energy_cost' => $detailsecm->overlit_annual_energy_cost,
+                       'annual_energy_saving' => $detailsecm->overlit_annual_energy_saving,
+                       'annual_cost_saving' => $detailsecm->overlit_annual_cost_saving,
+                       'investment_cost' => $detailsecm->overlit_investment_cost,
+                       'payback_period' => $detailsecm->overlit_payback_period,
+                       'ecm_calculation_desc' => 'calculation 1 overlit',
+                   ];
+
+                    
+
                 } elseif($resultecm == '1B'){
                     echo 'calculation 2';
                 }
@@ -485,12 +564,13 @@ class EcmController extends Controller
                     'result_ecmone' => $resultecmone,
                     'result_ecmonedesc' => $resultdescone,
                     'finalresult' => $finalresult,
-                    'ecm_calculation_desc' => 'calculation 1 underlit',
                 ];
 
             }
 
-            return response()->json(['status'=>'success','value'=>$finalarray]);
+            dd($finalarray);
+
+            //return response()->json(['status'=>'success','value'=>$finalarray]);
 
         } else {
             return response()->json(['status'=>'failed','value'=>'sorry ecm id not exist']);
