@@ -377,7 +377,7 @@ class EcmController extends Controller
                 }
 
             } else {
-                //luxstandar = 1
+                //luxstandard = 1
                 if($detailsecm->effieciency == '0'){
                     $resultdesc = 'change to higher efficiency';
                     $resultecm = '1B';
@@ -399,8 +399,8 @@ class EcmController extends Controller
 
             }
 
-            if($resultecm == 'E' || $resultecm == '1A'){
-                return response()->json(['status'=>'success','value'=>'no calculation required']);
+            if($resultecm == 'E' || $resultecm == '1A' || $resultecm == '1C'){
+                return response()->json(['status'=>'success','value'=>'no calculation required or NO ECM']);
             } else {
 
                 if($resultecm == '2D'){
@@ -468,7 +468,11 @@ class EcmController extends Controller
                     ];
 
                 } elseif($resultecm == '2C'){
-                    echo 'calculation 4';
+                    // echo 'calculation 4';
+                    // echo $resultdesc;
+
+                    $annual_energy_saving = 
+
                 } elseif($resultecm == '2A'){
                     //echo 'calculation 1 overlit';
                     $formdetails = Form::find($detailsecm->formid);
@@ -549,10 +553,12 @@ class EcmController extends Controller
 
                 } elseif($resultecm == '1B'){
                     echo 'calculation 2';
+                    echo $resultdesc;
                 }
 
                 if($resultecmone == '1D'){
                     echo 'calculation 3';
+                    echo $resultdescone;
                 }
 
                 $finalarray = array();
@@ -568,7 +574,7 @@ class EcmController extends Controller
 
             }
 
-            dd($finalarray);
+            //dd($finalarray);
 
             //return response()->json(['status'=>'success','value'=>$finalarray]);
 
