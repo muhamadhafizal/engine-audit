@@ -350,12 +350,12 @@ class EcmController extends Controller
                 if($detailsecm->lampcheck == '0'){
                     if($detailsecm->daylightavailability == '0'){
                         $resultecm = '2D';
-                        $resultdesc = 'install more lamp';
+                        $resultdesc = '(underlit area) install more lamp';
 
                     } elseif($detailsecm->daylightavailability == '1') {
         
                         $resultecm = '2C';
-                        $resultdesc = 'maximise daylight usage';
+                        $resultdesc = '(underlit) maximise daylight usage';
 
                     } else {
 
@@ -366,7 +366,7 @@ class EcmController extends Controller
 
                 } elseif($detailsecm->lampcheck == '1') {
 
-                    $resultdesc = 'delamping';
+                    $resultdesc = '(overlit area) delamping';
                     $resultecm = '2A';
 
                 } else {
@@ -470,8 +470,34 @@ class EcmController extends Controller
                 } elseif($resultecm == '2C'){
                     // echo 'calculation 4';
                     // echo $resultdesc;
+                    $formdetails = Form::find($detailsecm->formid);
+                    $subinventorydetails = Subinventory::find($detailsecm->subinventoryid);
+                    $tariffstructure = Sumplytariffstructure::where('projectid',$detailsecm->projectid)->first();
 
-                    $annual_energy_saving = 
+                    if($subinventorydetails != null && $formdetails != null){
+                        $annual_energy_saving = ($subinventorydetails->powerratingperfixture/1000) * $subinventorydetails->totalnumberoffixtures * $detailsecm->maximize_duration_of_daylight_usage * $subinventorydetails->annualoperationdays;
+                    } else {
+                        $annual_energy_saving = 0;
+                    }
+
+                    if($subinventorydetails != null && $formdetails != null && $tariffstructure != null){
+                        $annual_energy_cost_saving = ($subinventorydetails->powerratingperfixture/1000) * $subinventorydetails->totalnumberoffixtures * $detailsecm->maximize_duration_of_daylight_usage * $tariffstructure->structurepeak;
+                    } else {
+                        $annual_energy_cost_saving = 0;
+                    }
+
+                    $detailsecm->maximize_annual_energy_saving = $annual_energy_saving;
+                    $detailsecm->maximize_annual_energy_cost_saving = $annual_energy_cost_saving;
+
+                    $detailsecm->save();
+
+                    $finalresult = [
+                        'duration_of_daylight' => $detailsecm->maximize_duration_of_daylight_usage,
+                        'annual_energy_saving' => $detailsecm->maximize_annual_energy_saving,
+                        'annual_energy_cost_saving' => $detailsecm->maximize_annual_energy_cost_saving,
+                    ];
+
+                    
 
                 } elseif($resultecm == '2A'){
                     //echo 'calculation 1 overlit';
@@ -518,7 +544,7 @@ class EcmController extends Controller
                    }
 
                    //Payback Period
-                   if($detailsecm->overlit_investment_cost == null){
+                   if($detailsecm->overlit_investment_cost == null || $annual_cost_saving == 0){
                        $payback_period = 0;
                    } else {
                        $payback_period = $detailsecm->overlit_investment_cost / $annual_cost_saving;
@@ -537,8 +563,8 @@ class EcmController extends Controller
                        'type_of_lamp' => $detailsecm->overlit_type_of_lamp,
                        'unit_price_of_lamp' => $detailsecm->overlit_unit_price_of_lamp,
                        'lumen_of_lamp' => $detailsecm->overlit_lumen_of_lamp,
-                       'power_rating_of_lamp' => $detailsecm->overlit_power_rating_of_lamp,
-                       'difference_lux' => $detailsecm->overlit_differenct_in_lux,
+                       'power_rating_for_lamp' => $detailsecm->overlit_power_rating_for_lamp,
+                       'difference_lux' => $detailsecm->overlit_difference_in_lux,
                        'number_of_delamping' => $detailsecm->overlit_number_of_delamping,
                        'annual_energy_consumption' => $detailsecm->overlit_annual_energy_consumption,
                        'annual_energy_cost' => $detailsecm->overlit_annual_energy_cost,
@@ -552,13 +578,85 @@ class EcmController extends Controller
                     
 
                 } elseif($resultecm == '1B'){
-                    echo 'calculation 2';
-                    echo $resultdesc;
+                    // echo 'calculation 2';
+                    // echo $resultdesc;
+
+                    $formdetails = Form::find($detailsecm->formid);
+                    $subinventorydetails = Subinventory::find($detailsecm->subinventoryid);
+                    $tariffstructure = Sumplytariffstructure::where('projectid',$detailsecm->projectid)->first();
+
+                    if($formdetails != null && $subinventorydetails != null){
+                        $total_lumen_required_for_room = $formdetails->roomarea * $formdetails->average;                        
+                    } else {
+                        $total_lumen_required_for_room = 0;
+                    }
+
+                    if($detailsecm->efficacy_corrective_lumen_of_lamp != null){
+                        $number_of_lamp_required = $total_lumen_required_for_room / $detailsecm->efficacy_corrective_lumen_of_lamp;
+                    } else {
+                        $number_of_lamp_required = 0;
+                    }
+
+                    if($subinventorydetails != null && $tariffstructure != null){
+                        $annual_energy_consumption_after_ecm = (($detailsecm->efficacy_corrective_power_rating * $subinventorydetails->loadfactory / 1000) * $number_of_lamp_required * $subinventorydetails->consumptionduration) * $subinventorydetails->annualoperationdays;
+                    } else {
+                        $annual_energy_consumption_after_ecm = 0;
+                    }
+
+                    if($subinventorydetails != null){
+                        $annual_energy_cost_after_ecm = (($detailsecm->efficacy_corrective_power_rating * $subinventorydetails->loadfactory / 1000) * $number_of_lamp_required * $subinventorydetails->peakdurationcostoperation * $tariffstructure->structurepeak + ($detailsecm->efficacy_corrective_power_rating * $subinventorydetails->loadfactory / 1000) * $number_of_lamp_required * $subinventorydetails->offpeakduration * $tariffstructure->structureoffpeak)* $subinventorydetails->annualoperationdays;
+                    } else {
+                        $annual_energy_cost_after_ecm = 0;
+                    }
+
+                    if($subinventorydetails != null){
+                        $annual_energy_saving = $subinventorydetails->annualenergycost - $annual_energy_consumption_after_ecm;
+                    } else {
+                        $annual_energy_saving = 0;
+                    }
+
+                    if($subinventorydetails != null){
+                        $annual_cost_saving = $subinventorydetails->annualenergycost - $annual_energy_cost_after_ecm;
+                    } else {
+                        $annual_cost_saving = 0;
+                    }
+
+                    $investment_cost = $number_of_lamp_required * $detailsecm->efficacy_corrective_unit_price_of_lamp;
+                    $payback_period = $investment_cost/$annual_cost_saving;
+
+                    $detailsecm->efficacy_corrective_number_of_lamp_required = $number_of_lamp_required;
+                    $detailsecm->efficacy_corrective_annual_energy_consumption = $annual_energy_consumption_after_ecm;
+                    $detailsecm->efficacy_corrective_annual_energy_cost = $annual_energy_cost_after_ecm;
+                    $detailsecm->efficacy_corrective_annual_energy_saving = $annual_energy_saving;
+                    $detailsecm->efficacy_corrective_investment_cost = $annual_cost_saving;
+                    $detailsecm->efficacy_corrective_investment_cost = $investment_cost;
+                    $detailsecm->efficacy_corrective_payback_period = $payback_period;
+
+                    $detailsecm->save();
+
+                    $finalresult = [
+                        'total_lumen_required_for_room' => $total_lumen_required_for_room,
+                        'power_rating_of_existing_lemp' => $detailsecm->efficacy_current_power_rating,
+                        'current_efficacy_of_lamp' => $detailsecm->efficacy_current_efficacy_lamp,
+                        'total_number_of_lamp' => $detailsecm->efficacy_current_total_number_of_lamp,
+                        'type_of_lamp' => $detailsecm->efficacy_corrective_type_of_lamp,
+                        'corrective_efficacy_of_lamp' => $detailsecm->efficacy_corrective_efficacy_of_lamp,
+                        'unit_price_of_lamp' => $detailsecm->efficacy_corrective_unit_price_of_lamp,
+                        'lumen_of_lamp' => $detailsecm->efficacy_corrective_lumen_of_lamp,
+                        'power_rating' => $detailsecm->efficacy_corrective_power_rating,
+                        'number_of_lamp_required' => $number_of_lamp_required,
+                        'annual_energy_consumption_after_ecm' => $annual_energy_consumption_after_ecm,
+                        'annual_energy_cost_after_ecm' => $annual_energy_cost_after_ecm,
+                        'annual_energy_saving' => $annual_energy_saving,
+                        'annual_cost_saving' => $annual_cost_saving,
+                        'investment_cost' => $investment_cost,
+                        'payback_period' => $payback_period,
+                    ];
+
                 }
 
                 if($resultecmone == '1D'){
-                    echo 'calculation 3';
-                    echo $resultdescone;
+                   //no calcution
                 }
 
                 $finalarray = array();
@@ -574,13 +672,78 @@ class EcmController extends Controller
 
             }
 
-            //dd($finalarray);
-
-            //return response()->json(['status'=>'success','value'=>$finalarray]);
+            return response()->json(['status'=>'success','value'=>$finalarray]);
 
         } else {
             return response()->json(['status'=>'failed','value'=>'sorry ecm id not exist']);
         }
+
+    }
+
+    public function inputvalueecm(Request $request){
+
+        $ecmid = $request->input('ecm_id');
+        $ecmdetails = ECM::find($ecmid);
+
+        if($ecmdetails){
+            //underlit
+            $underlit_type_of_lamp = $request->input('underlit_type_of_lamp');
+            $underlit_unit_price_of_lamp = $request->input('underlit_unit_price_of_lamp');
+            $underlit_lumen_of_lamp = $request->input('underlit_lumen_of_lamp');
+            $underlit_power_rating_of_lamp = $request->input('underlit_power_rating_of_lamp');
+
+            $ecmdetails->underlit_type_of_lamp = $underlit_type_of_lamp;
+            $ecmdetails->underlit_unit_price_of_lamp = $underlit_unit_price_of_lamp;
+            $ecmdetails->underlit_lumen_of_lamp = $underlit_lumen_of_lamp;
+            $ecmdetails->underlit_power_rating_of_lamp = $underlit_power_rating_of_lamp;
+
+            //overlit
+            $overlit_type_of_lamp = $request->input('overlit_type_of_lamp');
+            $overlit_unit_price_of_lamp = $request->input('overlit_unit_price_of_lamp');
+            $overlit_lumen_of_lamp = $request->input('overlit_lumen_of_lamp');
+            $overlit_power_rating_for_lamp = $request->input('overlit_power_rating_for_lamp');
+            $overlit_investment_cost = $request->input('overlit_investment_cost');
+
+            $ecmdetails->overlit_type_of_lamp = $overlit_type_of_lamp;
+            $ecmdetails->overlit_unit_price_of_lamp = $overlit_unit_price_of_lamp;
+            $ecmdetails->overlit_lumen_of_lamp = $overlit_lumen_of_lamp;
+            $ecmdetails->overlit_power_rating_for_lamp = $overlit_power_rating_for_lamp;
+            $ecmdetails->overlit_investment_cost = $overlit_investment_cost;
+            $ecmdetails->overlit_power_rating_for_lamp;
+
+            //maximise daylight usage
+            $maximize_duration_of_daylight_usage = $request->input('maximize_duration_of_daylight_usage');
+
+            $ecmdetails->maximize_duration_of_daylight_usage = $maximize_duration_of_daylight_usage;
+
+            //efficacy lamp
+            $efficacy_current_power_rating = $request->input('efficacy_current_power_rating');
+            $efficacy_current_efficacy_lamp = $request->input('efficacy_current_efficacy_lamp');
+            $efficacy_current_total_number_of_lamp = $request->input('efficacy_current_total_number_of_lamp');
+            $efficacy_corrective_type_of_lamp = $request->input('efficacy_corrective_type_of_lamp');
+            $efficacy_corrective_efficacy_of_lamp = $request->input('efficacy_corrective_efficacy_of_lamp');
+            $efficacy_corrective_unit_price_of_lamp = $request->input('efficacy_corrective_unit_price_of_lamp');
+            $efficacy_corrective_lumen_of_lamp = $request->input('efficacy_corrective_lumen_of_lamp');
+            $efficacy_corrective_power_rating = $request->input('efficacy_corrective_power_rating');
+
+            $ecmdetails->efficacy_current_power_rating = $efficacy_current_power_rating;
+            $ecmdetails->efficacy_current_efficacy_lamp = $efficacy_current_efficacy_lamp;
+            $ecmdetails->efficacy_current_total_number_of_lamp = $efficacy_current_total_number_of_lamp;
+            $ecmdetails->efficacy_corrective_type_of_lamp = $efficacy_corrective_type_of_lamp;
+            $ecmdetails->efficacy_corrective_efficacy_of_lamp = $efficacy_corrective_efficacy_of_lamp;
+            $ecmdetails->efficacy_corrective_unit_price_of_lamp = $efficacy_corrective_unit_price_of_lamp;
+            $ecmdetails->efficacy_corrective_lumen_of_lamp = $efficacy_corrective_lumen_of_lamp;
+            $ecmdetails->efficacy_corrective_power_rating = $efficacy_corrective_power_rating;
+
+            $ecmdetails->save();
+
+            return response()->json(['status'=>'success','value'=>'success save ecm info']);
+
+        } else {
+            return response()->json(['status'=>'failed','value'=>'ecm id not exist']);
+        }
+        
+
 
     }
 }

@@ -174,6 +174,7 @@ Route::get('/ecm/list', 'EcmController@list');
 Route::get('/ecm/details', 'EcmController@details');
 Route::post('/ecm/insertinputefficiency', 'EcmController@insertinputefficiency');
 Route::get('/ecm/calculationenergyconservationmeasures', 'EcmController@calculation');
+Route::post('/ecm/inputvalueecm', 'EcmController@inputvalueecm');
 
 Route::get('unauthorized', ['as' => 'unauthorized', 'uses' => 'LoginController@unauthorized']);
 //token
