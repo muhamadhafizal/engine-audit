@@ -440,36 +440,37 @@ class EcmController extends Controller
                         $annual_energy_consumption = 0;
                     }
                     
+                    echo $power_rating_of_lamp;
                     
                     //annual energy cost
-                    if($subinventorydetails && $sumplytariff){
-                        $annual_energy_cost = (($power_rating_of_lamp / 1000 * $subinventorydetails->loadfactory) * $number_of_lamp * $subinventorydetails->peakdurationcostoperation * $sumplytariff->structurepeak + ($power_rating_of_lamp * $subinventorydetails->loadfactory / 1000) * $number_of_lamp * $subinventorydetails->offpeakduration * $sumplytariff->structureoffpeak) * $subinventorydetails->annualoperationdays;
-                    } else {
-                        $annual_energy_cost = 0;
-                    }
+                    // if($subinventorydetails && $sumplytariff){
+                    //     $annual_energy_cost = (($power_rating_of_lamp / 1000 * $subinventorydetails->loadfactory) * $number_of_lamp * $subinventorydetails->peakdurationcostoperation * $sumplytariff->structurepeak + ($power_rating_of_lamp * $subinventorydetails->loadfactory / 1000) * $number_of_lamp * $subinventorydetails->offpeakduration * $sumplytariff->structureoffpeak) * $subinventorydetails->annualoperationdays;
+                    // } else {
+                    //     $annual_energy_cost = 0;
+                    // }
                     
 
-                    $detailsecm->underlit_difference_in_lux = $difference_lux;
-                    $detailsecm->underlit_number_of_lamp_required = $number_of_lamp;
-                    $detailsecm->underlit_investment_cost = $investment_cost;
-                    $detailsecm->underlit_annual_energy_consumption = $annual_energy_consumption;
-                    $detailsecm->underlit_annual_energy_cost = $annual_energy_cost;
-                    $detailsecm->result_ecm = '2D';
+                    // $detailsecm->underlit_difference_in_lux = $difference_lux;
+                    // $detailsecm->underlit_number_of_lamp_required = $number_of_lamp;
+                    // $detailsecm->underlit_investment_cost = $investment_cost;
+                    // $detailsecm->underlit_annual_energy_consumption = $annual_energy_consumption;
+                    // $detailsecm->underlit_annual_energy_cost = $annual_energy_cost;
+                    // $detailsecm->result_ecm = '2D';
 
-                    $detailsecm->save();
+                    // $detailsecm->save();
 
-                    $finalresult = [
-                        'type_of_lamp' => $detailsecm->underlit_type_of_lamp,
-                        'unit_price_of_lamp' => $detailsecm->underlit_unit_price_of_lamp,
-                        'lumen_of_lamp' => $detailsecm->underlit_lumen_of_lamp,
-                        'power_rating_of_lamp' => $detailsecm->underlit_power_rating_of_lamp,
-                        'difference_in_lux' => $detailsecm->underlit_difference_in_lux,
-                        'number_of_lamp_required' => $detailsecm->underlit_number_of_lamp_required,
-                        'investment_cost' => $detailsecm->underlit_investment_cost,
-                        'annual_energy_consumption' => $detailsecm->underlit_annual_energy_consumption,
-                        'annual_energy_cost' => $detailsecm->underlit_annual_energy_cost,
-                        'ecm_calculation_desc' => 'calculation 1 underlit',
-                    ];
+                    // $finalresult = [
+                    //     'type_of_lamp' => $detailsecm->underlit_type_of_lamp,
+                    //     'unit_price_of_lamp' => $detailsecm->underlit_unit_price_of_lamp,
+                    //     'lumen_of_lamp' => $detailsecm->underlit_lumen_of_lamp,
+                    //     'power_rating_of_lamp' => $detailsecm->underlit_power_rating_of_lamp,
+                    //     'difference_in_lux' => $detailsecm->underlit_difference_in_lux,
+                    //     'number_of_lamp_required' => $detailsecm->underlit_number_of_lamp_required,
+                    //     'investment_cost' => $detailsecm->underlit_investment_cost,
+                    //     'annual_energy_consumption' => $detailsecm->underlit_annual_energy_consumption,
+                    //     'annual_energy_cost' => $detailsecm->underlit_annual_energy_cost,
+                    //     'ecm_calculation_desc' => 'calculation 1 underlit',
+                    // ];
 
                 } elseif($resultecm == '2C'){
                     // echo 'calculation 4';
