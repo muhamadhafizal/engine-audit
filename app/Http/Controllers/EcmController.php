@@ -410,7 +410,11 @@ class EcmController extends Controller
                         $lumen_of_lamp = $detailsecm->underlit_lumen_of_lamp;
                     }
                     if($difference_lux > 0){
-                       $number_of_lamp = $difference_lux * $formdetails->roomarea / $lumen_of_lamp;
+                       if($lumen_of_lamp == 0){
+                           $number_of_lamp = 0;
+                       } else {
+                           $number_of_lamp = $difference_lux * $formdetails->roomarea / $lumen_of_lamp;
+                       }
                     } else {
                         $number_of_lamp = 0;
                     }
