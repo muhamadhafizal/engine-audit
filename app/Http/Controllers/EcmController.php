@@ -442,7 +442,7 @@ class EcmController extends Controller
                     
                     
                     //annual energy cost
-                    if($subinventorydetails){
+                    if($subinventorydetails && $sumplytariff){
                         $annual_energy_cost = (($power_rating_of_lamp / 1000 * $subinventorydetails->loadfactory) * $number_of_lamp * $subinventorydetails->peakdurationcostoperation * $sumplytariff->structurepeak + ($power_rating_of_lamp * $subinventorydetails->loadfactory / 1000) * $number_of_lamp * $subinventorydetails->offpeakduration * $sumplytariff->structureoffpeak) * $subinventorydetails->annualoperationdays;
                     } else {
                         $annual_energy_cost = 0;
