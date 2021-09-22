@@ -13,6 +13,7 @@ use App\Capacity;
 use App\Lightdeviation;
 use App\Sumplytariffstructure;
 use Illuminate\Http\Request;
+use App\Ecmresult;
 
 class EcmController extends Controller
 {
@@ -41,7 +42,7 @@ class EcmController extends Controller
             }
         }
 
-        // //dari formarray kita akan tarik dia punya subequipment
+        //dari formarray kita akan tarik dia punya subequipment
         foreach($formarray as $form){
 
             if($form != null){
@@ -50,8 +51,6 @@ class EcmController extends Controller
 
                 $temparray = [
                     'projectid' => $projectid,
-                    'formid' => $form->id,
-                    'formname' => $form->formname,
                     'roomid' => $form->roomid,
                     'roomname' => $form->roomname,
                     'listsub' => $listsub,
@@ -95,17 +94,11 @@ class EcmController extends Controller
         if($subinventorydeails){
 
             $formid = $subinventorydeails->formid;
-
             $formdetails = Form::find($formid);
-
             $roomdetails = Room::where('id',$formdetails->roomid)->first();
-
             $projectid = $roomdetails->projectid;
         
-
-        
         //luxstandard & daylight availability & lampcheck
-
         if($formdetails){
 
             $ref_average = $formdetails->average;
@@ -295,8 +288,6 @@ class EcmController extends Controller
             return response()->json(['status'=>'failed','value'=>'sorry subinventory id not exist']);
         }
 
-        
-
     }
 
     public function insertinputefficiency(Request $request){
@@ -451,6 +442,7 @@ class EcmController extends Controller
                     $detailsecm->underlit_investment_cost = $investment_cost;
                     $detailsecm->underlit_annual_energy_consumption = $annual_energy_consumption;
                     $detailsecm->underlit_annual_energy_cost = $annual_energy_cost;
+                    $detailsecm->result_ecm = '2D';
 
                     $detailsecm->save();
 
@@ -488,6 +480,7 @@ class EcmController extends Controller
 
                     $detailsecm->maximize_annual_energy_saving = $annual_energy_saving;
                     $detailsecm->maximize_annual_energy_cost_saving = $annual_energy_cost_saving;
+                    $detailsecm->result_ecm = '2C';
 
                     $detailsecm->save();
 
@@ -557,6 +550,7 @@ class EcmController extends Controller
                    $detailsecm->overlit_annual_energy_saving = $annual_energy_saving;
                    $detailsecm->overlit_annual_cost_saving = $annual_cost_saving;
                    $detailsecm->overlit_payback_period = $payback_period;
+                   $detailsecm->result_ecm = '2A';
                    $detailsecm->save();
                     
                    $finalresult = [
@@ -628,9 +622,10 @@ class EcmController extends Controller
                     $detailsecm->efficacy_corrective_annual_energy_consumption = $annual_energy_consumption_after_ecm;
                     $detailsecm->efficacy_corrective_annual_energy_cost = $annual_energy_cost_after_ecm;
                     $detailsecm->efficacy_corrective_annual_energy_saving = $annual_energy_saving;
-                    $detailsecm->efficacy_corrective_investment_cost = $annual_cost_saving;
+                    $detailsecm->efficacy_corrective_annual_cost_saving = $annual_cost_saving;
                     $detailsecm->efficacy_corrective_investment_cost = $investment_cost;
                     $detailsecm->efficacy_corrective_payback_period = $payback_period;
+                    $detailsecm->result_ecm = '1B';
 
                     $detailsecm->save();
 
@@ -742,8 +737,162 @@ class EcmController extends Controller
         } else {
             return response()->json(['status'=>'failed','value'=>'ecm id not exist']);
         }
-        
+    }
 
+    public function summary(Request $request){
+
+        $project_id = $request->input('project_id');
+
+        $ecmlists = ECM::where('projectid',$project_id)->where('result_ecm','!=',null)->get();
+
+        if(sizeof($ecmlists)){
+
+            $underlit_array = array();
+            $overlit_array = array();
+            $efficacy_array = array();
+            $maximize_array = array();
+           
+            foreach($ecmlists as $ecmdetails){
+
+                $formdetails = Form::find($ecmdetails->formid);
+                $subinventorydetails = Subinventory::find($ecmdetails->subinventoryid);
+
+                if($ecmdetails->result_ecm == '2D'){
+
+                    $temparray = [
+                        'ecm_id' => $ecmdetails->id,
+                        'room_name' => $formdetails->roomname,
+                        'equipment_name' => $subinventorydetails->typeoflighting,
+                        'annual_energy_saving' => $ecmdetails->underlit_annual_energy_consumption,
+                        'annual_cost_saving' => $ecmdetails->underlit_annual_energy_cost,
+                        'investment_cost' => $ecmdetails->underlit_investment_cost,
+                        'payback_period' => '0',
+                    ];
+
+                    array_push($underlit_array,$temparray);
+                } elseif($ecmdetails->result_ecm == '2A'){
+
+                    $temparray = [
+                        'ecm_id' => $ecmdetails->id,
+                        'room_name' => $formdetails->roomname,
+                        'equipment_name' => $subinventorydetails->typeoflighting,
+                        'annual_energy_saving' => $ecmdetails->overlit_annual_energy_saving,
+                        'annual_cost_saving' => $ecmdetails->overlit_annual_cost_saving,
+                        'investment_cost' => $ecmdetails->overlit_investment_cost,
+                        'payback_period' => $ecmdetails->overlit_payback_period,
+                    ];
+
+                    array_push($overlit_array,$temparray);
+                } elseif($ecmdetails->result_ecm == '2C'){
+
+                    if($ecmdetails->maximize_annual_energy_cost_saving >= 0){
+                        $payback_period = 'immediate';
+                    } else {
+                        $payback_period = '-';
+                    }
+
+                    $temparray = [
+                        'ecm_id' => $ecmdetails->id,
+                        'room_name' => $formdetails->roomname,
+                        'equipment_name' => $subinventorydetails->typeoflighting,
+                        'annual_energy_saving' => $ecmdetails->maximize_annual_energy_saving,
+                        'annual_cost_saving' => $ecmdetails->maximize_annual_energy_cost_saving,
+                        'investment_cost' => '0',
+                        'payback_period' => $payback_period,
+                    ];
+
+                    array_push($maximize_array,$temparray);
+                } elseif($ecmdetails->result_ecm == '1B'){
+
+                    $temparray = [
+                        'ecm_id' => $ecmdetails->id,
+                        'room_name' => $formdetails->roomname,
+                        'equipment_name' => $subinventorydetails->typeoflighting,
+                        'annual_energy_saving' => $ecmdetails->efficacy_corrective_annual_energy_saving,
+                        'annual_cost_saving' => $ecmdetails->efficacy_corrective_annual_cost_saving,
+                        'investment_cost' => $ecmdetails->efficacy_corrective_investment_cost,
+                        'payback_period' => $ecmdetails->efficacy_corrective_payback_period,
+                    ];
+
+                    array_push($efficacy_array,$temparray);
+                }
+            }
+
+            $finalarray = [
+                'underlit' => $underlit_array,
+                'overlit' => $overlit_array,
+                'maximize' => $maximize_array,
+                'efficacy' => $efficacy_array,
+            ];
+
+            return response()->json(['status'=>'success','value'=>$finalarray]);
+
+            
+        } else {
+            return response()->json(['status'=>'failed','value'=>'ecm not exist']);
+        }
+
+    }
+
+    public function result(Request $request){
+
+        $project_id = $request->input('project_id');
+        $equipment = $request->input('equipment');
+        $total_annual_energy_saving = $request->input('total_annual_energy_saving');
+        $total_annual_cost_saving = $request->input('total_annual_cost_saving');
+        $total_investment_cost = $request->input('total_investment_cost');
+        $total_payback_period = $request->input('total_payback_period');
+        $annual_energy_consumption_after_ecm = $request->input('annual_energy_consumption_after_ecm');
+        $annual_cost_after_ecm = $request->input('annual_cost_after_ecm');
+
+        $resultexist = Ecmresult::where('project_id',$project_id)->where('equipment',$equipment)->first();
+
+        if($resultexist){
+
+            $resultexist->total_annual_energy_saving = $total_annual_energy_saving;
+            $resultexist->total_annual_cost_saving = $total_annual_cost_saving;
+            $resultexist->total_investment_cost = $total_investment_cost;
+            $resultexist->total_payback_period = $total_payback_period;
+            $resultexist->annual_energy_consumption_after_ecm = $annual_energy_consumption_after_ecm;
+            $resultexist->annual_cost_after_ecm = $annual_cost_after_ecm;
+
+            $resultexist->save();
+
+        } else {
+
+            $ecmresult =  new Ecmresult;
+            $ecmresult->project_id = $project_id;
+            $ecmresult->equipment = $equipment;
+            $ecmresult->total_annual_energy_saving = $total_annual_energy_saving;
+            $ecmresult->total_annual_cost_saving = $total_annual_cost_saving;
+            $ecmresult->total_investment_cost = $total_investment_cost;
+            $ecmresult->total_payback_period = $total_payback_period;
+            $ecmresult->annual_energy_consumption_after_ecm = $annual_energy_consumption_after_ecm;
+            $ecmresult->annual_cost_after_ecm = $annual_cost_after_ecm;
+
+            $ecmresult->save();
+
+        }
+
+        return response()->json(['status'=>'success','value'=>'success add or update result']);
+
+    }
+
+    public function getresult(Request $request){
+
+
+        $project_id = $request->input('project_id');
+        $equipment = $request->input('equipment');
+
+        $resultecm = Ecmresult::where('project_id',$project_id)->where('equipment',$equipment)->first();
+
+        if($resultecm){
+
+            return response()->json(['status'=>'success','value'=>$resultecm]);
+
+        } else {
+            return response()->json(['status'=>'failed','value'=>'project_id and equipments not exists']);
+        }
 
     }
 }
