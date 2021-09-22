@@ -434,12 +434,20 @@ class EcmController extends Controller
                     } else {
                         $power_rating_of_lamp = $detailsecm->underlit_power_rating_of_lamp;
                     }
- 
-                    $annual_energy_consumption = (($power_rating_of_lamp / 1000 * $number_of_lamp) * $subinventorydetails->loadfactory) * $subinventorydetails->consumptionduration * $subinventorydetails->annualoperationdays;
+                    if($subinventorydetails){
+                        $annual_energy_consumption = (($power_rating_of_lamp / 1000 * $number_of_lamp) * $subinventorydetails->loadfactory) * $subinventorydetails->consumptionduration * $subinventorydetails->annualoperationdays;
+                    } else {
+                        $annual_energy_consumption = 0;
+                    }
+                    
                     
                     //annual energy cost
-
-                    $annual_energy_cost = (($power_rating_of_lamp / 1000 * $subinventorydetails->loadfactory) * $number_of_lamp * $subinventorydetails->peakdurationcostoperation * $sumplytariff->structurepeak + ($power_rating_of_lamp * $subinventorydetails->loadfactory / 1000) * $number_of_lamp * $subinventorydetails->offpeakduration * $sumplytariff->structureoffpeak) * $subinventorydetails->annualoperationdays;
+                    if($subinventorydetails){
+                        $annual_energy_cost = (($power_rating_of_lamp / 1000 * $subinventorydetails->loadfactory) * $number_of_lamp * $subinventorydetails->peakdurationcostoperation * $sumplytariff->structurepeak + ($power_rating_of_lamp * $subinventorydetails->loadfactory / 1000) * $number_of_lamp * $subinventorydetails->offpeakduration * $sumplytariff->structureoffpeak) * $subinventorydetails->annualoperationdays;
+                    } else {
+                        $annual_energy_cost = 0;
+                    }
+                    
 
                     $detailsecm->underlit_difference_in_lux = $difference_lux;
                     $detailsecm->underlit_number_of_lamp_required = $number_of_lamp;
