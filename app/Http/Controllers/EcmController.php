@@ -440,7 +440,7 @@ class EcmController extends Controller
                         $annual_energy_consumption = 0;
                     }
                     
-                    echo $power_rating_of_lamp;
+                    echo $number_of_lamp;
                     
                     //annual energy cost
                     // if($subinventorydetails && $sumplytariff){
