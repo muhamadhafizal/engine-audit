@@ -127,7 +127,8 @@ class ProjectController extends Controller
         // $env = 'http://engine-audit.test/images/';
         //$env = 'http://52.74.178.166:82/';
         // $env = 'http://codeviable.com/engine-audit/public/images/';
-        $env = 'http://206.189.87.64:9292/images/';
+        //$env = 'http://206.189.87.64:9292/images/';
+        $env = 'http://3.1.83.125:9292/images/';
 
         $validator = validator::make($request->all(),
         [

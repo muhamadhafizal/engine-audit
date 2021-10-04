@@ -42,7 +42,8 @@ class MainincomingController extends Controller
 
     public function all(Request $request){
         // $env = 'http://codeviable.com/engine-audit/public/subone/';
-        $env = 'http://206.189.87.64:9292/subone/';
+        //$env = 'http://206.189.87.64:9292/subone/';
+        $env = 'http://3.1.83.125:9292/subone/';
 
         $projectid = $request->input('projectid');
         $finalarray = array();
