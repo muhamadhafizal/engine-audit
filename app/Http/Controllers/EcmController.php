@@ -193,7 +193,6 @@ class EcmController extends Controller
             $ecm->daylightavailabilityresult = $daylightavailabilityresult;
             $ecm->lampcheck = $lampcheck;
             $ecm->lampcheckresult = $lampcheckresult;
-            $ecm->status = 'process';
 
             $ecm->save();
 
@@ -213,7 +212,6 @@ class EcmController extends Controller
                 $temparray = [
                     'id' => $details->id,
                     'subinventoryid' => $details->subinventoryid,
-                    'status' => $details->status,
                     'formid' => $details->formid,
                     'projectid' => $details->projectid,
                     'luxstandard' => $details->luxstandard,
@@ -225,6 +223,7 @@ class EcmController extends Controller
                     'controlsystem' => $details->controlsystem,
                     'controlsystemresult' => $details->controlsystemresult, 
                     'category' => 'Wellit',
+                    'status' => $details->status,
                 ];
             } else {
                 $temparray = [
@@ -232,7 +231,6 @@ class EcmController extends Controller
                     'projectid' => $details->projectid,
                     'formid' => $details->formid,
                     'subinventoryid' => $details->subinventoryid,
-                    'status' => $details->status,
                     'luxstandard' => $details->luxstandard,
                     'luxstandardname' => 'does not meet recommended standard',
                     'lampcheck' => $details->lampcheck,
@@ -240,6 +238,7 @@ class EcmController extends Controller
                     'daylightavailability' => $details->daylightavailability,
                     'daylightavailabilityresult' => $details->daylightavailabilityresult,
                     'category' => $lampcategory,
+                    'status' => $details->status,
                 ];
             }
 
@@ -754,6 +753,7 @@ class EcmController extends Controller
     public function summary(Request $request){
 
         $project_id = $request->input('project_id');
+        $equipment = $request->input('equipment');
 
         $ecmlists = ECM::where('projectid',$project_id)->where('result_ecm','!=',null)->get();
 
@@ -779,6 +779,7 @@ class EcmController extends Controller
                         'annual_cost_saving' => $ecmdetails->underlit_annual_energy_cost,
                         'investment_cost' => $ecmdetails->underlit_investment_cost,
                         'payback_period' => '0',
+                        'status' => $ecmdetails->status,
                     ];
 
                     array_push($underlit_array,$temparray);
@@ -792,6 +793,7 @@ class EcmController extends Controller
                         'annual_cost_saving' => $ecmdetails->overlit_annual_cost_saving,
                         'investment_cost' => $ecmdetails->overlit_investment_cost,
                         'payback_period' => $ecmdetails->overlit_payback_period,
+                        'status' => $ecmdetails->status,
                     ];
 
                     array_push($overlit_array,$temparray);
@@ -811,6 +813,7 @@ class EcmController extends Controller
                         'annual_cost_saving' => $ecmdetails->maximize_annual_energy_cost_saving,
                         'investment_cost' => '0',
                         'payback_period' => $payback_period,
+                        'status' => $ecmdetails->status,
                     ];
 
                     array_push($maximize_array,$temparray);
@@ -824,6 +827,7 @@ class EcmController extends Controller
                         'annual_cost_saving' => $ecmdetails->efficacy_corrective_annual_cost_saving,
                         'investment_cost' => $ecmdetails->efficacy_corrective_investment_cost,
                         'payback_period' => $ecmdetails->efficacy_corrective_payback_period,
+                        'status' => $ecmdetails->status,
                     ];
 
                     array_push($efficacy_array,$temparray);
@@ -904,6 +908,26 @@ class EcmController extends Controller
 
         } else {
             return response()->json(['status'=>'failed','value'=>'project_id and equipments not exists']);
+        }
+
+    }
+
+    public function poststatus(Request $request){
+
+        $ecmid = $request->input('ecmid');
+        $status = $request->input('status');
+
+        $details = ECM::find($ecmid);
+
+        if($details){
+
+            $details->status = $status;
+            $details->save();
+
+            return response()->json(['status'=>'success','value'=>'success update status ecm']);
+
+        } else {
+            return response()->json(['status'=>'failed','value'=>'sorry ecmid does not exist']);
         }
 
     }

@@ -178,6 +178,7 @@ Route::post('/ecm/inputvalueecm', 'EcmController@inputvalueecm');
 Route::get('/ecm/summary', 'EcmController@summary');
 Route::post('/ecm/result/save','EcmController@result');
 Route::get('/ecm/result/get', 'EcmController@getresult');
+Route::post('/ecm/poststatus', 'EcmController@poststatus');
 
 Route::get('unauthorized', ['as' => 'unauthorized', 'uses' => 'LoginController@unauthorized']);
 //token
