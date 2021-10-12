@@ -266,7 +266,28 @@ class MainincomingController extends Controller
             return response()->json(['status'=>'failed','value'=>'sorry mainincoming not exist']);
         }
 
-        
+    }
+
+    public function delete(Request $request){
+
+        $mainincoming_id = $request->input('mainincoming_id');
+
+        $mainincoming = Mainincoming::find($mainincoming_id);
+
+        if($mainincoming){
+            
+            $route = public_path().'/subone/'.$mainincoming->filename;
+    
+            if(file_exists($route)){
+                $dd = unlink($route);   
+            }  
+            $mainincoming->delete();
+
+            return response()->json(['status'=>'success','value'=>'success delete mainincoming']);
+
+        } else {
+            return response()->json(['status'=>'failed','value'=>'sorry mainincoming id not exist']);
+        }
 
     }
 }

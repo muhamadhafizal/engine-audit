@@ -120,16 +120,18 @@ Route::get('/form/addsubinventory', 'FormController@addsubinventory');
 //Mainicomings
 Route::get('/mainincoming', 'MainincomingController@index');
 Route::post('/mainincoming/store', 'MainincomingController@store');
-//Route::get('/mainincoming/list', 'MainincomingController@all');
+Route::get('/mainincoming/list', 'MainincomingController@all');
 Route::post('/mainincoming/edit', 'MainincomingController@update');
 Route::get('/mainincoming/listname', 'MainincomingController@listmainincoming');
 Route::get('/mainincoming/details', 'MainincomingController@details');
 Route::get('/mainincoming/submeter', 'MainincomingController@submeter');
+Route::get('/mainincoming/delete', 'MainincomingController@delete');
 
 //Submeter
 Route::get('/submeter', 'SubmeterController@index');
 Route::post('/submeter/store', 'SubmeterController@store');
 Route::get('/submeter/list', 'SubmeterController@list');
+Route::get('/submeter/delete','SubmeterController@delete');
 
 
 //Database

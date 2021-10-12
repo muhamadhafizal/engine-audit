@@ -65,6 +65,28 @@ class SubmeterController extends Controller
         return response()->json(['status'=>'success','value'=>$finalarray]);
 
     }
+
+    public function delete(Request $request){
+
+        $submeter_id = $request->input('submeter_id');
+
+        $submeter = Submeter::find($submeter_id);
+
+        if($submeter){
+           
+            $route = public_path().'/subtwo/'.$submeter->filename;
+  
+            if(file_exists($route)){
+                $dd = unlink($route);
+            } 
+            $submeter->delete();
+
+            return response()->json(['status'=>'success','value'=>'success delete submeter']);
+        } else {
+            return response()->json(['status'=>'failed','value'=>'sorry sub meter id not exist']);
+        }
+
+    }
 }
 
 
