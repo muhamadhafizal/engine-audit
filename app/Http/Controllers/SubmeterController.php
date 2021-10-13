@@ -24,12 +24,14 @@ class SubmeterController extends Controller
         $submeterupdate = Submeter::where('randnumber',$randnumber)->first();
 
         $extension = $excelfile->getClientOriginalExtension();
+        $att_name = $excelfile->getClientOriginalName();
         $filename = rand(11111, 99999) . '.' .$extension;
         $destinationPath = 'subtwo';
         
         $excelfile->move($destinationPath,$filename);
 
         $submeterupdate->filename = $filename;
+        $submeterupdate->attachement_filename = $att_name;
 
         $submeterupdate->save();
         return response()->json(['status'=>'success','value'=>'success upload and import to database']);
@@ -57,6 +59,7 @@ class SubmeterController extends Controller
             $tempfile = [
                 'id' => $data->id,
                 'excelfile' => $excelfile,
+                'excelname' => $data->attachement_filename,
             ];
 
             array_push($finalarray,$tempfile);

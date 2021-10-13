@@ -10,6 +10,15 @@ use App\Generate;
 
 class MainincomingController extends Controller
 {
+
+    public function getenv(){
+
+        $env = 'http://3.1.83.125:9292/subone/';
+
+        return $env;
+
+    }
+
     public function index(){
         return response()->json(['status'=>'success','value'=>'engine mainincoming']);
     }
@@ -26,7 +35,10 @@ class MainincomingController extends Controller
         $incomingupdate = Mainincoming::where('randnumber',$randnumber)->first();
 
         //kita update dekat sini
+
+
         $extension = $excelfile->getClientOriginalExtension();
+        $att_name = $excelfile->getClientOriginalName();
         $filename = rand(11111, 99999) . '.' .$extension;
         $destinationPath = 'subone';
         
@@ -34,6 +46,7 @@ class MainincomingController extends Controller
 
         $incomingupdate->filename = $filename;
         $incomingupdate->name = $nameid;
+        $incomingupdate->attachement_filename = $att_name;
 
         $incomingupdate->save();
         return response()->json(['status'=>'success','value'=>'success upload and import to database']);
@@ -43,7 +56,9 @@ class MainincomingController extends Controller
     public function all(Request $request){
         // $env = 'http://codeviable.com/engine-audit/public/subone/';
         //$env = 'http://206.189.87.64:9292/subone/';
-        $env = 'http://3.1.83.125:9292/subone/';
+        //$env = 'http://3.1.83.125:9292/subone/';
+
+        $env = $this->getenv();
 
         $projectid = $request->input('projectid');
         $finalarray = array();
@@ -60,6 +75,7 @@ class MainincomingController extends Controller
             $tempfile = [
                 'id' => $value->id,
                 'excelfile' => $excelfile,
+                'excelname' => $value->attachement_filename,
             ];
 
             array_push($finalarray,$tempfile);
@@ -103,6 +119,8 @@ class MainincomingController extends Controller
         $finalarray = array();
         $projectid = $request->input('projectid');
 
+        $env = $this->getenv();
+
         $list = Mainincoming::where('projectid',$projectid)->get();
 
         foreach($list as $data){
@@ -123,6 +141,8 @@ class MainincomingController extends Controller
                 'id' => $data->id,
                 'name' => $name,
                 'peak' => $data->peak,
+                'attachement' => $env.$data->filename,
+                'excelname' => $data->attachement_filename,
             ];
             array_push($finalarray,$temparray);
         }
@@ -205,29 +225,29 @@ class MainincomingController extends Controller
             ];
 
             array_push($finalarray,$mainarray);
+            $totalsubpeak = 0;
 
             foreach($list as $data){
 
-               
-
                 //generatesname
-            if($data->name != 'main'){
-                $generatesdetails = Generate::find($data->name);
-                if($generatesdetails){
-                     $name = $generatesdetails->name;
+                if($data->name != 'main'){
+                    $generatesdetails = Generate::find($data->name);
+                    if($generatesdetails){
+                        $name = $generatesdetails->name;
+                    } else {
+                        $name = $data->name;
+                    }
+                
                 } else {
                     $name = $data->name;
                 }
-               
-            } else {
-                $name = $data->name;
-            }
 
                 $temparray =[
                     'name' => $name,
                     'peak' => $data->peak,
                     'percent' => round(($data->peak/$main->peak)*100),
                 ];
+                $totalsubpeak = $totalsubpeak + $data->peak;
 
                 array_push($finalarray,$temparray);
 
@@ -236,31 +256,34 @@ class MainincomingController extends Controller
                 $totalpercent = $totalpercent + round(($data->peak/$main->peak)*100);
             }
 
+       
+            if($totalsubpeak > $main->peak){
+                return response()->json(['status'=>'failed','value'=>'total main peak less than total sub peak']);
+            } else {
 
-            
+                $otherspeak = $main->peak - $totalsub;
+                $otherspercent = round(($otherspeak/$main->peak)*100); 
 
-           
-            $otherspeak = $main->peak - $totalsub;
-            $otherspercent = round(($otherspeak/$main->peak)*100); 
+                $totalpercent = $totalpercent + $otherspercent;
 
-            $totalpercent = $totalpercent + $otherspercent;
+                $balance = 100 - $totalpercent;
 
-            $balance = 100 - $totalpercent;
+                if($balance != 0){
+                    $otherspercent = $otherspercent + $balance;
+                }
+                
 
-            if($balance != 0){
-                $otherspercent = $otherspercent + $balance;
+                $othersarray = [
+                    'name' => 'others',
+                    'peak' => $otherspeak,
+                    'percent' => $otherspercent,
+                ];
+                
+                array_push($finalarray,$othersarray);
+
+                return response()->json(['status'=>'success','value'=>$finalarray]);
+
             }
-            
-
-            $othersarray = [
-                'name' => 'others',
-                'peak' => $otherspeak,
-                'percent' => $otherspercent,
-            ];
-            
-            array_push($finalarray,$othersarray);
-
-            return response()->json(['status'=>'success','value'=>$finalarray]);
 
         } else {
             return response()->json(['status'=>'failed','value'=>'sorry mainincoming not exist']);

@@ -116,6 +116,7 @@ Route::get('/form/detailsdependent', 'FormController@detailsdependent');
 Route::get('/form/listsubinventorybyform', 'FormController@listsubequipment');
 Route::delete('/form/deletesubinventory', 'FormController@deletesubinventory');
 Route::get('/form/addsubinventory', 'FormController@addsubinventory');
+Route::post('/form/resetalldependentsub','FormController@resetalldependentsub');
 
 //Mainicomings
 Route::get('/mainincoming', 'MainincomingController@index');

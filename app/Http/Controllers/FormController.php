@@ -820,6 +820,96 @@ class FormController extends Controller
 
         return response()->json(['status'=>'success','value'=>'success deleted']);
     }
+
+    public function resetalldependentsub(Request $request){
+
+        //master form id
+        $masterid = $request->input('masterid');
+
+        $masterid = $request->input('masterid');
+        $generalarray = array();
+        
+        $masterdetails = Form::find($masterid);
+        if($masterdetails){
+
+            $dependentform = Form::where('masterid',$masterid)->where('category','dependent')->get();
+            $submaster = Subinventory::where('formid',$masterdetails->id)->get();
+
+            foreach($dependentform as $dependent){
+
+                 //reset form
+                $dependent->roomid = $masterdetails->roomid;
+                $dependent->equipmentid = $masterdetails->equipmentid;
+                $dependent->roomname = $masterdetails->roomname;
+                $dependent->roomfunction = $masterdetails->roomfunction;
+                $dependent->roomarea = $masterdetails->roomarea;
+                $dependent->generalobservation = $masterdetails->generalobservation;
+                $dependent->potentialfornaturallighting = $masterdetails->potentialfornaturallighting;
+                $dependent->windowsorientation = $masterdetails->windowsorientation;
+                $dependent->recommendedlux = $masterdetails->recommendedlux;
+                $dependent->samplingpoints = $masterdetails->samplingpoints;
+                $dependent->average = $masterdetails->average;
+                $dependent->grandtotalenergyconsumption = $masterdetails->grandtotalenergyconsumption;
+                $dependent->grandtotalannualenergycost = $masterdetails->grandtotalannualenergycost;
+                $dependent->formname = $masterdetails->formname;
+
+                $dependent->save();
+
+                $subdependents = Subinventory::where('formid',$dependent->id)->get();
+
+                //reset depedent
+                foreach($subdependents as $sub){
+
+                    foreach($submaster as $master){
+
+                        if($sub->subequipmentid == $master->subequipmentid){
+
+                            $sub->subequipmentid = $master->subequipmentid;
+                            $sub->lightingidentification = $master->lightingidentification;
+                            $sub->typeoflighting = $master->typeoflighting;
+                            $sub->powerrating = $master->powerrating;
+                            $sub->frominventory = $master->frominventory;
+                            $sub->actual = $master->actual;
+                            $sub->loadfactory = $master->loadfactory;
+                            $sub->totalnumberoffixtures = $master->totalnumberoffixtures;
+                            $sub->numberoflightbulbperfixtures = $master->numberoflightbulbperfixtures;
+                            $sub->totalnumberoflightbulb = $master->totalnumberoflightbulb;
+                            $sub->lightingreflector = $master->lightingreflector;
+                            $sub->controlsystem = $master->controlsystem;
+                            $sub->switchontime = $master->switchontime;
+                            $sub->switchofftime = $master->switchofftime;
+                            $sub->consumptionduration = $master->consumptionduration;
+                            $sub->peakdurationcostoperation = $master->peakdurationcostoperation;
+                            $sub->offpeakduration = $master->offpeakduration;
+                            $sub->annualoperationdays = $master->annualoperationdays;
+                            $sub->lighting = $master->lighting;
+                            $sub->powerratingperfixture = $master->powerratingperfixture;
+                            $sub->dailyenergyconsumtion = $master->dailyenergyconsumtion;
+                            $sub->dailyenergycost = $master->dailyenergycost;
+                            $sub->peakdurationcostenergy = $master->peakdurationcostenergy;
+                            $sub->offpeakdurationcost = $master->offpeakdurationcost;
+                            $sub->annualenergycost = $master->annualenergycost;
+                            $sub->grandtotalannualenergyconsumption = $master->grandtotalannualenergyconsumption;
+                            $sub->grandtotalannualenergycost = $master->grandtotalannualenergycost;
+
+                            $sub->save();
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            return response(['status'=>'success','value'=>'success reset dependent form']);
+
+        } else {
+            return response(['status'=>'failed','value'=>'sorry master form id does not exist']);
+        }
+        
+
+    }
 }
 
 
