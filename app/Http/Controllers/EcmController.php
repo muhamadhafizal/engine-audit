@@ -153,9 +153,11 @@ class EcmController extends Controller
             if($subinventorydeails->controlsysten == 'manual'){
                 $controlsystem = 0;
                 $controlsystemresult  = 'Install control system for exiting lamp';
+                $ecm_result = 'yes';
             } else {
                 $controlsystem = 1;
                 $controlsystemresult = 'No ECM';
+                $ecm_result = 'no';
             }
         }
 
@@ -224,6 +226,7 @@ class EcmController extends Controller
                     'controlsystemresult' => $details->controlsystemresult, 
                     'category' => 'Wellit',
                     'status' => $details->status,
+                    'ecm_result' => $ecm_result,
                 ];
             } else {
                 $temparray = [
@@ -239,6 +242,7 @@ class EcmController extends Controller
                     'daylightavailabilityresult' => $details->daylightavailabilityresult,
                     'category' => $lampcategory,
                     'status' => $details->status,
+                    'ecm_status' => 'yes',
                 ];
             }
 
