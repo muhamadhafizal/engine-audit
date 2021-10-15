@@ -26,6 +26,8 @@ class ProjectController extends Controller
         //$env = 'http://206.189.87.64:9292/images/';
         $env = 'http://3.1.83.125:9292/images/';
 
+        return $env;
+
     }
 
     public function index(){
