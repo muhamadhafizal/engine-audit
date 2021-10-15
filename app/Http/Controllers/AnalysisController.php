@@ -152,8 +152,9 @@ class AnalysisController extends Controller
 
             $totalsum = 0;
             foreach($infoarray as $info){
-                if($info['value'] != null || $info['value'] != 'NaN')
-                $totalsum = $totalsum + $info['value'];
+                if (is_numeric($info['value'])){
+                    $totalsum = $totalsum + $info['value'];
+                }
             }
 
             $finalarray = [
