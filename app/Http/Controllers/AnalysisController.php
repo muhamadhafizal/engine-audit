@@ -129,10 +129,18 @@ class AnalysisController extends Controller
 
                     foreach($subs as $sub){
 
-                        $temparray = [
-                            'name' => $sub->typeoflighting,
-                            'value' => $sub->annualenergycost,
-                        ];
+                        if($sub->annualenergycost != null || $sub->annualenergycost != 'NaN'){
+                            $temparray = [
+                                'name' => $sub->typeoflighting,
+                                'value' => $sub->annualenergycost,
+                            ];
+                        } else {
+                            $temparray = [
+                                'name' => $sub->typeoflighting,
+                                'value' => 0,
+                            ];
+                        }
+                        
 
                         array_push($infoarray,$temparray);
 
