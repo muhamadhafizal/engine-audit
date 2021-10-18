@@ -90,6 +90,7 @@ class CapacityController extends Controller
 
                 $temparray = [
                     'id' => $lc->id,
+                    'roomname' => $formdetails->roomname,
                     'recommendedlux' => $formdetails->recommendedlux,
                     'avarage' => $formdetails->average,
                     'deviation' => $lc->deviation,
