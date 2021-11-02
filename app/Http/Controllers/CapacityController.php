@@ -16,17 +16,14 @@ class CapacityController extends Controller
     public function generate(Request $request){
 
         $finalarray = array();
-
         $projectid = $request->input('projectid');
 
-        $exist = Capacity::where('projectid',$projectid)->get();
-     
-       if(count($exist) == 0) {
+        //$exist = Capacity::where('projectid',$projectid)->get();
+        //if(count($exist) == 0) {
        
-          
             $listRoom = Room::where('projectid',$projectid)->get();
             $equipmentid = Equipment::where('projectid',$projectid)->where('equipments','lighting')->first();
-            
+         
             if($equipmentid){
 
                 foreach($listRoom as $data){
@@ -38,47 +35,47 @@ class CapacityController extends Controller
                         $deviation = ($formdetails->average - $formdetails->recommendedlux) / ($formdetails->recommendedlux * 100);
                         $formid = $formdetails->id;
 
-                        $capacity = new Capacity;
-                        $capacity->projectid = $projectid;
-                        $capacity->roomid = $data->id;
-                        $capacity->deviation = $deviation;
-                        $capacity->formid = $formid;
+                        //check capacity exist
+                        $capacityexist = Capacity::where('roomid',$data->id)->first();
 
-                        $capacity->save();
+                        if($capacityexist == null){
 
+                            $capacity = new Capacity;
+                            $capacity->projectid = $projectid;
+                            $capacity->roomid = $data->id;
+                            $capacity->deviation = $deviation;
+                            $capacity->formid = $formid;
+    
+                            $capacity->save();
+
+                        }
                     } 
-
                 }
-
                 //return response()->json(['status'=>'success','value'=>'success generate']);
-            
+            } 
 
-            } else{
-                //return response()->json(['status'=>'failed','value'=>'sorry equipment not exist']);
-            }
-
-        } else {
+        // } else {
 
           
-            //update dekat sini
-            foreach($exist as $data){
+        //     //update dekat sini
+        //     foreach($exist as $data){
                 
-                $formdetails = Form::where('id',$data->formid)->first();
+        //         $formdetails = Form::where('id',$data->formid)->first();
 
-                if($formdetails){
-                    $deviation = ($formdetails->average - $formdetails->recommendedlux) / ($formdetails->recommendedlux * 100);
-                } else {
-                    $deviation = 0;
-                }
+        //         if($formdetails){
+        //             $deviation = ($formdetails->average - $formdetails->recommendedlux) / ($formdetails->recommendedlux * 100);
+        //         } else {
+        //             $deviation = 0;
+        //         }
 
-                $data->deviation = $deviation;
-                $data->save();
+        //         $data->deviation = $deviation;
+        //         $data->save();
 
-            }
+        //     }
 
-            //return response()->json(['status'=>'success','value'=>'success updated']);
+        //     //return response()->json(['status'=>'success','value'=>'success updated']);
 
-        } 
+        // } 
 
         $listcapacity = Capacity::where('projectid',$projectid)->get();
 
