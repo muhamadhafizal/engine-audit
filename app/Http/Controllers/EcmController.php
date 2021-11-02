@@ -207,7 +207,7 @@ class EcmController extends Controller
             } elseif($details->lampcheck == '1') {
                 $lampcategory = 'Overlit';
             } else {
-                $lampcategory = 'unknown';
+                $lampcategory = $details->lampcheck;
             }
 
             if($details->luxstandard == '1'){
