@@ -88,14 +88,14 @@ class CapacityController extends Controller
 
                 $formdetails = Form::find($lc->formid);
 
-                $deviation = number_format((float)$lc->deviation, 2, '.', '');
+                //$deviation = number_format((float)$lc->deviation, 2, '.', '');
 
                 $temparray = [
                     'id' => $lc->id,
                     'roomname' => $formdetails->roomname,
                     'recommendedlux' => $formdetails->recommendedlux,
                     'avarage' => $formdetails->average,
-                    'deviation' => $deviation,
+                    'deviation' => $lc->deviation,
                 ];
 
                 array_push($finalarray,$temparray);
