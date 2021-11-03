@@ -32,7 +32,10 @@ class CapacityController extends Controller
                     
                     if($formdetails){
 
-                        $deviation = ($formdetails->average - $formdetails->recommendedlux) / ($formdetails->recommendedlux * 100);
+                        $tempdeviation = ($formdetails->average - $formdetails->recommendedlux) / ($formdetails->recommendedlux * 100);
+                        
+                        $deviation = number_format((float)$tempdeviation, 2, '.', '');
+
                         $formid = $formdetails->id;
 
                         //check capacity exist
