@@ -35,7 +35,6 @@ class CapacityController extends Controller
                         $tempdeviation = ($formdetails->average - $formdetails->recommendedlux) / ($formdetails->recommendedlux * 100);
                         
                         $deviation = number_format((float)$tempdeviation, 2, '.', '');
-                        dd($deviation);
 
                         $formid = $formdetails->id;
 
@@ -89,12 +88,14 @@ class CapacityController extends Controller
 
                 $formdetails = Form::find($lc->formid);
 
+                $deviation = number_format((float)$lc->deviation, 2, '.', '');
+
                 $temparray = [
                     'id' => $lc->id,
                     'roomname' => $formdetails->roomname,
                     'recommendedlux' => $formdetails->recommendedlux,
                     'avarage' => $formdetails->average,
-                    'deviation' => $lc->deviation,
+                    'deviation' => $deviation,
                 ];
 
                 array_push($finalarray,$temparray);
