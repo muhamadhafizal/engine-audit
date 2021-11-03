@@ -90,12 +90,14 @@ class CapacityController extends Controller
 
                 //$deviation = number_format((float)$lc->deviation, 2, '.', '');
 
+                $deviation = $lc->deviation * 10000;
+
                 $temparray = [
                     'id' => $lc->id,
                     'roomname' => $formdetails->roomname,
                     'recommendedlux' => $formdetails->recommendedlux,
                     'avarage' => $formdetails->average,
-                    'deviation' => $lc->deviation,
+                    'deviation' => $deviation,
                 ];
 
                 array_push($finalarray,$temparray);
