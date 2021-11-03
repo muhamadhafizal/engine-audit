@@ -35,6 +35,7 @@ class CapacityController extends Controller
                         $tempdeviation = ($formdetails->average - $formdetails->recommendedlux) / ($formdetails->recommendedlux * 100);
                         
                         $deviation = number_format((float)$tempdeviation, 2, '.', '');
+                        dd($deviation);
 
                         $formid = $formdetails->id;
 
